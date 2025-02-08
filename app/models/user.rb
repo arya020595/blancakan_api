@@ -5,6 +5,11 @@ class User
   include Mongoid::Timestamps
   include Mongoid::Locker
 
+  field :locker_locked_at, type: Time
+  field :locker_locked_until, type: Time
+
+  locker locked_at_field: :locker_locked_at
+
   ## Database authenticatable
   field :email,              type: String, default: ''
   field :encrypted_password, type: String, default: ''
@@ -23,6 +28,11 @@ class User
   field :confirmed_at,         type: Time
   field :confirmation_sent_at, type: Time
   field :unconfirmed_email,    type: String # Only if using reconfirmable
+
+  ## Lockable
+  # field :failed_attempts, type: Integer, default: 0 # Only if lock strategy is :failed_attempts
+  # field :unlock_token,    type: String # Only if unlock strategy is :email or :both
+  # field :locked_at,       type: Time
 
   ## Required
   field :provider, type: String, default: 'email'
