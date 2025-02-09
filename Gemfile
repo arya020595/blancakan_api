@@ -25,14 +25,15 @@ gem 'tzinfo-data', platforms: %i[windows jruby]
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', require: false
+gem 'cancancan', '~> 3.5'
 gem 'devise' # Authentication
 gem 'devise_token_auth' # Token-based authentication for APIs
 gem 'dry-validation'
 gem 'mongoid'
 gem 'mongoid-locker', '~> 2.1'
 gem 'omniauth'
-gem 'pundit', '~> 2.4'
 gem 'redis', '~> 5.3'
+gem 'rolify', '~> 6.0', '>= 6.0.1'
 gem 'sidekiq', '~> 7.3', '>= 7.3.8'
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin Ajax possible
