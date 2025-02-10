@@ -4,9 +4,8 @@ class User
   include Mongoid::Document
   include Mongoid::Timestamps
   include Mongoid::Locker
-  rolify
 
-  has_and_belongs_to_many :permissions
+  belongs_to :role, optional: true # Ensure a user belongs to a role
 
   field :locker_locked_at, type: Time
   field :locker_locked_until, type: Time
@@ -60,9 +59,11 @@ class User
   index({ uid: 1, provider: 1 }, { name: 'uid_provider_index', unique: true, background: true })
   # index({ unlock_token: 1 }, { name: 'unlock_token_index', unique: true, sparse: true, background: true })
 
-  after_create :assign_default_role
+  before_validation :set_default_role, on: :create # Set default role before saving
 
-  def assign_default_role
-    add_role(:organizer) if roles.blank?
+  private
+
+  def set_default_role
+    self.role ||= Role.find_or_create_by(name: 'organizer')
   end
 end

@@ -1,38 +1,39 @@
 # Clear existing users
 User.destroy_all
 
-# Create Users
-superadmin_user = User.create!(
+# Fetch roles
+superadmin_role = Role.find_by(name: 'superadmin')
+admin_role = Role.find_by(name: 'admin')
+organizer_role = Role.find_by(name: 'organizer')
+premium_organizer_role = Role.find_by(name: 'premium_organizer')
+
+# Create Users with assigned roles
+User.create!(
   email: 'superadmin@example.com',
   password: 'password123',
-  password_confirmation: 'password123'
+  password_confirmation: 'password123',
+  role: superadmin_role
 )
-superadmin_user.add_role(:superadmin)
 
-admin_user = User.create!(
+User.create!(
   email: 'admin@example.com',
   password: 'password123',
-  password_confirmation: 'password123'
+  password_confirmation: 'password123',
+  role: admin_role
 )
-admin_user.add_role(:admin)
-admin_user.permissions << Permission.where(name: %w[read_events create_events update_events delete_events])
 
-organizer_user = User.create!(
+User.create!(
   email: 'organizer@example.com',
   password: 'password123',
-  password_confirmation: 'password123'
+  password_confirmation: 'password123',
+  role: organizer_role
 )
-organizer_user.add_role(:organizer)
-organizer_user.permissions << Permission.where(name: %w[read_events create_events update_events delete_events])
 
-premium_organizer_user = User.create!(
+User.create!(
   email: 'premium_organizer@example.com',
   password: 'password123',
-  password_confirmation: 'password123'
+  password_confirmation: 'password123',
+  role: premium_organizer_role
 )
-premium_organizer_user.add_role(:premium_organizer)
-premium_organizer_user.permissions << Permission.where(name: %w[
-                                                         read_events create_events update_events delete_events
-                                                       ])
 
-puts 'User seeding completed successfully!'
+puts 'Users seeding completed successfully!'

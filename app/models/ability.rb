@@ -4,30 +4,31 @@ class Ability
   include CanCan::Ability
 
   def initialize(user)
-    return unless user.present? # Guest users have no permissions
+    return unless user.present? # Guests have no permissions
 
-    if user.has_role?(:superadmin)
-      can :manage, :all
-    elsif user.has_role?(:admin)
-      can :manage, User
-      can :read, Event # Admins can only read events
-    elsif user.has_role?(:organizer)
-      can :create, Event
-      can :read, Event
-      can %i[update destroy], Event, user_id: user.id # Only update/delete own events
-    elsif user.has_role?(:premium_organizer)
-      can :create, Event
-      can :read, Event
-      can %i[update destroy], Event, user_id: user.id
-      can :create, Ticket # Premium organizers can create tickets
+    role = user.role
+    if role.blank?
+      cannot :manage, :all # Explicitly deny all access if no role
+      return
     end
 
-    # Apply additional permissions from database
-    user.permissions.each do |permission|
-      action, model_name = permission.name.split('_', 2) # Extract action and model name
-      model_class = model_name.classify.safe_constantize # Convert string to model class
+    if role.name == 'superadmin'
+      can :manage, :all # Superadmin has full access
+      return
+    end
 
-      can action.to_sym, model_class if model_class
+    # Grant permissions based on role
+    role.permissions.each do |permission|
+      action = permission.action.to_sym
+      model_class = permission.subject_class.classify.safe_constantize
+      next unless model_class
+
+      if permission.conditions.present?
+        conditions = permission.conditions.deep_symbolize_keys
+        can action, model_class, conditions
+      else
+        can action, model_class
+      end
     end
   end
 end

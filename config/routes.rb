@@ -10,7 +10,24 @@ Rails.application.routes.draw do
   # root "posts#index"
   namespace :api do
     namespace :v1 do
-      resources :home, only: [:index]
+      namespace :admin do
+        resources :home, only: [:index]
+        resources :events, only: %i[index show create update destroy]
+        resources :users, only: %i[index show create update destroy]
+        resources :roles
+        resources :permissions
+        get 'dashboard', to: 'dashboard#stats'
+      end
+
+      namespace :organizer do
+        resources :events, only: %i[index show create update destroy]
+        get 'dashboard', to: 'dashboard#stats'
+      end
+
+      namespace :public do
+        resources :events, only: %i[index show]
+        get 'home', to: 'home#index'
+      end
     end
   end
 end
