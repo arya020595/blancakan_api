@@ -12,15 +12,15 @@ Rails.application.routes.draw do
     namespace :v1 do
       namespace :admin do
         resources :home, only: [:index]
-        resources :events, only: %i[index show create update destroy]
-        resources :users, only: %i[index show create update destroy]
+        resources :events
+        resources :users
         resources :roles
         resources :permissions
         get 'dashboard', to: 'dashboard#stats'
       end
 
       namespace :organizer do
-        resources :events, only: %i[index show create update destroy]
+        resources :events
         get 'dashboard', to: 'dashboard#stats'
       end
 
