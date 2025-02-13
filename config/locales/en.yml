@@ -28,4 +28,35 @@
 #       enabled: "ON"
 
 en:
-  hello: "Hello world"
+  roles:
+    index:
+      success: "Roles fetched successfully"
+      error: "Failed to fetch roles"
+    show:
+      success: "Role found"
+      error: "Role not found"
+    create:
+      success: "Role created"
+      error: "Role creation failed"
+    update:
+      success: "Role updated"
+      error: "Role update failed"
+    destroy:
+      success: "Role deleted"
+      error: "Role deletion failed"
+  permissions:
+    index:
+      success: "List of permissions"
+      error: "Failed to fetch permissions"
+    show:
+      success: "Permission found"
+      error: "Permission not found"
+    create:
+      success: "Permission created"
+      error: "Permission creation failed"
+    update:
+      success: "Permission updated"
+      error: "Permission update failed"
+    destroy:
+      success: "Permission deleted"
+      error: "Permission deletion failed"
