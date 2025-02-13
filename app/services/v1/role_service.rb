@@ -1,5 +1,6 @@
-# app/services/v1/role_service.rb
+# frozen_string_literal: true
 module V1
+  # Service class for managing roles, providing methods to list, show, create, update, and delete roles.
   class RoleService
     include Dry::Monads[:result]
 
