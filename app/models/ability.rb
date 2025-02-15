@@ -1,5 +1,10 @@
 # frozen_string_literal: true
 
+# Defines authorization rules using CanCanCan.
+# - Guests: no permissions.
+# - No role: denied all access.
+# - Superadmins: full access.
+# - Others: permissions based on role.
 class Ability
   include CanCan::Ability
 
