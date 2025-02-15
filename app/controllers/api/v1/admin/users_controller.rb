@@ -3,6 +3,7 @@
 module Api
   module V1
     module Admin
+      # UsersController handles administrative actions for managing users.
       class UsersController < ApplicationController
         load_and_authorize_resource
 
