@@ -29,7 +29,6 @@ gem 'bootsnap', require: false
 gem 'cancancan', '~> 3.5'
 gem 'devise' # Authentication
 gem 'devise_token_auth' # Token-based authentication for APIs
-gem 'dry-auto_inject', '~> 1.0', '>= 1.0.1'
 gem 'dry-container', '~> 0.11.0'
 gem 'dry-monads', '~> 1.7', '>= 1.7.1'
 gem 'dry-validation'

@@ -8,7 +8,7 @@ module Api
       class RolesController < ApplicationController
         def initialize
           super
-          @role_service = Container.resolve(:v1_role_service)
+          @role_service = Container.resolve('v1.role_service')
         end
 
         def index

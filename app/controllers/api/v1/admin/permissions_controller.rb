@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Api
   module V1
     module Admin
@@ -9,7 +10,7 @@ module Api
 
         def initialize
           super
-          @permission_service = Container.resolve(:v1_permission_service)
+          @permission_service = Container.resolve('v1.permission_service')
         end
 
         def index
