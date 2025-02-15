@@ -60,3 +60,22 @@ en:
     destroy:
       success: "Permission deleted"
       error: "Permission deletion failed"
+  users:
+    index:
+      success: "Users fetched successfully"
+      error: "Failed to fetch users"
+    show:
+      success: "User found"
+      error: "User not found"
+    create:
+      success: "User created successfully"
+      error: "Failed to create user"
+    update:
+      success: "User updated successfully"
+      error: "Failed to update user"
+    destroy:
+      success: "User deleted successfully"
+      error: "Failed to delete user"
+    assign_role:
+      success: "Role assigned successfully"
+      error: "Failed to assign role"
