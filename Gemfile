@@ -24,9 +24,13 @@ gem 'bcrypt', '~> 3.1.7'
 gem 'tzinfo-data', platforms: %i[windows jruby]
 
 # Reduces boot times through caching; required in config/boot.rb
+gem 'aasm', '~> 5.5'
 gem 'active_model_serializers', '~> 0.10.2'
 gem 'bootsnap', require: false
 gem 'cancancan', '~> 3.5'
+gem 'carrierwave', '~> 3.1', '>= 3.1.1'
+gem 'carrierwave-mongoid', require: 'carrierwave/mongoid'
+gem 'cloudinary', '~> 2.2'
 gem 'devise' # Authentication
 gem 'devise_token_auth' # Token-based authentication for APIs
 gem 'dry-container', '~> 0.11.0'

@@ -4,7 +4,6 @@ module Api
   module V1
     module Admin
       # Controller for managing roles in the admin namespace.
-      # Provides actions to list, show, create, update, and destroy roles.
       class RolesController < ApplicationController
         def initialize
           super

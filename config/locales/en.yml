@@ -79,3 +79,35 @@ en:
     assign_role:
       success: "Role assigned successfully"
       error: "Failed to assign role"
+  events:
+    index:
+      success: "Events fetched successfully"
+      error: "Failed to fetch events"
+    show:
+      success: "Event found"
+      error: "Event not found"
+    create:
+      success: "Event created successfully"
+      error: "Failed to create event"
+    update:
+      success: "Event updated successfully"
+      error: "Failed to update event"
+    destroy:
+      success: "Event deleted successfully"
+      error: "Failed to delete event"
+  categories:
+    index:
+      success: "Categories fetched successfully"
+      error: "Failed to fetch categories"
+    show:
+      success: "Category found"
+      error: "Category not found"
+    create:
+      success: "Category created successfully"
+      error: "Failed to create category"
+    update:
+      success: "Category updated successfully"
+      error: "Failed to update category"
+    destroy:
+      success: "Category deleted successfully"
+      error: "Failed to delete category"

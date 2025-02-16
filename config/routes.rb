@@ -16,6 +16,7 @@ Rails.application.routes.draw do
         resources :users
         resources :roles
         resources :permissions
+        resources :categories
         get 'dashboard', to: 'dashboard#stats'
       end
 

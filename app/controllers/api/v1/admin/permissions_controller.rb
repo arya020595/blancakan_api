@@ -4,7 +4,6 @@ module Api
   module V1
     module Admin
       # Controller for managing permissions in the admin namespace.
-      # Provides actions to list, show, create, update, and destroy permissions.
       class PermissionsController < ApplicationController
         load_and_authorize_resource
 
