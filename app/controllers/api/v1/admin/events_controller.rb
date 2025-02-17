@@ -44,13 +44,7 @@ module Api
         end
 
         def update
-          event = Event.find_by(id: params[:id])
-          if event.nil?
-            render json: { status: 'error', message: I18n.t('events.show.error') }, status: :not_found
-            return
-          end
-
-          result = @event_service.update(event, event_params)
+          result = @event_service.update(@event, event_params)
           if result.success?
             render json: { status: 'success', message: I18n.t('events.update.success'), data: result.value! }
           else
@@ -60,13 +54,7 @@ module Api
         end
 
         def destroy
-          event = Event.find_by(id: params[:id])
-          if event.nil?
-            render json: { status: 'error', message: I18n.t('events.show.error') }, status: :not_found
-            return
-          end
-
-          result = @event_service.destroy(event)
+          result = @event_service.destroy(@event)
           if result.success?
             render json: { status: 'success', message: I18n.t('events.destroy.success') }
           else
@@ -78,7 +66,8 @@ module Api
         private
 
         def event_params
-          params.require(:event).permit(:name, :description, :date, :location)
+          params.require(:event).permit(:title, :description, :location, :starts_at, :ends_at, :category_id, :user_id,
+                                        :organizer, :image)
         end
       end
     end

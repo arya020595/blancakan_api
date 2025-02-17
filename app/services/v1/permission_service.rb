@@ -13,7 +13,7 @@ module V1
     end
 
     def show(id)
-      permission = Permission.find_by(id: id)
+      permission = Permission.find(id)
       if permission
         Success(permission)
       else

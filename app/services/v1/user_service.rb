@@ -13,7 +13,7 @@ module V1
     end
 
     def show(id)
-      user = User.find_by(id: id)
+      user = User.find(id)
       if user
         Success(user)
       else

@@ -6,6 +6,10 @@ conference_category = Category.find_by(name: 'Conference')
 workshop_category = Category.find_by(name: 'Workshop')
 meetup_category = Category.find_by(name: 'Meetup')
 
+# Fetch the organizer users created in users.rb
+organizer_user1 = User.find_by(email: 'organizer@example.com')
+organizer_user2 = User.find_by(email: 'organizer2@example.com')
+
 # Create Events
 events = [
   {
@@ -14,7 +18,9 @@ events = [
     location: 'San Francisco, CA',
     starts_at: Time.current + 1.month,
     ends_at: Time.current + 1.month + 1.day,
-    category: conference_category
+    category: conference_category,
+    user: organizer_user1,
+    organizer: 'Organizer One'
   },
   {
     title: 'Ruby Workshop',
@@ -22,7 +28,9 @@ events = [
     location: 'New York, NY',
     starts_at: Time.current + 2.months,
     ends_at: Time.current + 2.months + 1.day,
-    category: workshop_category
+    category: workshop_category,
+    user: organizer_user2,
+    organizer: 'Organizer Two'
   },
   {
     title: 'Startup Meetup',
@@ -30,7 +38,9 @@ events = [
     location: 'Los Angeles, CA',
     starts_at: Time.current + 3.months,
     ends_at: Time.current + 3.months + 1.day,
-    category: meetup_category
+    category: meetup_category,
+    user: organizer_user1,
+    organizer: 'Organizer One'
   }
 ]
 

@@ -5,8 +5,6 @@ class User
   include Mongoid::Timestamps
   include Mongoid::Locker
 
-  belongs_to :role, optional: true # Ensure a user belongs to a role
-
   field :locker_locked_at, type: Time
   field :locker_locked_until, type: Time
 
@@ -60,6 +58,11 @@ class User
   # index({ unlock_token: 1 }, { name: 'unlock_token_index', unique: true, sparse: true, background: true })
 
   before_validation :set_default_role, on: :create # Set default role before saving
+
+  has_many :events
+  belongs_to :role, optional: true
+
+  validates :name, :email, presence: true
 
   private
 

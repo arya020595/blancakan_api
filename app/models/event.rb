@@ -12,11 +12,13 @@ class Event
   field :published_at, type: Time
   field :canceled_at, type: Time
   field :status, type: String
+  field :organizer, type: String
   field :image, type: String
 
   belongs_to :category
+  belongs_to :user
 
-  validates :title, :starts_at, :ends_at, :category, presence: true
+  validates :title, :starts_at, :ends_at, :description, :location, :organizer, presence: true
 
   mount_uploader :image, ImageUploader
 

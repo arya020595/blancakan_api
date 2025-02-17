@@ -14,9 +14,11 @@ module V1
 
     def show(id)
       event = Event.find(id)
-      Success(event)
-    rescue Mongoid::Errors::DocumentNotFound
-      Failure('Event not found')
+      if event
+        Success(event)
+      else
+        Failure('Event not found')
+      end
     rescue StandardError => e
       Failure(e.message)
     end

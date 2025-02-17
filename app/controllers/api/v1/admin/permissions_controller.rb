@@ -66,7 +66,7 @@ module Api
         private
 
         def permission_params
-          params.require(:permission).permit(:name, :description)
+          params.require(:permission).permit(:action, :subject_class, :conditions, :role_id)
         end
       end
     end
