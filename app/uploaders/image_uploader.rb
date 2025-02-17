@@ -22,4 +22,13 @@ class ImageUploader < CarrierWave::Uploader::Base
   def public_id
     "blancakan/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}"
   end
+
+  # Delete the temporary file after storing it to Cloudinary.
+  after :store, :delete_tmp_file
+
+  private
+
+  def delete_tmp_file(_file)
+    FileUtils.rm_rf Dir.glob("#{Rails.root}/public/uploads/tmp/*")
+  end
 end
