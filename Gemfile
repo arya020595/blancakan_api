@@ -41,6 +41,7 @@ gem 'mongoid-locker', '~> 2.1'
 gem 'omniauth'
 gem 'redis', '~> 5.3'
 gem 'sidekiq', '~> 7.3', '>= 7.3.8'
+gem 'whenever', '~> 0.9.4'
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin Ajax possible
 gem 'rack-cors'
