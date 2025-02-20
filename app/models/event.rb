@@ -7,8 +7,8 @@ class Event
   field :title, type: String
   field :description, type: String
   field :location, type: String
-  field :starts_at, type: Time
-  field :ends_at, type: Time
+  field :starts_at, type: DateTime
+  field :ends_at, type: DateTime
   field :published_at, type: Time
   field :canceled_at, type: Time
   field :status, type: String
@@ -21,6 +21,9 @@ class Event
   validates :title, :starts_at, :ends_at, :description, :location, :organizer, presence: true
 
   mount_uploader :image, ImageUploader
+
+  before_update :destroy_previous_image_if_changed
+  before_destroy :destroy_current_image
 
   aasm column: :status do
     state :draft, initial: true
@@ -61,5 +64,15 @@ class Event
 
   def send_notification(message)
     puts "[NOTIFICATION] #{message}"
+  end
+
+  def destroy_previous_image_if_changed
+    return unless image_changed?
+
+    Cloudinary::Uploader.destroy(image_was.file.public_id) if image_was.present?
+  end
+
+  def destroy_current_image
+    Cloudinary::Uploader.destroy(image.file.public_id) if image.present?
   end
 end
