@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # This module provides a standardized way to format service responses.
 # It ensures that the result object follows the correct pattern and renders
 # the appropriate JSON response based on the success or failure of the service call.
