@@ -5,6 +5,7 @@ module Api
     module Admin
       # Controller for managing roles in the admin namespace.
       class RolesController < ApplicationController
+        load_and_authorize_resource
         include ServiceResponseFormatter
 
         def initialize
