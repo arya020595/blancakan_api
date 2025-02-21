@@ -46,7 +46,7 @@ en:
       error: "Role deletion failed"
   permissions:
     index:
-      success: "List of permissions"
+      success: "Permission fetched successfully"
       error: "Failed to fetch permissions"
     show:
       success: "Permission found"
