@@ -4,32 +4,44 @@ Permission.destroy_all
 
 # Create Roles
 roles = {
-  'superadmin' => [],
-  'admin' => [
-    { action: 'read', subject_class: 'User' },
-    { action: 'manage', subject_class: 'User' },
-    { action: 'read', subject_class: 'Event' }
-  ],
-  'organizer' => [
-    { action: 'read', subject_class: 'Event' },
-    { action: 'create', subject_class: 'Event' },
-    { action: 'update', subject_class: 'Event', conditions: { user_id: 'user.id' } },
-    { action: 'destroy', subject_class: 'Event', conditions: { user_id: 'user.id' } }
-  ],
-  'premium_organizer' => [
-    { action: 'read', subject_class: 'Event' },
-    { action: 'create', subject_class: 'Event' },
-    { action: 'update', subject_class: 'Event', conditions: { user_id: 'user.id' } },
-    { action: 'destroy', subject_class: 'Event', conditions: { user_id: 'user.id' } },
-    { action: 'create', subject_class: 'Ticket' }
-  ]
+  'superadmin' => {
+    description: 'Has full access to all resources and actions.',
+    permissions: []
+  },
+  'admin' => {
+    description: 'Can manage users and read events.',
+    permissions: [
+      { action: 'read', subject_class: 'User' },
+      { action: 'manage', subject_class: 'User' },
+      { action: 'read', subject_class: 'Event' }
+    ]
+  },
+  'organizer' => {
+    description: 'Can manage their own events.',
+    permissions: [
+      { action: 'read', subject_class: 'Event' },
+      { action: 'create', subject_class: 'Event' },
+      { action: 'update', subject_class: 'Event', conditions: { user_id: 'user.id' } },
+      { action: 'destroy', subject_class: 'Event', conditions: { user_id: 'user.id' } }
+    ]
+  },
+  'premium_organizer' => {
+    description: 'Can manage their own events and create tickets.',
+    permissions: [
+      { action: 'read', subject_class: 'Event' },
+      { action: 'create', subject_class: 'Event' },
+      { action: 'update', subject_class: 'Event', conditions: { user_id: 'user.id' } },
+      { action: 'destroy', subject_class: 'Event', conditions: { user_id: 'user.id' } },
+      { action: 'create', subject_class: 'Ticket' }
+    ]
+  }
 }
 
 # Create roles and assign permissions
-roles.each do |role_name, permissions|
-  role = Role.create!(name: role_name)
+roles.each do |role_name, role_data|
+  role = Role.create!(name: role_name, description: role_data[:description])
 
-  permissions.each do |perm|
+  role_data[:permissions].each do |perm|
     role.permissions.create!(
       action: perm[:action],
       subject_class: perm[:subject_class],
