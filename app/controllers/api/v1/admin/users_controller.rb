@@ -3,9 +3,10 @@
 module Api
   module V1
     module Admin
-      # UsersController handles administrative actions for managing users.
+      # Controller for managing users in the admin namespace.
       class UsersController < ApplicationController
         load_and_authorize_resource
+        include ServiceResponseFormatter
 
         def initialize
           super
@@ -14,53 +15,27 @@ module Api
 
         def index
           result = @user_service.index
-          if result.success?
-            render json: { status: 'success', message: I18n.t('users.index.success'), data: result.value! }
-          else
-            render json: { status: 'error', message: I18n.t('users.index.error'), errors: result.failure },
-                   status: :unprocessable_entity
-          end
+          format_response(result: result, resource: 'users', action: :index)
         end
 
         def show
           result = @user_service.show(params[:id])
-          if result.success?
-            render json: { status: 'success', message: I18n.t('users.show.success'), data: result.value! }
-          else
-            render json: { status: 'error', message: I18n.t('users.show.error'), errors: result.failure },
-                   status: :not_found
-          end
+          format_response(result: result, resource: 'users', action: :show)
         end
 
         def create
           result = @user_service.create(user_params)
-          if result.success?
-            render json: { status: 'success', message: I18n.t('users.create.success'), data: result.value! },
-                   status: :created
-          else
-            render json: { status: 'error', message: I18n.t('users.create.error'), errors: result.failure },
-                   status: :unprocessable_entity
-          end
+          format_response(result: result, resource: 'users', action: :create)
         end
 
         def update
           result = @user_service.update(@user, user_params)
-          if result.success?
-            render json: { status: 'success', message: I18n.t('users.update.success'), data: result.value! }
-          else
-            render json: { status: 'error', message: I18n.t('users.update.error'), errors: result.failure },
-                   status: :unprocessable_entity
-          end
+          format_response(result: result, resource: 'users', action: :update)
         end
 
         def destroy
           result = @user_service.destroy(@user)
-          if result.success?
-            render json: { status: 'success', message: I18n.t('users.destroy.success') }
-          else
-            render json: { status: 'error', message: I18n.t('users.destroy.error'), errors: result.failure },
-                   status: :unprocessable_entity
-          end
+          format_response(result: result, resource: 'users', action: :destroy)
         end
 
         private

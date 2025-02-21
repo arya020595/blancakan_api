@@ -6,6 +6,7 @@ module Api
       # Controller for managing permissions in the admin namespace.
       class PermissionsController < ApplicationController
         load_and_authorize_resource
+        include ServiceResponseFormatter
 
         def initialize
           super
@@ -14,53 +15,27 @@ module Api
 
         def index
           result = @permission_service.index
-          if result.success?
-            render json: { status: 'success', message: I18n.t('permissions.index.success'), data: result.value! }
-          else
-            render json: { status: 'error', message: I18n.t('permissions.index.error'), errors: result.failure },
-                   status: :unprocessable_entity
-          end
+          format_response(result: result, resource: 'permissions', action: :index)
         end
 
         def show
           result = @permission_service.show(params[:id])
-          if result.success?
-            render json: { status: 'success', message: I18n.t('permissions.show.success'), data: result.value! }
-          else
-            render json: { status: 'error', message: I18n.t('permissions.show.error'), errors: result.failure },
-                   status: :not_found
-          end
+          format_response(result: result, resource: 'permissions', action: :show)
         end
 
         def create
           result = @permission_service.create(permission_params)
-          if result.success?
-            render json: { status: 'success', message: I18n.t('permissions.create.success'), data: result.value! },
-                   status: :created
-          else
-            render json: { status: 'error', message: I18n.t('permissions.create.error'), errors: result.failure },
-                   status: :unprocessable_entity
-          end
+          format_response(result: result, resource: 'permissions', action: :create)
         end
 
         def update
           result = @permission_service.update(@permission, permission_params)
-          if result.success?
-            render json: { status: 'success', message: I18n.t('permissions.update.success'), data: result.value! }
-          else
-            render json: { status: 'error', message: I18n.t('permissions.update.error'), errors: result.failure },
-                   status: :unprocessable_entity
-          end
+          format_response(result: result, resource: 'permissions', action: :update)
         end
 
         def destroy
           result = @permission_service.destroy(@permission)
-          if result.success?
-            render json: { status: 'success', message: I18n.t('permissions.destroy.success') }
-          else
-            render json: { status: 'error', message: I18n.t('permissions.destroy.error'), errors: result.failure },
-                   status: :unprocessable_entity
-          end
+          format_response(result: result, resource: 'permissions', action: :destroy)
         end
 
         private

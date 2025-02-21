@@ -6,6 +6,7 @@ module Api
       # Controller for managing events in the admin namespace.
       class EventsController < ApplicationController
         load_and_authorize_resource
+        include ServiceResponseFormatter
 
         def initialize
           super
@@ -14,53 +15,27 @@ module Api
 
         def index
           result = @event_service.index
-          if result.success?
-            render json: { status: 'success', message: I18n.t('events.index.success'), data: result.value! }
-          else
-            render json: { status: 'error', message: I18n.t('events.index.error'), errors: result.failure },
-                   status: :unprocessable_entity
-          end
+          format_response(result: result, resource: 'events', action: :index)
         end
 
         def show
           result = @event_service.show(params[:id])
-          if result.success?
-            render json: { status: 'success', message: I18n.t('events.show.success'), data: result.value! }
-          else
-            render json: { status: 'error', message: I18n.t('events.show.error'), errors: result.failure },
-                   status: :not_found
-          end
+          format_response(result: result, resource: 'events', action: :show)
         end
 
         def create
           result = @event_service.create(event_params)
-          if result.success?
-            render json: { status: 'success', message: I18n.t('events.create.success'), data: result.value! },
-                   status: :created
-          else
-            render json: { status: 'error', message: I18n.t('events.create.error'), errors: result.failure },
-                   status: :unprocessable_entity
-          end
+          format_response(result: result, resource: 'events', action: :create)
         end
 
         def update
           result = @event_service.update(@event, event_params)
-          if result.success?
-            render json: { status: 'success', message: I18n.t('events.update.success'), data: result.value! }
-          else
-            render json: { status: 'error', message: I18n.t('events.update.error'), errors: result.failure },
-                   status: :unprocessable_entity
-          end
+          format_response(result: result, resource: 'events', action: :update)
         end
 
         def destroy
           result = @event_service.destroy(@event)
-          if result.success?
-            render json: { status: 'success', message: I18n.t('events.destroy.success') }
-          else
-            render json: { status: 'error', message: I18n.t('events.destroy.error'), errors: result.failure },
-                   status: :unprocessable_entity
-          end
+          format_response(result: result, resource: 'events', action: :destroy)
         end
 
         private

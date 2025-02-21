@@ -3,6 +3,7 @@ module Api
     module Admin
       class CategoriesController < ApplicationController
         load_and_authorize_resource
+        include ServiceResponseFormatter
 
         def initialize
           super
@@ -11,53 +12,27 @@ module Api
 
         def index
           result = @category_service.index
-          if result.success?
-            render json: { status: 'success', message: I18n.t('categories.index.success'), data: result.value! }
-          else
-            render json: { status: 'error', message: I18n.t('categories.index.error'), errors: result.failure },
-                   status: :unprocessable_entity
-          end
+          format_response(result: result, resource: 'categories', action: :index)
         end
 
         def show
           result = @category_service.show(params[:id])
-          if result.success?
-            render json: { status: 'success', message: I18n.t('categories.show.success'), data: result.value! }
-          else
-            render json: { status: 'error', message: I18n.t('categories.show.error'), errors: result.failure },
-                   status: :not_found
-          end
+          format_response(result: result, resource: 'categories', action: :show)
         end
 
         def create
           result = @category_service.create(category_params)
-          if result.success?
-            render json: { status: 'success', message: I18n.t('categories.create.success'), data: result.value! },
-                   status: :created
-          else
-            render json: { status: 'error', message: I18n.t('categories.create.error'), errors: result.failure },
-                   status: :unprocessable_entity
-          end
+          format_response(result: result, resource: 'categories', action: :create)
         end
 
         def update
           result = @category_service.update(@category, category_params)
-          if result.success?
-            render json: { status: 'success', message: I18n.t('categories.update.success'), data: result.value! }
-          else
-            render json: { status: 'error', message: I18n.t('categories.update.error'), errors: result.failure },
-                   status: :unprocessable_entity
-          end
+          format_response(result: result, resource: 'categories', action: :update)
         end
 
         def destroy
           result = @category_service.destroy(@category)
-          if result.success?
-            render json: { status: 'success', message: I18n.t('categories.destroy.success') }
-          else
-            render json: { status: 'error', message: I18n.t('categories.destroy.error'), errors: result.failure },
-                   status: :unprocessable_entity
-          end
+          format_response(result: result, resource: 'categories', action: :destroy)
         end
 
         private
