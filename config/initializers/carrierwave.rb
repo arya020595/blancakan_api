@@ -1,6 +1,6 @@
 CarrierWave.configure do |config|
   config.cache_storage = :file
-  config.fog_provider = 'fog/cloudinary'
+  config.fog_directory = 'fog/cloudinary'
   config.fog_credentials = {
     provider: 'Cloudinary',
     cloud_name: Rails.application.credentials.dig(:cloudinary, :cloud_name),
