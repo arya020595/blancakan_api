@@ -1,5 +1,8 @@
 FactoryBot.define do
   factory :permission do
-    name { "MyString" }
+    action { 'read' }
+    subject_class { %w[User Permission] }
+    conditions { {} }
+    association :role
   end
 end
