@@ -19,6 +19,8 @@ class Event
   belongs_to :user
 
   validates :title, :starts_at, :ends_at, :description, :location, :organizer, presence: true
+  validate :starts_at_cannot_be_in_the_past
+  validate :starts_at_before_ends_at
 
   mount_uploader :image, ImageUploader
 
@@ -33,7 +35,7 @@ class Event
       transitions from: :draft, to: :published, after: :set_published_at
 
       after do
-        send_notification("Event '#{title}' has been published!")
+        send_notification(I18n.t('event.notifications.published', title: title))
       end
     end
 
@@ -41,24 +43,36 @@ class Event
       transitions from: %i[draft published], to: :canceled, after: :set_canceled_at
 
       after do
-        send_notification("Event '#{title}' has been canceled!")
+        send_notification(I18n.t('event.notifications.canceled', title: title))
       end
     end
   end
 
   private
 
+  def starts_at_cannot_be_in_the_past
+    return unless starts_at.present? && starts_at < DateTime.now
+
+    errors.add(:starts_at, I18n.t('event.errors.starts_at_past'))
+  end
+
+  def starts_at_before_ends_at
+    return unless starts_at.present? && ends_at.present? && starts_at > ends_at
+
+    errors.add(:starts_at, I18n.t('event.errors.starts_at_before_ends_at'))
+  end
+
   def set_published_at
     return if update(published_at: Time.current)
 
-    errors.add(:base, 'Failed to update published_at')
+    errors.add(:base, I18n.t('event.errors.failed_to_update_published_at'))
     raise ActiveRecord::Rollback
   end
 
   def set_canceled_at
     return if update(canceled_at: Time.current)
 
-    errors.add(:base, 'Failed to update canceled_at')
+    errors.add(:base, I18n.t('event.errors.failed_to_update_canceled_at'))
     raise ActiveRecord::Rollback
   end
 
