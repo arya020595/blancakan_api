@@ -44,7 +44,13 @@ RSpec.configure do |config|
             bearerFormat: :JWT
           }
         }
-      }
+      },
+      tags: [
+        {
+          name: 'Authentication',
+          description: 'Endpoints related to authentication. Please use this to authenticate your requests.'
+        }
+      ]
       # security: [
       #   {
       #     bearerAuth: []
