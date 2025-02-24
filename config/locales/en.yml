@@ -60,6 +60,9 @@ en:
     destroy:
       success: "Permission deleted"
       error: "Permission deletion failed"
+  permission:
+    errors:
+      duplicate_permission: "and subject_class combination already exists for this role"
   users:
     index:
       success: "Users fetched successfully"
@@ -95,6 +98,15 @@ en:
     destroy:
       success: "Event deleted successfully"
       error: "Failed to delete event"
+  event:
+    errors:
+      starts_at_past: "can't be in the past"
+      starts_at_before_ends_at: "must be before the end date"
+      failed_to_update_published_at: "Failed to update published_at"
+      failed_to_update_canceled_at: "Failed to update canceled_at"
+    notifications:
+      published: "Event '%{title}' has been published!"
+      canceled: "Event '%{title}' has been canceled!"
   categories:
     index:
       success: "Categories fetched successfully"
@@ -111,3 +123,10 @@ en:
     destroy:
       success: "Category deleted successfully"
       error: "Failed to delete category"
+  mongoid:
+    errors:
+      models:
+        permission:
+          attributes:
+            action:
+              duplicate_permission: "and subject_class combination already exists for this role"
