@@ -62,7 +62,7 @@ class User
   has_many :events
   belongs_to :role, optional: true
 
-  validates :name, :email, presence: true
+  validates :email, presence: true
 
   private
 
