@@ -9,4 +9,7 @@ class Permission
   belongs_to :role
 
   validates :action, :subject_class, presence: true
+  validates :action,
+            uniqueness: { scope: %i[subject_class role_id],
+                          message: I18n.t('mongoid.errors.models.permission.attributes.action.duplicate_permission') }
 end
