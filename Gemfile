@@ -45,6 +45,8 @@ gem 'whenever', '~> 0.9.4'
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin Ajax possible
 gem 'rack-cors'
+gem 'rswag-api'
+gem 'rswag-ui'
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
@@ -57,6 +59,7 @@ group :development, :test do
   gem 'factory_bot_rails' # Test data factory
   gem 'faker' # Generate fake data
   gem 'rspec-rails' # RSpec for testing
+  gem 'rswag-specs'
 end
 
 group :development do

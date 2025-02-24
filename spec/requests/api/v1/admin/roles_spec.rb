@@ -1,120 +1,155 @@
-require 'rails_helper'
+require 'swagger_helper'
 
 RSpec.describe 'Roles API', type: :request do
-  # Create a role with the name 'superadmin'
-  let(:role) { create(:role, name: 'superadmin') }
+  # Create a role with the name 'superadmin' for generate auth_headers purpose only
+  let(:init_role) { create(:role, name: 'superadmin') }
 
   # Create a user with the 'superadmin' role
-  let(:user) { create(:user, role: role) }
+  let(:user) { create(:user, role: init_role) }
 
   # Generate authentication headers for the created user
   let(:auth_headers) { user.create_new_auth_token }
+  let(:Authorization) { "Bearer #{auth_headers['Authorization']}" }
 
-  # Test suite for GET /api/v1/admin/roles
-  describe 'GET /api/v1/admin/roles' do
-    before do
-      create_list(:role, 2)
-      get '/api/v1/admin/roles', headers: auth_headers
-    end
+  # Define the path for retrieving all roles
+  path '/api/v1/admin/roles' do
+    get 'Retrieves all roles' do
+      tags 'Roles'
+      produces 'application/json'
+      security [bearerAuth: []]
 
-    it 'returns all roles' do
-      expect(response).to have_http_status(200)
-      expect(json['data'].size).to eq(3) # Including the initial 'superadmin' role
-    end
-  end
+      response '200', 'roles found' do
+        schema type: :object,
+               properties: {
+                 status: { type: :string },
+                 message: { type: :string },
+                 data: {
+                   type: :array,
+                   items: {
+                     type: :object,
+                     properties: {
+                       _id: { type: :string },
+                       name: { type: :string },
+                       created_at: { type: :string, format: :date_time },
+                       updated_at: { type: :string, format: :date_time }
+                     },
+                     required: %w[_id name created_at updated_at]
+                   }
+                 }
+               },
+               required: %w[status message data]
 
-  # Test suite for POST /api/v1/admin/roles
-  describe 'POST /api/v1/admin/roles' do
-    let(:valid_attributes) { { role: { name: 'admin', description: 'Administrator role' } } }
+        before do
+          create_list(:role, 2)
+        end
 
-    context 'when the request is valid' do
-      before { post '/api/v1/admin/roles', params: valid_attributes, headers: auth_headers }
-
-      it 'creates a role' do
-        expect(response).to have_http_status(201)
-        expect(json['data']['name']).to eq('admin')
+        run_test!
       end
     end
 
-    context 'when the request is invalid' do
-      before { post '/api/v1/admin/roles', params: { role: { name: '', description: '' } }, headers: auth_headers }
+    post 'Creates a role' do
+      tags 'Roles'
+      consumes 'application/json'
+      security [bearerAuth: []]
+      parameter name: :role, in: :body, schema: {
+        type: :object,
+        properties: {
+          name: { type: :string },
+          description: { type: :string }
+        },
+        required: %w[name description]
+      }
 
-      it 'returns status code 422' do
-        expect(response).to have_http_status(422)
-      end
-    end
-  end
-
-  # Test suite for GET /api/v1/admin/roles/:id
-  describe 'GET /api/v1/admin/roles/:id' do
-    let(:role1) { create(:role) }
-
-    context 'when the record exists' do
-      before { get "/api/v1/admin/roles/#{role.id}", headers: auth_headers }
-
-      it 'returns the role' do
-        expect(response).to have_http_status(200)
-        expect(json['data']['_id']).to eq(role.id.to_s)
-      end
-    end
-
-    context 'when the record does not exist' do
-      before { get '/api/v1/admin/roles/invalid', headers: auth_headers }
-
-      it 'returns status code 404' do
-        expect(response).to have_http_status(404)
-      end
-    end
-  end
-
-  # Test suite for PUT /api/v1/admin/roles/:id
-  describe 'PUT /api/v1/admin/roles/:id' do
-    let(:role1) { create(:role) }
-    let(:valid_attributes) { { role: { name: 'superadmin', description: 'Super Administrator role' } } }
-
-    context 'when the record exists' do
-      before { put "/api/v1/admin/roles/#{role.id}", params: valid_attributes, headers: auth_headers }
-
-      it 'updates the record' do
-        expect(response).to have_http_status(200)
-        expect(role.reload.name).to eq('superadmin')
-      end
-    end
-
-    context 'when the request is invalid' do
-      before do
-        put "/api/v1/admin/roles/#{role.id}", params: { role: { name: '', description: '' } }, headers: auth_headers
+      response '201', 'role created' do
+        let(:role) { { name: 'manager', description: 'Manager role' } }
+        run_test!
       end
 
-      it 'returns status code 422' do
-        expect(response).to have_http_status(422)
+      response '422', 'invalid request' do
+        let(:role) { { name: '', description: '' } }
+        run_test!
       end
     end
   end
 
-  # Test suite for DELETE /api/v1/admin/roles/:id
-  describe 'DELETE /api/v1/admin/roles/:id' do
-    let!(:role1) { create(:role) }
+  # Define the path for retrieving a specific role by ID
+  path '/api/v1/admin/roles/{id}' do
+    get 'Retrieves a role' do
+      tags 'Roles'
+      produces 'application/json'
+      security [bearerAuth: []]
+      parameter name: :id, in: :path, type: :string
 
-    context 'when the record exists' do
-      before { delete "/api/v1/admin/roles/#{role.id}", headers: auth_headers }
+      response '200', 'role found' do
+        schema type: :object,
+               properties: {
+                 status: { type: :string },
+                 message: { type: :string },
+                 data: {
+                   type: :object,
+                   properties: {
+                     _id: { type: :string },
+                     name: { type: :string },
+                     description: { type: :string },
+                     created_at: { type: :string, format: :date_time },
+                     updated_at: { type: :string, format: :date_time }
+                   },
+                   required: %w[_id name description created_at updated_at]
+                 }
+               },
+               required: %w[status message data]
 
-      it 'deletes the record' do
-        expect(response).to have_http_status(204)
+        let(:id) { Role.create(name: 'admin', description: 'Administrator role').id }
+        run_test!
+      end
+
+      response '404', 'role not found' do
+        let(:id) { 'invalid' }
+        run_test!
       end
     end
 
-    context 'when the record does not exist' do
-      before { delete '/api/v1/admin/roles/invalid', headers: auth_headers }
+    put 'Updates a role' do
+      tags 'Roles'
+      consumes 'application/json'
+      security [bearerAuth: []]
+      parameter name: :id, in: :path, type: :string
+      parameter name: :role, in: :body, schema: {
+        type: :object,
+        properties: {
+          name: { type: :string },
+          description: { type: :string }
+        },
+        required: %w[name description]
+      }
 
-      it 'returns status code 404' do
-        expect(response).to have_http_status(404)
+      response '200', 'role updated' do
+        let(:id) { Role.create(name: 'unique_admin', description: 'Administrator role').id }
+        let(:role) { { name: 'unique_superadmin', description: 'Super Administrator role' } }
+        run_test!
+      end
+
+      response '422', 'invalid request' do
+        let(:id) { Role.create(name: 'another_admin', description: 'Administrator role').id }
+        let(:role) { { name: '', description: '' } }
+        run_test!
+      end
+    end
+
+    delete 'Deletes a role' do
+      tags 'Roles'
+      security [bearerAuth: []]
+      parameter name: :id, in: :path, type: :string
+
+      response '204', 'role deleted' do
+        let(:id) { Role.create(name: 'admin', description: 'Administrator role').id }
+        run_test!
+      end
+
+      response '404', 'role not found' do
+        let(:id) { 'invalid' }
+        run_test!
       end
     end
   end
-end
-
-# Helper method to parse JSON responses
-def json
-  JSON.parse(response.body)
 end

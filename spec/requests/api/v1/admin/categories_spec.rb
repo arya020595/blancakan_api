@@ -1,123 +1,159 @@
-require 'rails_helper'
+require 'swagger_helper'
 
 RSpec.describe 'Categories API', type: :request do
+  # Setup user and authentication headers
   let(:role) { create(:role, name: 'superadmin') }
   let(:user) { create(:user, role: role) }
   let(:auth_headers) { user.create_new_auth_token }
+  let(:Authorization) { "Bearer #{auth_headers['Authorization']}" }
 
-  describe 'GET /api/v1/admin/categories' do
-    before do
-      create_list(:category, 2)
-      get '/api/v1/admin/categories', headers: auth_headers
+  # Define the path for retrieving all categories
+  path '/api/v1/admin/categories' do
+    get 'Retrieves all categories' do
+      tags 'Categories'
+      produces 'application/json'
+      security [bearerAuth: []]
+
+      response '200', 'categories found' do
+        schema type: :object,
+               properties: {
+                 status: { type: :string },
+                 message: { type: :string },
+                 data: {
+                   type: :array,
+                   items: {
+                     type: :object,
+                     properties: {
+                       _id: { type: :string },
+                       name: { type: :string },
+                       description: { type: :string },
+                       parent_id: { type: :string, nullable: true },
+                       status: { type: :boolean },
+                       created_at: { type: :string, format: :date_time },
+                       updated_at: { type: :string, format: :date_time }
+                     },
+                     required: %w[_id name description status created_at updated_at]
+                   }
+                 }
+               },
+               required: %w[status message data]
+
+        before do
+          create_list(:category, 2)
+        end
+
+        run_test!
+      end
     end
 
-    it 'returns all categories' do
-      expect(response).to have_http_status(200)
-      expect(json['data'].size).to eq(2)
-    end
-  end
-
-  describe 'POST /api/v1/admin/categories' do
-    let(:valid_attributes) do
-      {
-        category: {
-          name: 'Tech',
-          description: 'Technology related events'
-        }
+    # Define the path for creating a new category
+    post 'Creates a category' do
+      tags 'Categories'
+      consumes 'application/json'
+      security [bearerAuth: []]
+      parameter name: :category, in: :body, schema: {
+        type: :object,
+        properties: {
+          name: { type: :string },
+          description: { type: :string }
+        },
+        required: %w[name description]
       }
-    end
 
-    context 'when the request is valid' do
-      before { post '/api/v1/admin/categories', params: valid_attributes, headers: auth_headers }
-
-      it 'creates a category' do
-        expect(response).to have_http_status(201)
-        expect(json['data']['name']).to eq('Tech')
-      end
-    end
-
-    context 'when the request is invalid' do
-      before do
-        post '/api/v1/admin/categories',
-             params: { category: { name: '', description: '' } }, headers: auth_headers
+      response '201', 'category created' do
+        let(:category) { { name: 'Tech', description: 'Technology related events' } }
+        run_test!
       end
 
-      it 'returns status code 422' do
-        expect(response).to have_http_status(422)
+      response '422', 'invalid request' do
+        let(:category) { { name: '', description: '' } }
+        run_test!
       end
     end
   end
 
-  describe 'GET /api/v1/admin/categories/:id' do
-    let(:category) { create(:category) }
+  # Define the path for retrieving a specific category by ID
+  path '/api/v1/admin/categories/{id}' do
+    get 'Retrieves a category' do
+      tags 'Categories'
+      produces 'application/json'
+      security [bearerAuth: []]
+      parameter name: :id, in: :path, type: :string
 
-    context 'when the record exists' do
-      before { get "/api/v1/admin/categories/#{category.id}", headers: auth_headers }
+      response '200', 'category found' do
+        schema type: :object,
+               properties: {
+                 status: { type: :string },
+                 message: { type: :string },
+                 data: {
+                   type: :object,
+                   properties: {
+                     _id: { type: :string },
+                     name: { type: :string },
+                     description: { type: :string },
+                     parent_id: { type: :string, nullable: true },
+                     status: { type: :boolean },
+                     created_at: { type: :string, format: :date_time },
+                     updated_at: { type: :string, format: :date_time }
+                   },
+                   required: %w[_id name description status created_at updated_at]
+                 }
+               },
+               required: %w[status message data]
 
-      it 'returns the category' do
-        expect(response).to have_http_status(200)
-        expect(json['data']['_id']).to eq(category.id.to_s)
+        let(:id) { Category.create(name: 'Tech', description: 'Technology related events').id }
+        run_test!
+      end
+
+      response '404', 'category not found' do
+        let(:id) { 'invalid' }
+        run_test!
       end
     end
 
-    context 'when the record does not exist' do
-      before { get '/api/v1/admin/categories/invalid', headers: auth_headers }
+    # Define the path for updating a specific category by ID
+    put 'Updates a category' do
+      tags 'Categories'
+      consumes 'application/json'
+      security [bearerAuth: []]
+      parameter name: :id, in: :path, type: :string
+      parameter name: :category, in: :body, schema: {
+        type: :object,
+        properties: {
+          name: { type: :string },
+          description: { type: :string }
+        },
+        required: %w[name description]
+      }
 
-      it 'returns status code 404' do
-        expect(response).to have_http_status(404)
+      response '200', 'category updated' do
+        let(:id) { Category.create(name: 'Tech', description: 'Technology related events').id }
+        let(:category) { { name: 'Updated Category', description: 'Updated description' } }
+        run_test!
+      end
+
+      response '422', 'invalid request' do
+        let(:id) { Category.create(name: 'Tech', description: 'Technology related events').id }
+        let(:category) { { name: '', description: '' } }
+        run_test!
+      end
+    end
+
+    # Define the path for deleting a specific category by ID
+    delete 'Deletes a category' do
+      tags 'Categories'
+      security [bearerAuth: []]
+      parameter name: :id, in: :path, type: :string
+
+      response '204', 'category deleted' do
+        let(:id) { Category.create(name: 'Tech', description: 'Technology related events').id }
+        run_test!
+      end
+
+      response '404', 'category not found' do
+        let(:id) { 'invalid' }
+        run_test!
       end
     end
   end
-
-  describe 'PUT /api/v1/admin/categories/:id' do
-    let(:category) { create(:category) }
-    let(:valid_attributes) do
-      { category: { name: 'Updated Category', description: 'Updated description' } }
-    end
-
-    context 'when the record exists' do
-      before { put "/api/v1/admin/categories/#{category.id}", params: valid_attributes, headers: auth_headers }
-
-      it 'updates the record' do
-        expect(response).to have_http_status(200)
-        expect(category.reload.name).to eq('Updated Category')
-      end
-    end
-
-    context 'when the request is invalid' do
-      before do
-        put "/api/v1/admin/categories/#{category.id}", params: { category: { name: '', description: '' } },
-                                                       headers: auth_headers
-      end
-
-      it 'returns status code 422' do
-        expect(response).to have_http_status(422)
-      end
-    end
-  end
-
-  describe 'DELETE /api/v1/admin/categories/:id' do
-    let!(:category) { create(:category) }
-
-    context 'when the record exists' do
-      before { delete "/api/v1/admin/categories/#{category.id}", headers: auth_headers }
-
-      it 'deletes the record' do
-        expect(response).to have_http_status(204)
-      end
-    end
-
-    context 'when the record does not exist' do
-      before { delete '/api/v1/admin/categories/invalid', headers: auth_headers }
-
-      it 'returns status code 404' do
-        expect(response).to have_http_status(404)
-      end
-    end
-  end
-end
-
-# Helper method to parse JSON responses
-def json
-  JSON.parse(response.body)
 end

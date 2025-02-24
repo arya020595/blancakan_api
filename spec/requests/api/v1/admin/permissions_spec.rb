@@ -1,4 +1,4 @@
-require 'rails_helper'
+require 'swagger_helper'
 
 RSpec.describe 'Permissions API', type: :request do
   # Create a role with the name 'superadmin'
@@ -9,137 +9,152 @@ RSpec.describe 'Permissions API', type: :request do
 
   # Generate authentication headers for the created user
   let(:auth_headers) { user.create_new_auth_token }
+  let(:Authorization) { "Bearer #{auth_headers['Authorization']}" }
 
-  # Test suite for GET /api/v1/admin/permissions
-  describe 'GET /api/v1/admin/permissions' do
-    before do
-      # Create a list of 2 permissions
-      create_list(:permission, 2)
-      # Make a GET request to the permissions endpoint with authentication headers
-      get '/api/v1/admin/permissions', headers: auth_headers
-    end
+  # Define the path for retrieving all permissions
+  path '/api/v1/admin/permissions' do
+    get 'Retrieves all permissions' do
+      tags 'Permissions'
+      produces 'application/json'
+      security [bearerAuth: []]
 
-    it 'returns all permissions' do
-      # Expect the response to have HTTP status 200 (OK)
-      expect(response).to have_http_status(200)
-      # Expect the JSON response to contain 2 permissions
-      expect(json['data'].size).to eq(2)
-    end
-  end
+      response '200', 'permissions found' do
+        schema type: :object,
+               properties: {
+                 status: { type: :string },
+                 message: { type: :string },
+                 data: {
+                   type: :array,
+                   items: {
+                     type: :object,
+                     properties: {
+                       _id: { type: :string },
+                       action: { type: :string },
+                       subject_class: { type: :string },
+                       role_id: { type: :string },
+                       created_at: { type: :string, format: :date_time },
+                       updated_at: { type: :string, format: :date_time }
+                     },
+                     required: %w[_id action subject_class role_id created_at updated_at]
+                   }
+                 }
+               },
+               required: %w[status message data]
 
-  # Test suite for POST /api/v1/admin/permissions
-  describe 'POST /api/v1/admin/permissions' do
-    # Define valid attributes for creating a permission
-    let(:valid_attributes) do
-      { permission: { action: 'read', subject_class: 'User', role_id: role.id } }
-    end
+        before do
+          create_list(:permission, 2)
+        end
 
-    context 'when the request is valid' do
-      before do
-        # Make a POST request to create a permission with valid attributes
-        post '/api/v1/admin/permissions', params: valid_attributes, headers: auth_headers
-      end
-
-      it 'creates a permission' do
-        # Expect the response to have HTTP status 201 (Created)
-        expect(response).to have_http_status(201)
-        # Expect the JSON response to contain the action 'read'
-        expect(json['data']['action']).to eq('read')
-      end
-    end
-
-    context 'when the request is invalid' do
-      before do
-        # Make a POST request to create a permission with invalid attributes
-        post '/api/v1/admin/permissions',
-             params: { permission: { action: '', subject_class: '', role_id: '' } }, headers: auth_headers
-      end
-
-      it 'returns status code 422' do
-        # Expect the response to have HTTP status 422 (Unprocessable Entity)
-        expect(response).to have_http_status(422)
-      end
-    end
-  end
-
-  # Test suite for GET /api/v1/admin/permissions/:id
-  describe 'GET /api/v1/admin/permissions/:id' do
-    let(:permission) { create(:permission) }
-
-    context 'when the record exists' do
-      before { get "/api/v1/admin/permissions/#{permission.id}", headers: auth_headers }
-
-      it 'returns the permission' do
-        # Expect the response to have HTTP status 200 (OK)
-        expect(response).to have_http_status(200)
-        # Expect the JSON response to contain the permission ID
-        expect(json['data']['_id']).to eq(permission.id.to_s)
+        run_test!
       end
     end
 
-    context 'when the record does not exist' do
-      before { get '/api/v1/admin/permissions/invalid', headers: auth_headers }
+    post 'Creates a permission' do
+      tags 'Permissions'
+      consumes 'application/json'
+      security [bearerAuth: []]
+      parameter name: :permission, in: :body, schema: {
+        type: :object,
+        properties: {
+          action: { type: :string },
+          subject_class: { type: :string },
+          role_id: { type: :string }
+        },
+        required: %w[action subject_class role_id]
+      }
 
-      it 'returns status code 404' do
-        # Expect the response to have HTTP status 404 (Not Found)
-        expect(response).to have_http_status(404)
+      response '201', 'permission created' do
+        let(:permission) { { action: 'read', subject_class: 'User', role_id: role.id } }
+        run_test!
+      end
+
+      response '422', 'invalid request' do
+        let(:permission) { { action: '', subject_class: '', role_id: '' } }
+        run_test!
       end
     end
   end
 
-  # Test suite for PUT /api/v1/admin/permissions/:id
-  describe 'PUT /api/v1/admin/permissions/:id' do
-    let(:permission) { create(:permission) }
-    let(:valid_attributes) { { permission: { action: 'manage' } } }
+  # Define the path for retrieving a specific permission by ID
+  path '/api/v1/admin/permissions/{id}' do
+    get 'Retrieves a permission' do
+      tags 'Permissions'
+      produces 'application/json'
+      security [bearerAuth: []]
+      parameter name: :id, in: :path, type: :string
 
-    context 'when the record exists' do
-      before { put "/api/v1/admin/permissions/#{permission.id}", params: valid_attributes, headers: auth_headers }
+      response '200', 'permission found' do
+        schema type: :object,
+               properties: {
+                 status: { type: :string },
+                 message: { type: :string },
+                 data: {
+                   type: :object,
+                   properties: {
+                     _id: { type: :string },
+                     action: { type: :string },
+                     subject_class: { type: :string },
+                     role_id: { type: :string },
+                     created_at: { type: :string, format: :date_time },
+                     updated_at: { type: :string, format: :date_time }
+                   },
+                   required: %w[_id action subject_class role_id created_at updated_at]
+                 }
+               },
+               required: %w[status message data]
 
-      it 'updates the record' do
-        # Expect the response to have HTTP status 200 (OK)
-        expect(response).to have_http_status(200)
-        # Expect the permission action to be updated to 'manage'
-        expect(permission.reload.action).to eq('manage')
+        let(:id) { Permission.create(action: 'read', subject_class: 'User', role_id: role.id).id }
+        run_test!
+      end
+
+      response '404', 'permission not found' do
+        let(:id) { 'invalid' }
+        run_test!
       end
     end
 
-    context 'when the request is invalid' do
-      before do
-        put "/api/v1/admin/permissions/#{permission.id}", params: { permission: { action: '' } }, headers: auth_headers
+    put 'Updates a permission' do
+      tags 'Permissions'
+      consumes 'application/json'
+      security [bearerAuth: []]
+      parameter name: :id, in: :path, type: :string
+      parameter name: :permission, in: :body, schema: {
+        type: :object,
+        properties: {
+          action: { type: :string },
+          subject_class: { type: :string },
+          role_id: { type: :string }
+        },
+        required: %w[action subject_class role_id]
+      }
+
+      response '200', 'permission updated' do
+        let(:id) { Permission.create(action: 'read', subject_class: 'User', role_id: role.id).id }
+        let(:permission) { { action: 'manage', subject_class: 'User', role_id: role.id } }
+        run_test!
       end
 
-      it 'returns status code 422' do
-        # Expect the response to have HTTP status 422 (Unprocessable Entity)
-        expect(response).to have_http_status(422)
+      response '422', 'invalid request' do
+        let(:id) { Permission.create(action: 'read', subject_class: 'User', role_id: role.id).id }
+        let(:permission) { { action: '', subject_class: '', role_id: '' } }
+        run_test!
+      end
+    end
+
+    delete 'Deletes a permission' do
+      tags 'Permissions'
+      security [bearerAuth: []]
+      parameter name: :id, in: :path, type: :string
+
+      response '204', 'permission deleted' do
+        let(:id) { Permission.create(action: 'read', subject_class: 'User', role_id: role.id).id }
+        run_test!
+      end
+
+      response '404', 'permission not found' do
+        let(:id) { 'invalid' }
+        run_test!
       end
     end
   end
-
-  # Test suite for DELETE /api/v1/admin/permissions/:id
-  describe 'DELETE /api/v1/admin/permissions/:id' do
-    let!(:permission) { create(:permission) }
-
-    context 'when the record exists' do
-      before { delete "/api/v1/admin/permissions/#{permission.id}", headers: auth_headers }
-
-      it 'deletes the record' do
-        # Expect the response to have HTTP status 204 (No Content)
-        expect(response).to have_http_status(204)
-      end
-    end
-
-    context 'when the record does not exist' do
-      before { delete '/api/v1/admin/permissions/invalid', headers: auth_headers }
-
-      it 'returns status code 404' do
-        # Expect the response to have HTTP status 404 (Not Found)
-        expect(response).to have_http_status(404)
-      end
-    end
-  end
-end
-
-# Helper method to parse JSON responses
-def json
-  JSON.parse(response.body)
 end
