@@ -5,8 +5,8 @@ module V1
   class RoleService
     include Dry::Monads[:result]
 
-    def index
-      roles = Role.all
+    def index(page: 1, per_page: 10)
+      roles = Role.page(page).per(per_page)
       Success(roles)
     rescue StandardError => e
       Failure(e.message)

@@ -32,11 +32,14 @@ module ServiceResponseFormatter
   end
 
   def render_success_response(result, resource, action, serializer)
-    render json: {
+    data = result.value!
+    response = {
       status: 'success',
       message: I18n.t("#{resource}.#{action}.success"),
-      data: serialize_data(result.value!, serializer)
-    }, status: http_success_status(action)
+      data: serialize_data(data, serializer)
+    }
+    response[:meta] = pagination_meta(data) if data.respond_to?(:current_page)
+    render json: response, status: http_success_status(action)
   end
 
   def render_error_response(result, resource, action)
@@ -82,5 +85,16 @@ module ServiceResponseFormatter
     else
       :bad_request
     end
+  end
+
+  def pagination_meta(collection)
+    {
+      current_page: collection.current_page,
+      next_page: collection.next_page,
+      prev_page: collection.prev_page,
+      total_pages: collection.total_pages,
+      total_count: collection.total_count,
+      per_page: collection.limit_value
+    }
   end
 end

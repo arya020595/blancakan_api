@@ -5,8 +5,8 @@ module V1
   class CategoryService
     include Dry::Monads[:result]
 
-    def index
-      categories = Category.all
+    def index(page: 1, per_page: 10)
+      categories = Category.page(page).per(per_page)
       Success(categories)
     rescue StandardError => e
       Failure(e.message)

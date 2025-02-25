@@ -14,7 +14,7 @@ module Api
         end
 
         def index
-          result = @event_service.index
+          result = @event_service.index(page: params[:page], per_page: params[:per_page])
           format_response(result: result, resource: 'events', action: :index)
         end
 

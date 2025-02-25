@@ -14,7 +14,7 @@ module Api
         end
 
         def index
-          result = @role_service.index
+          result = @role_service.index(page: params[:page], per_page: params[:per_page])
           format_response(result: result, resource: 'roles', action: :index)
         end
 

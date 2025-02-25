@@ -5,8 +5,8 @@ module V1
   class EventService
     include Dry::Monads[:result]
 
-    def index
-      events = Event.all
+    def index(page: 1, per_page: 10)
+      events = Event.page(page).per(per_page)
       Success(events)
     rescue StandardError => e
       Failure(e.message)

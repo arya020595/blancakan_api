@@ -11,7 +11,7 @@ module Api
         end
 
         def index
-          result = @category_service.index
+          result = @category_service.index(page: params[:page], per_page: params[:per_page])
           format_response(result: result, resource: 'categories', action: :index)
         end
 
