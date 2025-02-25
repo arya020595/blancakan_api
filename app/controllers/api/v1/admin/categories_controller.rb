@@ -1,6 +1,8 @@
 module Api
   module V1
     module Admin
+      # Controller for managing categories in the admin namespace.
+      # It uses a service object to handle the business logic and formats the response using a custom formatter.
       class CategoriesController < ApplicationController
         load_and_authorize_resource
         include ServiceResponseFormatter
