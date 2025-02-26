@@ -1,3 +1,11 @@
+GIT
+  remote: git@github.com:elastic/elastic-transport-ruby.git
+  revision: fbff6b6e3ae1879ba590e2588500897b8c836335
+  specs:
+    elastic-transport (8.4.0)
+      faraday (< 3)
+      multi_json
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -182,6 +190,16 @@ GEM
       dry-initializer (~> 3.2)
       dry-schema (~> 1.14)
       zeitwerk (~> 2.6)
+    elasticsearch (8.17.1)
+      elastic-transport (~> 8.3)
+      elasticsearch-api (= 8.17.1)
+    elasticsearch-api (8.17.1)
+      multi_json
+    elasticsearch-model (8.0.0)
+      activesupport (> 3)
+      elasticsearch (~> 8)
+      hashie
+    elasticsearch-rails (8.0.0)
     erubi (1.13.1)
     factory_bot (6.5.1)
       activesupport (>= 6.1.0)
@@ -266,6 +284,7 @@ GEM
     mongoid-locker (2.1.0)
       mongoid (>= 5.0, < 10)
     msgpack (1.8.0)
+    multi_json (1.15.0)
     multipart-post (2.4.1)
     mutex_m (0.3.0)
     net-http (0.6.0)
@@ -473,6 +492,9 @@ DEPENDENCIES
   dry-container (~> 0.11.0)
   dry-monads (~> 1.7, >= 1.7.1)
   dry-validation
+  elastic-transport!
+  elasticsearch-model
+  elasticsearch-rails
   factory_bot_rails
   faker
   kaminari
