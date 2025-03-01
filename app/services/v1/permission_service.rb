@@ -5,8 +5,8 @@ module V1
   class PermissionService
     include Dry::Monads[:result]
 
-    def index(page: 1, per_page: 10)
-      permissions = Permission.page(page).per(per_page)
+    def index(query: '*', page: 1, per_page: 10)
+      permissions = Permission.search(query: query, page: page, per_page: per_page)
       Success(permissions)
     rescue StandardError => e
       Failure(e.message)

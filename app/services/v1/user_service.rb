@@ -5,8 +5,8 @@ module V1
   class UserService
     include Dry::Monads[:result]
 
-    def index(page: 1, per_page: 10)
-      users = User.page(page).per(per_page)
+    def index(query: '*', page: 1, per_page: 10)
+      users = User.search(query: query, page: page, per_page: per_page)
       Success(users)
     rescue StandardError => e
       Failure(e.message)

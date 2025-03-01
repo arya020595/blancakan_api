@@ -4,6 +4,7 @@ class User
   include Mongoid::Document
   include Mongoid::Timestamps
   include Mongoid::Locker
+  include Elasticsearch::UserSearchable
 
   field :locker_locked_at, type: Time
   field :locker_locked_until, type: Time
@@ -64,9 +65,21 @@ class User
 
   validates :email, presence: true
 
+  after_create :enqueue_reindex_job
+  after_update :enqueue_reindex_job, if: :should_reindex?
+  after_destroy :enqueue_reindex_job
+
   private
 
   def set_default_role
     self.role ||= Role.find_or_create_by(name: 'organizer')
+  end
+
+  def enqueue_reindex_job
+    ReindexElasticsearchJob.perform_later(self.class.name, id.to_s)
+  end
+
+  def should_reindex?
+    saved_change_to_email? || saved_change_to_name? || saved_change_to_role_id?
   end
 end

@@ -3,7 +3,7 @@ class Event
   include Mongoid::Timestamps
   include AASM
   include CarrierWave::Mongoid
-  include Searchable
+  include Elasticsearch::EventSearchable
 
   field :title, type: String
   field :description, type: String
@@ -28,8 +28,8 @@ class Event
   before_update :destroy_previous_image_if_changed
   before_destroy :destroy_current_image
 
-  after_save :reindex_event
-  after_destroy :reindex_event
+  after_save :enqueue_reindex_job
+  after_destroy :enqueue_reindex_job
 
   aasm column: :status do
     state :draft, initial: true
@@ -94,7 +94,7 @@ class Event
     Cloudinary::Uploader.destroy(image.file.public_id) if image.present?
   end
 
-  def reindex_event
-    __elasticsearch__.index_document
+  def enqueue_reindex_job
+    ReindexElasticsearchJob.perform_later(self.class.name, id.to_s)
   end
 end

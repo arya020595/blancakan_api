@@ -14,7 +14,7 @@ module Api
         end
 
         def index
-          result = @user_service.index(page: params[:page], per_page: params[:per_page])
+          result = @user_service.index(query: params[:query], page: params[:page], per_page: params[:per_page])
           format_response(result: result, resource: 'users', action: :index)
         end
 
@@ -41,7 +41,7 @@ module Api
         private
 
         def user_params
-          params.require(:user).permit(:name, :email, :password, :password_confirmation, :role_id)
+          params.require(:user).permit(:name, :email, :password, :password_confirmation, :role_id, :provider, :uid)
         end
       end
     end

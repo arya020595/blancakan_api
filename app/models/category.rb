@@ -1,6 +1,7 @@
 class Category
   include Mongoid::Document
   include Mongoid::Timestamps
+  include Elasticsearch::CategorySearchable
 
   field :name, type: String
   field :description, type: String
@@ -17,4 +18,13 @@ class Category
   scope :subcategories, -> { where(:parent_id.ne => nil) }
   scope :active, -> { where(status: true) }
   scope :inactive, -> { where(status: false) }
+
+  after_save :enqueue_reindex_job
+  after_destroy :enqueue_reindex_job
+
+  private
+
+  def enqueue_reindex_job
+    ReindexElasticsearchJob.perform_later(self.class.name, id.to_s)
+  end
 end
