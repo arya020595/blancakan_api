@@ -40,7 +40,7 @@ module Api
         private
 
         def category_params
-          params.require(:category).permit(:name, :description, :status, :parent_id)
+          params.require(:category).permit(:name, :description, :is_active, :parent_id)
         end
       end
     end
