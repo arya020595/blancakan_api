@@ -10,13 +10,13 @@ module Elasticsearch
         mappings dynamic: false do
           indexes :name, type: :text, analyzer: 'standard'
           indexes :description, type: :text, analyzer: 'standard'
-          indexes :status, type: :keyword
+          indexes :is_active, type: :boolean
           indexes :parent_id, type: :keyword
         end
       end
 
       def as_indexed_json(_options = {})
-        as_json(only: %i[name description status parent_id])
+        as_json(only: %i[name description is_active parent_id])
       end
     end
 
@@ -29,8 +29,14 @@ module Elasticsearch
                                                         fields: %w[name description] } } }
                             end
 
-        response = __elasticsearch__.search(search_definition)
-        response.records.page(page).per(per_page)
+        begin
+          response = __elasticsearch__.search(search_definition)
+          response.records.page(page).per(per_page)
+        rescue StandardError => e
+          Rails.logger.error "Elasticsearch search failed: #{e.message}"
+          # Fallback to database with same interface
+          Category.page(page).per(per_page)
+        end
       end
     end
   end
