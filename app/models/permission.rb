@@ -7,6 +7,10 @@ class Permission
   field :subject_class, type: String # Example: "Event", "User"
   field :conditions, type: Hash, default: {} # Optional: { "user_id": "user.id" }
 
+  # MongoDB indexes for performance optimization
+  index({ action: 1, subject_class: 1, role_id: 1 }, { unique: true, background: true })
+  index({ role_id: 1 }, { background: true })
+
   belongs_to :role
 
   validates :action, :subject_class, presence: true
