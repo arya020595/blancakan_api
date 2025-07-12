@@ -68,7 +68,7 @@ module ServiceResponseFormatter
     when :update
       :ok
     when :destroy
-      :no_content
+      :ok
     else
       :ok
     end
