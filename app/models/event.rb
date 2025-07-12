@@ -48,20 +48,11 @@ class Event
   # Text search index for title and description
   index({ title: 'text', description: 'text' }, { background: true })
 
-  # Basic validations - complex ones moved to concerns
-  validates :title, :start_date, :start_time, :end_date, :end_time, :description, :location_type, :timezone,
-            presence: true
+  # Database integrity validations - fallback guardrails
   validates :slug, presence: true, uniqueness: true
-  validates :short_id, presence: true, uniqueness: true, length: { in: 6..8 }
-  validates :location_type, inclusion: { in: %w[online offline hybrid] }
-  validates :timezone, inclusion: {
-    in: lambda { |_|
-      # Use direct ActiveSupport::TimeZone during seeding to avoid cache issues
-      ActiveSupport::TimeZone.all.map(&:name)
-    },
-    message: 'is not a valid timezone'
-  }
+  validates :short_id, presence: true, uniqueness: true
   validates :event_type, presence: true
+  validates :organizer, presence: true
 
   # CarrierWave
   mount_uploader :cover_image_url, ImageUploader
@@ -79,18 +70,17 @@ class Event
 
     event :publish do
       transitions from: :draft, to: :published, after: :set_published_at
-      after { send_notification(I18n.t('event.notifications.published', title: title)) }
+      after { notification_service.send_published_notification }
     end
 
     event :cancel do
       transitions from: %i[draft published], to: :cancelled, after: :set_canceled_at
-      after { send_notification(I18n.t('event.notifications.canceled', title: title)) }
+      after { notification_service.send_canceled_notification }
     end
 
     event :reject do
-      before { authorize_admin_action }
       transitions from: %i[draft published], to: :rejected
-      after { send_notification(I18n.t('event.notifications.rejected', title: title)) }
+      after { notification_service.send_rejected_notification }
     end
   end
 
@@ -106,11 +96,12 @@ class Event
     @datetime_service ||= EventDateTimeService.new(self)
   end
 
-  def authorize_admin_action
-    return if User.current.has_role?(:admin) || User.current.has_role?(:superadmin)
+  def notification_service
+    @notification_service ||= EventNotificationService.new(self)
+  end
 
-    errors.add(:base, I18n.t('event.errors.not_authorized'))
-    throw(:abort)
+  def image_service
+    @image_service ||= EventImageService.new(self)
   end
 
   def set_published_at
@@ -127,18 +118,12 @@ class Event
     raise ActiveRecord::Rollback
   end
 
-  def send_notification(message)
-    puts "[NOTIFICATION] #{message}"
-  end
-
   def destroy_previous_image_if_changed
-    return unless cover_image_url_changed?
-
-    Cloudinary::Uploader.destroy(cover_image_url_was.file.public_id) if cover_image_url_was.present?
+    image_service.destroy_previous_image_if_changed
   end
 
   def destroy_current_image
-    Cloudinary::Uploader.destroy(cover_image_url.file.public_id) if cover_image_url.present?
+    image_service.destroy_current_image
   end
 
   def enqueue_reindex_job
