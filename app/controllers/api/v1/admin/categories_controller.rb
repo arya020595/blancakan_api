@@ -3,10 +3,7 @@ module Api
     module Admin
       # Controller for managing categories in the admin namespace.
       # It uses a service object to handle the business logic and formats the response using a custom formatter.
-      class CategoriesController < ApplicationController
-        load_and_authorize_resource
-        include ServiceResponseFormatter
-
+      class CategoriesController < BaseController
         def initialize
           super
           @category_service = Container.resolve('v1.category_service')
