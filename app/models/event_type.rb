@@ -34,11 +34,6 @@ class EventType
   scope :active, -> { where(is_active: true) }
   scope :ordered, -> { order(:sort_order, :name) }
 
-  # Class methods
-  def self.for_selection
-    active.ordered.pluck(:name, :id)
-  end
-
   private
 
   def generate_slug

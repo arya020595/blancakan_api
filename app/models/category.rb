@@ -26,14 +26,10 @@ class Category
   scope :active, -> { where(is_active: true) }
   scope :inactive, -> { where(is_active: false) }
 
-  after_save :clear_events_cache, :enqueue_reindex_job
+  after_save :enqueue_reindex_job
   after_destroy :enqueue_reindex_job
 
   private
-
-  def clear_events_cache
-    DataCacheService.invalidate_category_cache(id)
-  end
 
   def enqueue_reindex_job
     ReindexElasticsearchJob.perform_later(self.class.name, id.to_s)
