@@ -4,10 +4,7 @@ module Api
   module V1
     module Admin
       # Controller for managing permissions in the admin namespace.
-      class PermissionsController < ApplicationController
-        load_and_authorize_resource
-        include ServiceResponseFormatter
-
+      class PermissionsController < BaseController
         def initialize
           super
           @permission_service = Container.resolve('v1.permission_service')

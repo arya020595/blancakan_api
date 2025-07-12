@@ -4,10 +4,7 @@ module Api
   module V1
     module Admin
       # Controller for managing users in the admin namespace.
-      class UsersController < ApplicationController
-        load_and_authorize_resource
-        include ServiceResponseFormatter
-
+      class UsersController < BaseController
         def initialize
           super
           @user_service = Container.resolve('v1.user_service')
