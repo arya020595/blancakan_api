@@ -5,7 +5,7 @@ module V1
   class EventService
     include Dry::Monads[:result]
 
-    def index(query:, page:, per_page:)
+    def index(query: '*', page: 1, per_page: 10)
       events = Event.search(query: query, page: page, per_page: per_page)
       Success(events)
     rescue StandardError => e
