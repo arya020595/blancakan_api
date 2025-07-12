@@ -29,9 +29,10 @@ Rails.application.routes.draw do
         get 'dashboard', to: 'dashboard#stats'
       end
 
+      namespace :user do
+      end
+
       namespace :public do
-        resources :events, only: %i[index show]
-        get 'home', to: 'home#index'
       end
     end
   end
