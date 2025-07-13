@@ -12,19 +12,20 @@ module V1
       Failure(e.message)
     end
 
-    def show(id)
-      event = Event.find(id)
-      if event
-        Success(event)
-      else
-        Failure('Event not found')
-      end
+    def show(event)
+      return Failure('Event not found') unless event
+
+      Success(event)
     rescue StandardError => e
       Failure(e.message)
     end
 
     def create(params)
-      event = Event.new(params)
+      contract = ::V1::Event::EventContract.new
+      result = contract.call(params)
+      return Failure(result.errors.to_h) if result.failure?
+
+      event = Event.new(result.to_h)
       if event.save
         Success(event)
       else
@@ -35,7 +36,11 @@ module V1
     end
 
     def update(event, params)
-      if event.update(params)
+      contract = ::V1::Event::EventContract.new
+      result = contract.call(params)
+      return Failure(result.errors.to_h) if result.failure?
+
+      if event.update(result.to_h)
         Success(event)
       else
         Failure(event.errors.full_messages)
@@ -45,6 +50,8 @@ module V1
     end
 
     def destroy(event)
+      return Failure('Event not found') unless event
+
       if event.destroy
         Success('Event deleted')
       else

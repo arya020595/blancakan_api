@@ -12,13 +12,10 @@ module V1
       Failure(e.message)
     end
 
-    def show(id)
-      user = User.find(id)
-      if user
-        Success(user)
-      else
-        Failure('User not found')
-      end
+    def show(user)
+      return Failure('User not found') unless user
+
+      Success(user)
     rescue StandardError => e
       Failure(e.message)
     end
@@ -45,6 +42,8 @@ module V1
     end
 
     def destroy(user)
+      return Failure('User not found') unless user
+
       if user.destroy
         Success('User deleted')
       else

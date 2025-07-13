@@ -12,13 +12,10 @@ module V1
       Failure(e.message)
     end
 
-    def show(id)
-      permission = Permission.find(id)
-      if permission
-        Success(permission)
-      else
-        Failure('Permission not found')
-      end
+    def show(permission)
+      return Failure('Permission not found') unless permission
+
+      Success(permission)
     rescue StandardError => e
       Failure(e.message)
     end
@@ -45,6 +42,8 @@ module V1
     end
 
     def destroy(permission)
+      return Failure('Permission not found') unless permission
+
       if permission.destroy
         Success('Permission deleted')
       else

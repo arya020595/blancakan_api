@@ -12,13 +12,10 @@ module V1
       Failure(e.message)
     end
 
-    def show(id)
-      role = Role.find(id)
-      if role
-        Success(role)
-      else
-        Failure('Role not found')
-      end
+    def show(role)
+      return Failure('Role not found') unless role
+
+      Success(role)
     rescue StandardError => e
       Failure(e.message)
     end
@@ -45,6 +42,8 @@ module V1
     end
 
     def destroy(role)
+      return Failure('Role not found') unless role
+
       if role.destroy
         Success('Role deleted')
       else

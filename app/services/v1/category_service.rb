@@ -6,25 +6,25 @@ module V1
     include Dry::Monads[:result]
 
     def index(query: '*', page: 1, per_page: 10)
-      categories = Category.search(query: query, page: page, per_page: per_page)
+      categories = ::Category.search(query: query, page: page, per_page: per_page)
       Success(categories)
     rescue StandardError => e
       Failure(e.message)
     end
 
-    def show(id)
-      category = Category.find(id)
-      if category
-        Success(category)
-      else
-        Failure('Category not found')
-      end
+    def show(category)
+      return Failure('Category not found') unless category
+
+      Success(category)
     rescue StandardError => e
       Failure(e.message)
     end
 
     def create(params)
-      category = Category.new(params)
+      form = ::V1::CategoryForm.new(params)
+      return Failure(form.errors.to_hash) unless form.valid?
+
+      category = ::Category.new(form.attributes)
       if category.save
         Success(category)
       else
@@ -35,7 +35,10 @@ module V1
     end
 
     def update(category, params)
-      if category.update(params)
+      form = ::V1::CategoryForm.new(params)
+      return Failure(form.errors.to_hash) unless form.valid?
+
+      if category.update(form.attributes)
         Success(category)
       else
         Failure(category.errors.full_messages)
@@ -45,8 +48,10 @@ module V1
     end
 
     def destroy(category)
+      return Failure('Category not found') unless category
+
       if category.destroy
-        Success('Category deleted')
+        Success(category)
       else
         Failure(category.errors.full_messages)
       end
