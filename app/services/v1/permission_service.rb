@@ -6,39 +6,37 @@ module V1
     include Dry::Monads[:result]
 
     def index(query: '*', page: 1, per_page: 10)
-      permissions = Permission.search(query: query, page: page, per_page: per_page)
+      permissions = ::Permission.search(query: query, page: page, per_page: per_page)
       Success(permissions)
-    rescue StandardError => e
-      Failure(e.message)
     end
 
     def show(permission)
       return Failure('Permission not found') unless permission
 
       Success(permission)
-    rescue StandardError => e
-      Failure(e.message)
     end
 
     def create(params)
-      permission = Permission.new(params)
+      form = ::V1::Permission::PermissionForm.new(params)
+      return Failure(form.errors.to_hash) unless form.valid?
+
+      permission = ::Permission.new(form.attributes)
       if permission.save
         Success(permission)
       else
         Failure(permission.errors.full_messages)
       end
-    rescue StandardError => e
-      Failure(e.message)
     end
 
     def update(permission, params)
-      if permission.update(params)
+      form = ::V1::Permission::PermissionForm.new(params)
+      return Failure(form.errors.to_hash) unless form.valid?
+
+      if permission.update(form.attributes)
         Success(permission)
       else
         Failure(permission.errors.full_messages)
       end
-    rescue StandardError => e
-      Failure(e.message)
     end
 
     def destroy(permission)
@@ -49,8 +47,6 @@ module V1
       else
         Failure(permission.errors.full_messages)
       end
-    rescue StandardError => e
-      Failure(e.message)
     end
   end
 end

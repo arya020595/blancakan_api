@@ -6,39 +6,37 @@ module V1
     include Dry::Monads[:result]
 
     def index(query: '*', page: 1, per_page: 10)
-      roles = Role.search(query: query, page: page, per_page: per_page)
+      roles = ::Role.search(query: query, page: page, per_page: per_page)
       Success(roles)
-    rescue StandardError => e
-      Failure(e.message)
     end
 
     def show(role)
       return Failure('Role not found') unless role
 
       Success(role)
-    rescue StandardError => e
-      Failure(e.message)
     end
 
     def create(params)
-      role = Role.new(params)
+      form = ::V1::Role::RoleForm.new(params)
+      return Failure(form.errors.to_hash) unless form.valid?
+
+      role = ::Role.new(form.attributes)
       if role.save
         Success(role)
       else
         Failure(role.errors.full_messages)
       end
-    rescue StandardError => e
-      Failure(e.message)
     end
 
     def update(role, params)
-      if role.update(params)
+      form = ::V1::Role::RoleForm.new(params)
+      return Failure(form.errors.to_hash) unless form.valid?
+
+      if role.update(form.attributes)
         Success(role)
       else
         Failure(role.errors.full_messages)
       end
-    rescue StandardError => e
-      Failure(e.message)
     end
 
     def destroy(role)
@@ -49,8 +47,6 @@ module V1
       else
         Failure(role.errors.full_messages)
       end
-    rescue StandardError => e
-      Failure(e.message)
     end
   end
 end

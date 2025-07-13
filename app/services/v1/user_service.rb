@@ -6,39 +6,37 @@ module V1
     include Dry::Monads[:result]
 
     def index(query: '*', page: 1, per_page: 10)
-      users = User.search(query: query, page: page, per_page: per_page)
+      users = ::User.search(query: query, page: page, per_page: per_page)
       Success(users)
-    rescue StandardError => e
-      Failure(e.message)
     end
 
     def show(user)
       return Failure('User not found') unless user
 
       Success(user)
-    rescue StandardError => e
-      Failure(e.message)
     end
 
     def create(params)
-      user = User.new(params)
+      form = ::V1::User::UserForm.new(params)
+      return Failure(form.errors.to_hash) unless form.valid?
+
+      user = ::User.new(form.attributes)
       if user.save
         Success(user)
       else
         Failure(user.errors.full_messages)
       end
-    rescue StandardError => e
-      Failure(e.message)
     end
 
     def update(user, params)
-      if user.update(params)
+      form = ::V1::User::UserForm.new(params)
+      return Failure(form.errors.to_hash) unless form.valid?
+
+      if user.update(form.attributes)
         Success(user)
       else
         Failure(user.errors.full_messages)
       end
-    rescue StandardError => e
-      Failure(e.message)
     end
 
     def destroy(user)
@@ -49,8 +47,6 @@ module V1
       else
         Failure(user.errors.full_messages)
       end
-    rescue StandardError => e
-      Failure(e.message)
     end
   end
 end

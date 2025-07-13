@@ -38,8 +38,23 @@ module Api
         private
 
         def event_params
-          params.require(:event).permit(:title, :description, :location, :starts_at, :ends_at, :category_id, :user_id,
-                                        :organizer, :image)
+          params.require(:event).permit(
+            :title,
+            :description,
+            :start_date,
+            :start_time,
+            :end_date,
+            :end_time,
+            :location_type,
+            :timezone,
+            :event_type_id,
+            :organizer_id,
+            :cover_image_url,
+            :status,
+            :is_paid,
+            location: {},
+            category_ids: []
+          )
         end
       end
     end
