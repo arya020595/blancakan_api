@@ -43,11 +43,5 @@ module V1
         parent_id: parent_id
       }
     end
-
-    def save
-      return false unless valid?
-
-      Category.create(attributes)
-    end
   end
 end
