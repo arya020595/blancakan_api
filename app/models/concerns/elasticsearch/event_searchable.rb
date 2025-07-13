@@ -9,18 +9,37 @@ module Elasticsearch
       settings do
         mappings dynamic: false do
           indexes :title, type: :text, analyzer: 'standard'
+          indexes :slug, type: :keyword
+          indexes :short_id, type: :keyword
           indexes :description, type: :text, analyzer: 'standard'
-          indexes :location, type: :text, analyzer: 'standard'
-          indexes :starts_at, type: :date
-          indexes :ends_at, type: :date
-          indexes :category_id, type: :keyword
-          indexes :user_id, type: :keyword
-          indexes :organizer, type: :text, analyzer: 'standard'
+          indexes :cover_image_url, type: :keyword
+          indexes :status, type: :keyword
+          indexes :location_type, type: :keyword
+          indexes :location, type: :object, enabled: true
+          indexes :start_date, type: :date
+          indexes :start_time, type: :date
+          indexes :end_date, type: :date
+          indexes :end_time, type: :date
+          indexes :timezone, type: :keyword
+          indexes :is_paid, type: :boolean
+          indexes :published_at, type: :date
+          indexes :canceled_at, type: :date
+          indexes :organizer_id, type: :keyword
+          indexes :event_type_id, type: :keyword
+          indexes :category_ids, type: :keyword
+          # Add more fields as needed
         end
       end
 
       def as_indexed_json(_options = {})
-        as_json(only: %i[title description location starts_at ends_at category_id user_id organizer])
+        attributes = as_json(only: %i[
+                               title slug short_id description status location_type location start_date start_time end_date end_time timezone is_paid published_at canceled_at organizer_id event_type_id category_ids
+                             ])
+
+        # Handle CarrierWave uploader for cover_image_url
+        attributes[:cover_image_url] = cover_image_url.present? ? cover_image_url.url : nil
+
+        attributes
       end
     end
 
@@ -30,7 +49,8 @@ module Elasticsearch
                               { query: { match_all: {} } }
                             else
                               { query: { multi_match: { query: query,
-                                                        fields: %w[title description location organizer] } } }
+                                                        fields: %w[title description location_type location status slug
+                                                                   short_id] } } }
                             end
 
         response = __elasticsearch__.search(search_definition)

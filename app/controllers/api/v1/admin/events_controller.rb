@@ -4,7 +4,7 @@ module Api
   module V1
     module Admin
       # Controller for managing events in the admin namespace.
-      class EventsController < BaseController
+      class EventsController < Api::V1::Admin::BaseController
         def initialize
           super
           @event_service = Container.resolve('v1.event_service')

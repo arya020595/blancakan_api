@@ -4,7 +4,7 @@ require 'dry/validation'
 
 module V1
   module Category
-    class CategoryContract < Dry::Validation::Contract
+    class Contract < Dry::Validation::Contract
       params do
         required(:name).filled(:string)
         optional(:description).maybe(:string)

@@ -8,8 +8,8 @@ class Event
   include Elasticsearch::EventSearchable
 
   # Concerns for separation of concerns
-  include EventSlugGenerator
-  include EventDateTimeValidations
+  include Events::SlugGenerator
+  include Events::DateTimeValidations
 
   # Fields - only data definition
   field :title, type: String
@@ -93,15 +93,15 @@ class Event
   private
 
   def datetime_service
-    @datetime_service ||= EventDateTimeService.new(self)
+    @datetime_service ||= V1::Events::DateTimeService.new(self)
   end
 
   def notification_service
-    @notification_service ||= EventNotificationService.new(self)
+    @notification_service ||= V1::Events::NotificationService.new(self)
   end
 
   def image_service
-    @image_service ||= EventImageService.new(self)
+    @image_service ||= V1::Events::ImageService.new(self)
   end
 
   def set_published_at

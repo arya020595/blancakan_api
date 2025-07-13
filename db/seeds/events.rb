@@ -11,41 +11,59 @@ organizer_user1 = User.find_by(email: 'organizer@example.com')
 organizer_user2 = User.find_by(email: 'organizer2@example.com')
 
 # Create Events
+# Note: location is now a Hash, organizer is a reference, categories is HABTM
+# Use start_date, start_time, end_date, end_time, and other new fields
+
 events = [
   {
     title: 'Tech Conference 2025',
     description: 'A conference about the latest in technology.',
-    location: 'San Francisco, CA',
-    starts_at: Time.current + 1.month,
-    ends_at: Time.current + 1.month + 1.day,
-    category: conference_category,
-    user: organizer_user1,
-    organizer: 'Organizer One'
+    location_type: 'offline',
+    location: { city: 'San Francisco', state: 'CA', address: '123 Tech St.' },
+    start_date: (Time.current + 1.month).to_date,
+    start_time: (Time.current + 1.month).change(hour: 9, min: 0),
+    end_date: (Time.current + 1.month + 1.day).to_date,
+    end_time: (Time.current + 1.month + 1.day).change(hour: 17, min: 0),
+    timezone: 'America/Los_Angeles',
+    is_paid: false,
+    organizer: organizer_user1,
+    event_type: EventType.first,
+    categories: [conference_category]
   },
   {
     title: 'Ruby Workshop',
     description: 'A workshop to learn Ruby programming.',
-    location: 'New York, NY',
-    starts_at: Time.current + 2.months,
-    ends_at: Time.current + 2.months + 1.day,
-    category: workshop_category,
-    user: organizer_user2,
-    organizer: 'Organizer Two'
+    location_type: 'offline',
+    location: { city: 'New York', state: 'NY', address: '456 Ruby Ave.' },
+    start_date: (Time.current + 2.months).to_date,
+    start_time: (Time.current + 2.months).change(hour: 10, min: 0),
+    end_date: (Time.current + 2.months + 1.day).to_date,
+    end_time: (Time.current + 2.months + 1.day).change(hour: 16, min: 0),
+    timezone: 'America/New_York',
+    is_paid: true,
+    organizer: organizer_user2,
+    event_type: EventType.first,
+    categories: [workshop_category]
   },
   {
     title: 'Startup Meetup',
     description: 'A meetup for startup enthusiasts.',
-    location: 'Los Angeles, CA',
-    starts_at: Time.current + 3.months,
-    ends_at: Time.current + 3.months + 1.day,
-    category: meetup_category,
-    user: organizer_user1,
-    organizer: 'Organizer One'
+    location_type: 'offline',
+    location: { city: 'Los Angeles', state: 'CA', address: '789 Startup Blvd.' },
+    start_date: (Time.current + 3.months).to_date,
+    start_time: (Time.current + 3.months).change(hour: 18, min: 0),
+    end_date: (Time.current + 3.months + 1.day).to_date,
+    end_time: (Time.current + 3.months + 1.day).change(hour: 21, min: 0),
+    timezone: 'America/Los_Angeles',
+    is_paid: false,
+    organizer: organizer_user1,
+    event_type: EventType.first,
+    categories: [meetup_category]
   }
 ]
 
-events.each do |event|
-  Event.create!(event)
+events.each do |event_attrs|
+  Event.create!(event_attrs)
 end
 
 puts 'Events seeding completed successfully!'

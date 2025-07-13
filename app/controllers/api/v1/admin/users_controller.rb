@@ -4,7 +4,7 @@ module Api
   module V1
     module Admin
       # Controller for managing users in the admin namespace.
-      class UsersController < BaseController
+      class UsersController < Api::V1::Admin::BaseController
         def initialize
           super
           @user_service = Container.resolve('v1.user_service')

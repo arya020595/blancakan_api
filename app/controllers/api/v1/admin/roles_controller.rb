@@ -4,7 +4,7 @@ module Api
   module V1
     module Admin
       # Controller for managing roles in the admin namespace.
-      class RolesController < BaseController
+      class RolesController < Api::V1::Admin::BaseController
         def initialize
           super
           @role_service = Container.resolve('v1.role_service')
