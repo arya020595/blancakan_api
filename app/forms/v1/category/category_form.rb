@@ -9,7 +9,7 @@ module V1
 
       def initialize(params = {})
         super(params)
-        @contract = ::V1::Category::Contract.new
+        @contract = ::V1::Category::CategoryContract.new
       end
 
       def valid?

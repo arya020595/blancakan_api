@@ -4,7 +4,7 @@ require 'dry/validation'
 
 module V1
   module Event
-    class Contract < Dry::Validation::Contract
+    class EventContract < Dry::Validation::Contract
       params do
         required(:title).filled(:string)
         required(:description).filled(:string)

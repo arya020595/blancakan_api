@@ -2,7 +2,7 @@
 
 module V1
   module Permission
-    class Contract < Dry::Validation::Contract
+    class PermissionContract < Dry::Validation::Contract
       params do
         required(:name).filled(:string)
         optional(:description).maybe(:string)

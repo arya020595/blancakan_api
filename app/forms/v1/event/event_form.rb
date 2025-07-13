@@ -9,7 +9,7 @@ module V1
 
       def initialize(params = {})
         super(params)
-        @contract = ::V1::Event::Contract.new
+        @contract = ::V1::Event::EventContract.new
       end
 
       def valid?

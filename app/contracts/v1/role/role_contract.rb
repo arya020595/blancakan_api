@@ -2,7 +2,7 @@
 
 module V1
   module Role
-    class Contract < Dry::Validation::Contract
+    class RoleContract < Dry::Validation::Contract
       params do
         required(:name).filled(:string)
         optional(:description).maybe(:string)
