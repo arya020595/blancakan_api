@@ -76,10 +76,22 @@ namespace :elasticsearch do
 
     # Scan all models in the app
     Rails.application.eager_load!
-    ObjectSpace.each_object(Class).select do |klass|
-      next unless klass < ActiveRecord::Base || (defined?(Mongoid::Document) && klass.include?(Mongoid::Document))
+
+    # Look specifically in our app models directory
+    Dir.glob(Rails.root.join('app', 'models', '**', '*.rb')).each do |file|
+      # Extract the class name from the file path
+      relative_path = file.sub(Rails.root.join('app', 'models').to_s + '/', '')
+      class_name = relative_path.sub(/\.rb$/, '').camelize.gsub('/', '::')
+
+      # Skip concerns
+      next if relative_path.include?('concerns/')
+
+      klass = class_name.constantize
 
       models << klass if klass.respond_to?(:__elasticsearch__)
+    rescue NameError, LoadError => e
+      # Skip files that can't be loaded as classes
+      puts "  ⚠️  Skipping #{relative_path}: #{e.message}" if ENV['DEBUG']
     end
 
     models.uniq
