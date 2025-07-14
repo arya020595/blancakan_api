@@ -253,6 +253,11 @@ GEM
       mongoid
     language_server-protocol (3.17.0.4)
     logger (1.6.5)
+    lograge (0.14.0)
+      actionpack (>= 4)
+      activesupport (>= 4)
+      railties (>= 4)
+      request_store (~> 1.0)
     loofah (2.24.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
@@ -380,6 +385,8 @@ GEM
     regexp_parser (2.10.0)
     reline (0.6.0)
       io-console (~> 0.5)
+    request_store (1.7.0)
+      rack (>= 1.4)
     rspec-core (3.13.3)
       rspec-support (~> 3.13.0)
     rspec-expectations (3.13.3)
@@ -485,6 +492,7 @@ DEPENDENCIES
   kaminari
   kaminari-actionview
   kaminari-mongoid
+  lograge (~> 0.14.0)
   mongoid
   mongoid-locker (~> 2.1)
   omniauth

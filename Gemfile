@@ -41,6 +41,7 @@ gem 'elastic-transport', git: 'git@github.com:elastic/elastic-transport-ruby.git
 gem 'kaminari'
 gem 'kaminari-actionview'
 gem 'kaminari-mongoid'
+gem 'lograge', '~> 0.14.0'
 gem 'mongoid'
 gem 'mongoid-locker', '~> 2.1'
 gem 'omniauth'
