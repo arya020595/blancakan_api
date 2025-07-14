@@ -19,6 +19,7 @@ gem 'puma', '>= 5.0'
 
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 gem 'bcrypt', '~> 3.1.7'
+gem 'jwt', '~> 2.7'
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: %i[windows jruby]
@@ -31,8 +32,6 @@ gem 'cancancan', '~> 3.5'
 gem 'carrierwave', '~> 3.1', '>= 3.1.1'
 gem 'carrierwave-mongoid', require: 'carrierwave/mongoid'
 gem 'cloudinary', '~> 2.2'
-gem 'devise' # Authentication
-gem 'devise_token_auth' # Token-based authentication for APIs
 gem 'dry-container', '~> 0.11.0'
 gem 'dry-monads', '~> 1.7', '>= 1.7.1'
 gem 'dry-validation'
