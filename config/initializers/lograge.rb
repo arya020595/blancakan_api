@@ -7,7 +7,9 @@ Rails.application.configure do
     {
       host: controller.request.host,
       user_id: controller.instance_variable_get(:@current_user)&.id,
-      request_id: controller.request.uuid
+      request_id: controller.request.uuid,
+      error_message: controller.request.env['lograge.error_message'],
+      errors: controller.request.env['lograge.errors']
     }
   end
 
@@ -18,7 +20,9 @@ Rails.application.configure do
       user_id: event.payload[:user_id],
       params: event.payload[:params].except('controller', 'action'),
       tags: ['api'],
-      host: event.payload[:host]
+      host: event.payload[:host],
+      error_message: event.payload[:error_message],
+      errors: event.payload[:errors]
     }
   }
 end

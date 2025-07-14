@@ -43,6 +43,10 @@ module ServiceResponseFormatter
   end
 
   def render_error_response(result, resource, action)
+    # Set error details for Lograge
+    request.env['lograge.error_message'] = I18n.t("#{resource}.#{action}.error")
+    request.env['lograge.errors'] = result.failure
+
     render json: {
       status: 'error',
       message: I18n.t("#{resource}.#{action}.error"),
