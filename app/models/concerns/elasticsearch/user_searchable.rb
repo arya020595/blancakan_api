@@ -10,13 +10,11 @@ module Elasticsearch
         mappings dynamic: false do
           indexes :email, type: :text, analyzer: 'standard'
           indexes :name, type: :text, analyzer: 'standard'
-          indexes :provider, type: :keyword
-          indexes :uid, type: :keyword
         end
       end
 
       def as_indexed_json(_options = {})
-        as_json(only: %i[email name provider uid])
+        as_json(only: %i[email name])
       end
     end
 
@@ -26,7 +24,7 @@ module Elasticsearch
                               { query: { match_all: {} } }
                             else
                               { query: { multi_match: { query: query,
-                                                        fields: %w[email name provider uid] } } }
+                                                        fields: %w[email name] } } }
                             end
 
         response = __elasticsearch__.search(search_definition)

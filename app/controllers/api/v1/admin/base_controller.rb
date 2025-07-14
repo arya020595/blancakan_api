@@ -5,8 +5,8 @@ module Api
     module Admin
       class BaseController < Api::BaseController
         include ServiceResponseFormatter
+        include Authenticatable
 
-        before_action :authenticate_user!
         load_and_authorize_resource
       end
     end
