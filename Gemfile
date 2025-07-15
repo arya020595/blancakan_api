@@ -59,6 +59,7 @@ group :development, :test do
   gem 'brakeman', '~> 6.1', '>= 6.1.2'
   gem 'byebug', '~> 11.1', '>= 11.1.3'
   gem 'debug', platforms: %i[mri windows]
+  gem 'dotenv-rails'
   gem 'rubocop', '~> 1.71', '>= 1.71.2'
 
   gem 'database_cleaner-mongoid' # Clean test DB

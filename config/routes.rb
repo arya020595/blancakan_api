@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   namespace :auth do
     post 'sign_in', to: 'auth#sign_in'
     post 'register', to: 'auth#register'
-    post 'sign_out', to: 'auth#sign_out'
+    delete 'sign_out', to: 'auth#sign_out'
   end
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
