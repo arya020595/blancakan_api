@@ -8,4 +8,5 @@ class Container
   register('v1.user_service') { V1::UserService.new }
   register('v1.event_service') { V1::EventService.new }
   register('v1.category_service') { V1::CategoryService.new }
+  register('v1.event_type_service') { V1::EventTypeService.new }
 end

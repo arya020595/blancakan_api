@@ -3,7 +3,7 @@ Rails.application.routes.draw do
   mount Rswag::Api::Engine => '/api-docs'
 
   namespace :auth do
-    post 'login', to: 'auth#login'
+    post 'sign_in', to: 'auth#sign_in'
   end
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
@@ -18,6 +18,7 @@ Rails.application.routes.draw do
         resources :roles
         resources :permissions
         resources :categories
+        resources :event_types
         get 'dashboard', to: 'dashboard#stats'
       end
 

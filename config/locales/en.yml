@@ -123,6 +123,22 @@ en:
     destroy:
       success: "Category deleted successfully"
       error: "Failed to delete category"
+  event_types:
+    index:
+      success: "Event types fetched successfully"
+      error: "Failed to fetch event types"
+    show:
+      success: "Event type found"
+      error: "Event type not found"
+    create:
+      success: "Event type created successfully"
+      error: "Failed to create event type"
+    update:
+      success: "Event type updated successfully"
+      error: "Failed to update event type"
+    destroy:
+      success: "Event type deleted successfully"
+      error: "Failed to delete event type"
   mongoid:
     errors:
       models:

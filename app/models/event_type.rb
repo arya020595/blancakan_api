@@ -34,6 +34,16 @@ class EventType
   scope :active, -> { where(is_active: true) }
   scope :ordered, -> { order(:sort_order, :name) }
 
+  # Search functionality using MongoDB text search
+  def self.search(query: '*', page: 1, per_page: 10)
+    if query == '*' || query.blank?
+      page(page).per(per_page)
+    else
+      where('$text' => { '$search' => query })
+        .page(page).per(per_page)
+    end
+  end
+
   private
 
   def generate_slug
