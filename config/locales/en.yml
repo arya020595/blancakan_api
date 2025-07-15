@@ -85,6 +85,12 @@ en:
     sign_in:
       success: "Sign in successful"
       error: "Invalid email or password"
+    register:
+      success: "Registration successful"
+      error: "Registration failed"
+    sign_out:
+      success: "Successfully signed out"
+      error: "Sign out failed"
   events:
     index:
       success: "Events fetched successfully"
