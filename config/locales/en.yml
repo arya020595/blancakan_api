@@ -82,6 +82,9 @@ en:
     assign_role:
       success: "Role assigned successfully"
       error: "Failed to assign role"
+    sign_in:
+      success: "Sign in successful"
+      error: "Invalid email or password"
   events:
     index:
       success: "Events fetched successfully"

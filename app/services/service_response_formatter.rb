@@ -57,7 +57,12 @@ module ServiceResponseFormatter
   def serialize_data(data, serializer)
     return data unless serializer
 
-    cached_serializer(serializer).new(data).as_json
+    if serializer.is_a?(Array) && serializer.size == 2
+      klass, options = serializer
+      klass.new(data, options).as_json
+    else
+      cached_serializer(serializer).new(data).as_json
+    end
   end
 
   def cached_serializer(serializer)
