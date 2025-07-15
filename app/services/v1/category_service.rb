@@ -11,7 +11,7 @@ module V1
     end
 
     def show(category)
-      return Failure('Category not found') unless category
+      return Failure(nil) unless category
 
       Success(category)
     end
@@ -40,7 +40,7 @@ module V1
     end
 
     def destroy(category)
-      return Failure('Category not found') unless category
+      return Failure(nil) unless category
 
       if category.destroy
         Success(category)

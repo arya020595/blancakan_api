@@ -11,7 +11,7 @@ module V1
     end
 
     def show(permission)
-      return Failure('Permission not found') unless permission
+      return Failure(nil) unless permission
 
       Success(permission)
     end
@@ -40,10 +40,10 @@ module V1
     end
 
     def destroy(permission)
-      return Failure('Permission not found') unless permission
+      return Failure(nil) unless permission
 
       if permission.destroy
-        Success('Permission deleted')
+        Success(permission)
       else
         Failure(permission.errors.full_messages)
       end

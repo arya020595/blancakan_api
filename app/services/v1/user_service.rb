@@ -11,7 +11,7 @@ module V1
     end
 
     def show(user)
-      return Failure('User not found') unless user
+      return Failure(nil) unless user
 
       Success(user)
     end
@@ -40,10 +40,10 @@ module V1
     end
 
     def destroy(user)
-      return Failure('User not found') unless user
+      return Failure(nil) unless user
 
       if user.destroy
-        Success('User deleted')
+        Success(user)
       else
         Failure(user.errors.full_messages)
       end

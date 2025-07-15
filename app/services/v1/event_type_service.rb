@@ -11,7 +11,7 @@ module V1
     end
 
     def show(event_type)
-      return Failure('Event type not found') unless event_type
+      return Failure(nil) unless event_type
 
       Success(event_type)
     end
@@ -40,10 +40,10 @@ module V1
     end
 
     def destroy(event_type)
-      return Failure('Event type not found') unless event_type
+      return Failure(nil) unless event_type
 
       if event_type.destroy
-        Success('Event type deleted')
+        Success(event_type)
       else
         Failure(event_type.errors.full_messages)
       end

@@ -11,7 +11,7 @@ module V1
     end
 
     def show(role)
-      return Failure('Role not found') unless role
+      return Failure(nil) unless role
 
       Success(role)
     end
@@ -40,10 +40,10 @@ module V1
     end
 
     def destroy(role)
-      return Failure('Role not found') unless role
+      return Failure(nil) unless role
 
       if role.destroy
-        Success('Role deleted')
+        Success(role)
       else
         Failure(role.errors.full_messages)
       end

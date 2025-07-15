@@ -11,7 +11,7 @@ module V1
     end
 
     def show(event)
-      return Failure('Event not found') unless event
+      return Failure(nil) unless event
 
       Success(event)
     end
@@ -40,10 +40,10 @@ module V1
     end
 
     def destroy(event)
-      return Failure('Event not found') unless event
+      return Failure(nil) unless event
 
       if event.destroy
-        Success('Event deleted')
+        Success(event)
       else
         Failure(event.errors.full_messages)
       end
