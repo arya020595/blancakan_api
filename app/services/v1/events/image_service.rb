@@ -8,16 +8,16 @@ module V1
       end
 
       def destroy_previous_image_if_changed
-        return unless @event.cover_image_url_changed?
-        return unless @event.cover_image_url_was.present?
+        return unless @event.cover_image_changed?
+        return unless @event.cover_image_was.present?
 
-        destroy_image(@event.cover_image_url_was)
+        destroy_image(@event.cover_image_was)
       end
 
       def destroy_current_image
-        return unless @event.cover_image_url.present?
+        return unless @event.cover_image.present?
 
-        destroy_image(@event.cover_image_url)
+        destroy_image(@event.cover_image)
       end
 
       private

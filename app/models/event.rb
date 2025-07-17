@@ -16,7 +16,7 @@ class Event
   field :slug, type: String
   field :short_id, type: String
   field :description, type: String
-  field :cover_image_url, type: String
+  field :cover_image, type: String
   field :status, type: String, default: 'draft'
   field :location_type, type: String
   field :location, type: Hash
@@ -55,7 +55,7 @@ class Event
   validates :organizer, presence: true
 
   # CarrierWave
-  mount_uploader :cover_image_url, ImageUploader
+  mount_uploader :cover_image, ImageUploader
 
   # Callbacks
   before_update :destroy_previous_image_if_changed

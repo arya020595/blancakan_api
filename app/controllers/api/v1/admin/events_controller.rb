@@ -49,7 +49,7 @@ module Api
             :timezone,
             :event_type_id,
             :organizer_id,
-            :cover_image_url,
+            :cover_image,
             :status,
             :is_paid,
             location: {},

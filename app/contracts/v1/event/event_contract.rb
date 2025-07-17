@@ -16,7 +16,7 @@ module V1
         required(:timezone).filled(:string)
         required(:event_type_id).filled
         required(:organizer_id).filled
-        optional(:cover_image_url).filled(:string)
+        optional(:cover_image)
         optional(:status).filled(:string)
         optional(:location).filled(:hash)
         optional(:is_paid).filled(:bool)
@@ -49,6 +49,35 @@ module V1
         end
       end
 
+      rule(:cover_image) do
+        if key? && value
+          # Allow string URLs
+          if value.is_a?(String)
+            # Basic URL validation if it's a string
+            unless value.match?(/\A#{URI::DEFAULT_PARSER.make_regexp(%w[http https])}\z/) || value.blank?
+              key.failure('must be a valid URL if provided as string')
+            end
+          # Allow file uploads (ActionDispatch::Http::UploadedFile)
+          elsif defined?(ActionDispatch::Http::UploadedFile) && value.is_a?(ActionDispatch::Http::UploadedFile)
+            # Validate file type
+            allowed_types = %w[image/jpeg image/jpg image/png image/gif image/webp]
+            unless allowed_types.include?(value.content_type)
+              key.failure('must be a valid image file (JPEG, PNG, GIF, WebP)')
+            end
+
+            # Validate file size (5MB limit)
+            max_size = 5.megabytes
+            key.failure('file size must be less than 5MB') if value.size > max_size
+          # Allow other file-like objects (for testing or other upload methods)
+          elsif value.respond_to?(:read) && value.respond_to?(:original_filename)
+            # This covers other file upload scenarios
+            # File validation would happen at the CarrierWave level
+          else
+            key.failure('must be either a valid URL string or an uploaded file')
+          end
+        end
+      end
+
       rule(:start_date, :end_date, :start_time, :end_time) do
         if values[:start_date] && values[:end_date] && values[:start_time] && values[:end_time]
           start_datetime = combine_date_time(values[:start_date], values[:start_time])
@@ -66,11 +95,11 @@ module V1
       end
 
       rule(:organizer_id) do
-        key.failure('organizer does not exist') if key? && value.present? && !User.where(id: value).exists?
+        key.failure('organizer does not exist') if key? && value.present? && !::User.where(id: value).exists?
       end
 
       rule(:event_type_id) do
-        key.failure('event type does not exist') if key? && value.present? && !EventType.where(id: value).exists?
+        key.failure('event type does not exist') if key? && value.present? && !::EventType.where(id: value).exists?
       end
 
       rule(:category_ids) do
