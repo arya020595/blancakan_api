@@ -65,6 +65,14 @@ module V1
         end
       end
 
+      rule(:organizer_id) do
+        key.failure('organizer does not exist') if key? && value.present? && !User.where(id: value).exists?
+      end
+
+      rule(:event_type_id) do
+        key.failure('event type does not exist') if key? && value.present? && !EventType.where(id: value).exists?
+      end
+
       rule(:category_ids) do
         if key? && value && value.is_a?(Array)
           key.failure('must have at least one category') if value.empty?
