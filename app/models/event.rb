@@ -30,7 +30,7 @@ class Event
   field :canceled_at, type: Time
 
   # Associations
-  belongs_to :organizer, class_name: 'User'
+  belongs_to :organizer, class_name: 'Organizer'
   belongs_to :event_type
   has_and_belongs_to_many :categories
 
