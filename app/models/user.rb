@@ -42,7 +42,8 @@ class User
   index({ email: 1 }, { name: 'email_index', unique: true, background: true })
 
   # Associations
-  has_many :events
+  has_one :organizer, dependent: :destroy
+  has_many :events, through: :organizer
   belongs_to :role, optional: true
 
   # Callbacks
