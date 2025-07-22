@@ -43,8 +43,12 @@ class User
 
   # Associations
   has_one :organizer, dependent: :destroy
-  has_many :events, through: :organizer
   belongs_to :role, optional: true
+
+  # Events through organizer (delegate method)
+  def events
+    organizer&.events || Event.none
+  end
 
   # Callbacks
   before_validation :set_default_role, on: :create
