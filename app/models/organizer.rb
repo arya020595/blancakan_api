@@ -9,7 +9,6 @@ class Organizer
   include Organizers::ProfileMethods
   include StatusMethods
   include Organizers::EventMethods
-  include Organizers::SearchMethods
 
   # Fields
   field :handle, type: String
