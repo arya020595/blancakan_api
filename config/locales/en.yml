@@ -91,6 +91,22 @@ en:
     sign_out:
       success: "Successfully signed out"
       error: "Sign out failed"
+  organizers:
+    index:
+      success: "Organizers fetched successfully"
+      error: "Failed to fetch organizers"
+    show:
+      success: "Organizer found"
+      error: "Organizer not found"
+    create:
+      success: "Organizer created successfully"
+      error: "Failed to create organizer"
+    update:
+      success: "Organizer updated successfully"
+      error: "Failed to update organizer"
+    destroy:
+      success: "Organizer deleted successfully"
+      error: "Failed to delete organizer"
   events:
     index:
       success: "Events fetched successfully"
