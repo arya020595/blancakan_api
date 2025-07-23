@@ -3,9 +3,13 @@
 class Organizer
   include Mongoid::Document
   include Mongoid::Timestamps
+  include Elasticsearch::OrganizerSearchable
 
   # Concerns for separation of concerns
   include Organizers::ProfileMethods
+  include StatusMethods
+  include Organizers::EventMethods
+  include Organizers::SearchMethods
 
   # Fields
   field :handle, type: String
@@ -54,6 +58,8 @@ class Organizer
   # Callbacks
   before_update :destroy_previous_avatar_if_changed
   before_destroy :destroy_current_avatar
+  after_save :enqueue_reindex_job
+  after_destroy :enqueue_reindex_job
 
   private
 
@@ -67,5 +73,9 @@ class Organizer
 
   def destroy_current_avatar
     image_service.destroy_current_image
+  end
+
+  def enqueue_reindex_job
+    ReindexElasticsearchJob.perform_later(self.class.name, id.to_s)
   end
 end
