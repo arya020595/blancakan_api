@@ -8,3 +8,8 @@ CarrierWave.configure do |config|
     api_secret: Rails.application.credentials.dig(:cloudinary, :api_secret)
   }
 end
+
+# NOTE: The Cloudinary CarrierWave warning is a known compatibility issue
+# between CarrierWave 3.x and Cloudinary 2.x. It's harmless and doesn't
+# affect functionality. The warning will be resolved when Cloudinary
+# releases an updated version compatible with CarrierWave 3.x.
