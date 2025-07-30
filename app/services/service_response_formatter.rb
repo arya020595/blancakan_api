@@ -10,13 +10,13 @@ module ServiceResponseFormatter
   # @param resource [Symbol] The resource symbol used for I18n translation.
   # @param action [Symbol] The action symbol used for I18n translation and HTTP status determination.
   # @param serializer [Class, nil] The optional serializer class for formatting the response data.
-  def format_response(result:, resource:, action:, serializer: nil)
+  def format_response(result:, resource:, action:, serializer: nil, status: nil)
     validate_result_pattern(result)
 
     if result.success?
-      render_success_response(result, resource, action, serializer)
+      render_success_response(result, resource, action, serializer, status)
     else
-      render_error_response(result, resource, action)
+      render_error_response(result, resource, action, status)
     end
   end
 
@@ -31,7 +31,7 @@ module ServiceResponseFormatter
     raise ArgumentError, "Result object is missing required methods: #{missing_methods.join(', ')}"
   end
 
-  def render_success_response(result, resource, action, serializer)
+  def render_success_response(result, resource, action, serializer, status)
     data = result.value!
     response = {
       status: 'success',
@@ -39,10 +39,10 @@ module ServiceResponseFormatter
       data: serialize_data(data, serializer)
     }
     response[:meta] = pagination_meta(data) if data.respond_to?(:current_page)
-    render json: response, status: http_success_status(action)
+    render json: response, status: status || http_success_status(action)
   end
 
-  def render_error_response(result, resource, action)
+  def render_error_response(result, resource, action, status)
     # Set error details for Lograge
     request.env['lograge.error_message'] = I18n.t("#{resource}.#{action}.error")
     request.env['lograge.errors'] = result.failure
@@ -51,7 +51,7 @@ module ServiceResponseFormatter
       status: 'error',
       message: I18n.t("#{resource}.#{action}.error"),
       errors: result.failure
-    }, status: http_error_status(action)
+    }, status: status || http_error_status(action)
   end
 
   def serialize_data(data, serializer)
