@@ -1,14 +1,12 @@
 # Clear existing events
 Event.destroy_all
 
-# Fetch created categories
-conference_category = Category.find_by(name: 'Conference')
-workshop_category = Category.find_by(name: 'Workshop')
-meetup_category = Category.find_by(name: 'Meetup')
 
-# Fetch the organizer users created in users.rb
-organizer_user1 = User.find_by(email: 'organizer@example.com')
-organizer_user2 = User.find_by(email: 'organizer2@example.com')
+# Fetch all categories and assign randomly
+categories = Category.all.to_a
+
+# Fetch all organizers and assign randomly
+organizers = Organizer.all.to_a
 
 # Create Events
 # Note: location is now a Hash, organizer is a reference, categories is HABTM
@@ -26,9 +24,9 @@ events = [
     end_time: (Time.current + 1.month + 1.day).change(hour: 17, min: 0),
     timezone: 'America/Los_Angeles',
     is_paid: false,
-    organizer: organizer_user1,
+    organizer: organizers.sample,
     event_type: EventType.first,
-    categories: [conference_category]
+    categories: [categories.sample]
   },
   {
     title: 'Ruby Workshop',
@@ -41,9 +39,9 @@ events = [
     end_time: (Time.current + 2.months + 1.day).change(hour: 16, min: 0),
     timezone: 'America/New_York',
     is_paid: true,
-    organizer: organizer_user2,
+    organizer: organizers.sample,
     event_type: EventType.first,
-    categories: [workshop_category]
+    categories: [categories.sample]
   },
   {
     title: 'Startup Meetup',
@@ -56,9 +54,9 @@ events = [
     end_time: (Time.current + 3.months + 1.day).change(hour: 21, min: 0),
     timezone: 'America/Los_Angeles',
     is_paid: false,
-    organizer: organizer_user1,
+    organizer: organizers.sample,
     event_type: EventType.first,
-    categories: [meetup_category]
+    categories: [categories.sample]
   }
 ]
 

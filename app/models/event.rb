@@ -33,6 +33,7 @@ class Event
   belongs_to :organizer, class_name: 'Organizer'
   belongs_to :event_type
   has_and_belongs_to_many :categories
+  has_many :ticket_types
 
   # MongoDB indexes for performance optimization
   # Based on "MongoDB: The Definitive Guide" - index common query patterns
