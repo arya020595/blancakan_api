@@ -23,4 +23,14 @@ class TicketType
 
   scope :active, -> { where(is_active: true) }
   scope :available, -> { where(:available_from.lte => Time.current, :available_until.gte => Time.current) }
+
+  # Search functionality using MongoDB text search
+  def self.search(query: '*', page: 1, per_page: 10)
+    if query == '*' || query.blank?
+      page(page).per(per_page)
+    else
+      where('$text' => { '$search' => query })
+        .page(page).per(per_page)
+    end
+  end
 end

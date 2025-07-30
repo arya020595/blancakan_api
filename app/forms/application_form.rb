@@ -24,12 +24,21 @@ class ApplicationForm
 
   # Helper method for parsing datetime strings
   def parse_datetime(value)
-    return value if value.is_a?(Time) || value.is_a?(DateTime)
+    return value.to_datetime if value.is_a?(Time)
+    return value if value.is_a?(DateTime)
     return nil if value.blank?
 
-    Time.parse(value.to_s)
-  rescue ArgumentError
-    value # Return original value, let validation handle the error
+    return unless value.is_a?(String)
+
+    begin
+      DateTime.iso8601(value)
+    rescue ArgumentError
+      begin
+        Time.zone.parse(value).to_datetime
+      rescue StandardError
+        nil
+      end
+    end
   end
 
   # Helper method for parsing date strings

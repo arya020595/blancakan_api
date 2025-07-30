@@ -22,6 +22,7 @@ Rails.application.routes.draw do
         resources :permissions
         resources :categories
         resources :event_types
+        resources :ticket_types
         get 'dashboard', to: 'dashboard#stats'
       end
 
