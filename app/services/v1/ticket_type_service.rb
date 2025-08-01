@@ -7,6 +7,7 @@ module V1
 
     def index(query: '*', page: 1, per_page: 10)
       ticket_types = ::TicketType.search(query: query, page: page, per_page: per_page)
+
       Success(ticket_types)
     end
 
