@@ -11,4 +11,5 @@ class Container
   register('v1.category_service') { V1::CategoryService.new }
   register('v1.event_type_service') { V1::EventTypeService.new }
   register('v1.ticket_type_service') { V1::TicketTypeService.new }
+  register('v1.payment_method_service') { V1::PaymentMethodService.new }
 end

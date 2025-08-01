@@ -180,6 +180,22 @@ en:
     destroy:
       success: "Ticket type deleted successfully"
       error: "Failed to delete ticket type"
+  payment_methods:
+    index:
+      success: "Payment methods fetched successfully"
+      error: "Failed to fetch payment methods"
+    show:
+      success: "Payment method found"
+      error: "Payment method not found"
+    create:
+      success: "Payment method created successfully"
+      error: "Failed to create payment method"
+    update:
+      success: "Payment method updated successfully"
+      error: "Failed to update payment method"
+    destroy:
+      success: "Payment method deleted successfully"
+      error: "Failed to delete payment method"
   mongoid:
     errors:
       models:

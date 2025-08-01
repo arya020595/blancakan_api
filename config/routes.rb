@@ -23,6 +23,7 @@ Rails.application.routes.draw do
         resources :categories
         resources :event_types
         resources :ticket_types
+        resources :payment_methods
         get 'dashboard', to: 'dashboard#stats'
       end
 
