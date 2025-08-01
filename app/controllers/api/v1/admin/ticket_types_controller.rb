@@ -11,7 +11,7 @@ module Api
         end
 
         def index
-          result = @ticket_type_service.index(event_id: params[:event_id], query: params[:query],
+          result = @ticket_type_service.index(query: params[:query],
                                               page: params[:page], per_page: params[:per_page])
           format_response(result: result, resource: 'ticket_types', action: :index)
         end
