@@ -24,6 +24,15 @@ Rails.application.routes.draw do
         resources :event_types
         resources :ticket_types
         resources :payment_methods
+        resources :banks do
+          member do
+            patch :activate
+            patch :deactivate
+          end
+          collection do
+            get :available
+          end
+        end
         get 'dashboard', to: 'dashboard#stats'
       end
 

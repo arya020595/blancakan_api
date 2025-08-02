@@ -196,6 +196,31 @@ en:
     destroy:
       success: "Payment method deleted successfully"
       error: "Failed to delete payment method"
+  banks:
+    index:
+      success: "Banks fetched successfully"
+      error: "Failed to fetch banks"
+    show:
+      success: "Bank found"
+      error: "Bank not found"
+    create:
+      success: "Bank created successfully"
+      error: "Failed to create bank"
+    update:
+      success: "Bank updated successfully"
+      error: "Failed to update bank"
+    destroy:
+      success: "Bank deleted successfully"
+      error: "Failed to delete bank"
+    activate:
+      success: "Bank activated successfully"
+      error: "Failed to activate bank"
+    deactivate:
+      success: "Bank deactivated successfully"
+      error: "Failed to deactivate bank"
+    available:
+      success: "Available banks fetched successfully"
+      error: "Failed to fetch available banks"
   mongoid:
     errors:
       models:
