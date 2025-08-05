@@ -4,6 +4,7 @@ class Bank
   include Mongoid::Document
   include Mongoid::Timestamps
   include StatusMethods
+  include Searchable
 
   field :code, type: String
   field :name, type: String
@@ -16,18 +17,9 @@ class Bank
 
   scope :ordered, -> { order_by(name: :asc) }
 
-  # Search functionality using MongoDB regex search
-  def self.search(query: '*', page: 1, per_page: 10)
-    if query == '*' || query.blank?
-      ordered.page(page).per(per_page)
-    else
-      where(
-        '$or' => [
-          { name: /#{Regexp.escape(query)}/i },
-          { code: /#{Regexp.escape(query)}/i }
-        ]
-      ).ordered.page(page).per(per_page)
-    end
+  # Define searchable fields for the Searchable concern
+  def self.searchable_fields
+    %w[name code]
   end
 
   # Helper method to get available banks for selection
@@ -37,9 +29,8 @@ class Bank
 
   # Check if bank can be safely deactivated
   def can_be_deactivated?
-    # TODO: Add check for existing payout methods using this bank
-    # For now, allow deactivation
-    true
+    # Check for existing payout methods using this bank
+    !PayoutMethod.where(bank: self).exists?
   end
 
   # Override deactivate! from StatusMethods to add safety check
