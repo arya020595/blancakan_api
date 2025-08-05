@@ -3,7 +3,7 @@
 class Role
   include Mongoid::Document
   include Mongoid::Timestamps
-  include Elasticsearch::RoleSearchable
+  include Searchable
 
   field :name, type: String
   field :description, type: String
@@ -16,13 +16,11 @@ class Role
   validates :name, presence: true, uniqueness: true
   validates :description, presence: true
 
-  after_save :enqueue_reindex_job
-  after_destroy :enqueue_reindex_job
+  scope :ordered, -> { order_by(name: :asc) }
 
-  private
-
-  def enqueue_reindex_job
-    ReindexElasticsearchJob.perform_later(self.class.name, id.to_s)
+  # Define searchable fields for the Searchable concern
+  def self.searchable_fields
+    %w[name description]
   end
 
   # Superadmin: Can manage everything.

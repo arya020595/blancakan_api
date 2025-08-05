@@ -3,7 +3,7 @@
 class Permission
   include Mongoid::Document
   include Mongoid::Timestamps
-  include Elasticsearch::PermissionSearchable
+  include Searchable
 
   field :action, type: String # Example: "read", "create"
   field :subject_class, type: String # Example: "Event", "User"
@@ -19,12 +19,11 @@ class Permission
   validates :action,
             uniqueness: { scope: %i[subject_class role_id],
                           message: I18n.t('mongoid.errors.models.permission.attributes.action.duplicate_permission') }
-  after_save :enqueue_reindex_job
-  after_destroy :enqueue_reindex_job
 
-  private
+  scope :ordered, -> { order_by(action: :asc, subject_class: :asc) }
 
-  def enqueue_reindex_job
-    ReindexElasticsearchJob.perform_later(self.class.name, id.to_s)
+  # Define searchable fields for the Searchable concern
+  def self.searchable_fields
+    %w[action subject_class]
   end
 end
