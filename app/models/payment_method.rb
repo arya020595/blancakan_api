@@ -3,6 +3,7 @@
 class PaymentMethod
   include Mongoid::Document
   include Mongoid::Timestamps
+  include Searchable
 
   field :code, type: String
   field :display_name, type: String
@@ -35,20 +36,9 @@ class PaymentMethod
     TYPES
   end
 
-  # Search functionality using MongoDB text search
-  def self.search(query: '*', page: 1, per_page: 10)
-    if query == '*' || query.blank?
-      ordered.page(page).per(per_page)
-    else
-      where(
-        '$or' => [
-          { display_name: /#{Regexp.escape(query)}/i },
-          { code: /#{Regexp.escape(query)}/i },
-          { type: /#{Regexp.escape(query)}/i },
-          { payment_gateway: /#{Regexp.escape(query)}/i }
-        ]
-      ).ordered.page(page).per(per_page)
-    end
+  # Define searchable fields for the Searchable concern
+  def self.searchable_fields
+    %w[display_name code type payment_gateway]
   end
 
   # Calculate total fee for a given subtotal
