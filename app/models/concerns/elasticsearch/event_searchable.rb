@@ -1,6 +1,7 @@
 module Elasticsearch
   module EventSearchable
     extend ActiveSupport::Concern
+    # Include shared search functionality
     include BaseSearchable
 
     included do
@@ -56,7 +57,29 @@ module Elasticsearch
       end
     end
 
+    # for Elasticsearch integration in the Event model.
     module ClassMethods
+      # Original search method for backward compatibility
+      def search(query: '*', page: 1, per_page: 10)
+        search_definition = if query == '*' || query.nil?
+                              { query: { match_all: {} } }
+                            else
+                              {
+                                query: {
+                                  multi_match: {
+                                    query: query,
+                                    fields: elasticsearch_searchable_fields,
+                                    type: 'best_fields',
+                                    fuzziness: 'AUTO'
+                                  }
+                                }
+                              }
+                            end
+
+        response = __elasticsearch__.search(search_definition)
+        response.records.page(page).per(per_page)
+      end
+
       # Fields that can be searched with text queries
       def elasticsearch_searchable_fields
         %w[title description location_type status slug short_id]
