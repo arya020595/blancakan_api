@@ -64,8 +64,8 @@ module Elasticsearch
     end
 
     def boolean_field?(field)
-      # Check if field is a known boolean field
-      boolean_fields = %w[is_paid is_active is_featured is_published]
+      # Get boolean fields from model or defaults
+      boolean_fields = Configuration.boolean_fields_for(model_class)
       boolean_fields.include?(field)
     end
 

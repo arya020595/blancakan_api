@@ -98,6 +98,16 @@ module Elasticsearch
           _score _id
         ]
       end
+
+      # Fields that are text fields with keyword subfields for sorting
+      def elasticsearch_text_fields_with_keywords
+        %w[title status location_type timezone]
+      end
+
+      # Fields that are boolean type for filtering
+      def elasticsearch_boolean_fields
+        %w[is_paid]
+      end
     end
   end
 end

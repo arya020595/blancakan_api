@@ -49,12 +49,8 @@ module Elasticsearch
     end
 
     def searchable_fields
-      if model_class.respond_to?(:elasticsearch_searchable_fields)
-        model_class.elasticsearch_searchable_fields
-      else
-        # Default fallback fields
-        %w[title name description]
-      end
+      # Get searchable fields from model or defaults
+      Configuration.searchable_fields_for(model_class)
     end
   end
 end

@@ -49,22 +49,9 @@ module Elasticsearch
     def valid_sort_field?(field)
       return false if field.blank?
 
-      # Check if the model defines allowed sortable fields
-      if model_class.respond_to?(:elasticsearch_sortable_fields)
-        model_class.elasticsearch_sortable_fields.include?(field)
-      else
-        # Default allowed fields if model doesn't specify
-        default_sortable_fields.include?(field)
-      end
-    end
-
-    def default_sortable_fields
-      %w[
-        created_at updated_at published_at
-        title name
-        start_date end_date
-        _score _id
-      ]
+      # Get sortable fields from model or defaults
+      sortable_fields = Configuration.sortable_fields_for(model_class)
+      sortable_fields.include?(field)
     end
 
     def build_sort_clause(field, direction)
@@ -102,9 +89,9 @@ module Elasticsearch
     end
 
     def text_field_with_keyword?(field)
-      # Fields that are typically text fields but have keyword subfields for sorting
-      text_fields_with_keywords = %w[title status location_type timezone]
-      text_fields_with_keywords.include?(field)
+      # Get text fields with keywords from model or defaults
+      text_fields = Configuration.text_fields_with_keywords_for(model_class)
+      text_fields.include?(field)
     end
 
     def normalize_direction(direction)
@@ -119,9 +106,8 @@ module Elasticsearch
     end
 
     def default_sort
-      [
-        { 'created_at' => { 'order' => 'desc' } }
-      ]
+      # Get default sort from model or system defaults
+      Configuration.default_sort_for(model_class)
     end
   end
 end

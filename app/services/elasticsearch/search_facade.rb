@@ -105,14 +105,10 @@ module Elasticsearch
       fields = []
 
       # Add searchable fields (for text queries)
-      if @model_class.respond_to?(:elasticsearch_searchable_fields)
-        fields.concat(@model_class.elasticsearch_searchable_fields)
-      end
+      fields.concat(Configuration.searchable_fields_for(@model_class))
 
       # Add sortable fields (for sorting and filtering)
-      if @model_class.respond_to?(:elasticsearch_sortable_fields)
-        fields.concat(@model_class.elasticsearch_sortable_fields)
-      end
+      fields.concat(Configuration.sortable_fields_for(@model_class))
 
       # Add essential fields that should always be included
       essential_fields = %w[_id location cover_image cover_image_filename category_ids]
