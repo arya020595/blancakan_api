@@ -41,14 +41,16 @@ module Elasticsearch
         end
       end
 
-      # Define what data gets indexed
+      # Define what data gets indexed for Elasticsearch
       def as_indexed_json(_options = {})
         attributes = as_json(only: %i[
-                               title slug short_id description status location_type location start_date start_time end_date end_time timezone is_paid published_at canceled_at organizer_id event_type_id category_ids
+                               title slug short_id description status location_type location
+                               start_date start_time end_date end_time timezone is_paid published_at
+                               canceled_at organizer_id event_type_id category_ids
                              ])
 
-        # Handle CarrierWave uploader for cover_image
-        attributes[:cover_image] = cover_image.present? ? cover_image.url : nil
+        # Add cover_image URL if present
+        attributes[:cover_image] = cover_image&.url
 
         attributes
       end
