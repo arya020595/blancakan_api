@@ -11,15 +11,19 @@ module Elasticsearch
       # Elasticsearch index configuration
       settings do
         mappings dynamic: false do
-          # Text fields for search
-          indexes :title, type: :text, analyzer: 'standard'
+          # Text fields for search with keyword subfields for sorting/filtering
+          indexes :title, type: :text, analyzer: 'standard', fields: {
+            keyword: { type: :keyword, ignore_above: 256 }
+          }
           indexes :description, type: :text, analyzer: 'standard'
 
           # Keyword fields for exact matching and sorting
           indexes :slug, type: :keyword
           indexes :short_id, type: :keyword
           indexes :status, type: :keyword
-          indexes :location_type, type: :keyword
+          indexes :location_type, type: :keyword, fields: {
+            text: { type: :text, analyzer: 'standard' }
+          }
           indexes :timezone, type: :keyword
           indexes :cover_image, type: :keyword
           indexes :organizer_id, type: :keyword
@@ -88,9 +92,9 @@ module Elasticsearch
       # Fields that can be used for sorting
       def elasticsearch_sortable_fields
         %w[
-          status slug short_id location_type timezone is_paid
-          start_date end_date organizer_id event_type_id
-          created_at updated_at published_at
+          title status slug short_id location_type timezone is_paid
+          start_date end_date start_time end_time organizer_id event_type_id
+          created_at updated_at published_at canceled_at
           _score _id
         ]
       end
