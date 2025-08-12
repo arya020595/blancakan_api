@@ -11,7 +11,7 @@ module Api
         end
 
         def index
-          result = @event_service.index(query: params[:query], page: params[:page], per_page: params[:per_page])
+          result = @event_service.index(search_params)
           format_response(result: result, resource: 'events', action: :index)
         end
 
@@ -36,6 +36,10 @@ module Api
         end
 
         private
+
+        def search_params
+          params.permit(:query, :sort, :page, :per_page, filter: {})
+        end
 
         def event_params
           params.require(:event).permit(
