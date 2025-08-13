@@ -3,6 +3,7 @@
 class EventType
   include Mongoid::Document
   include Mongoid::Timestamps
+  include MongodbSearch::EventTypeSearchable
 
   # Fields matching the provided schema
   field :name, type: String
@@ -33,16 +34,6 @@ class EventType
   # Scopes
   scope :active, -> { where(is_active: true) }
   scope :ordered, -> { order(:sort_order, :name) }
-
-  # Search functionality using MongoDB text search
-  def self.search(query: '*', page: 1, per_page: 10)
-    if query == '*' || query.blank?
-      page(page).per(per_page)
-    else
-      where('$text' => { '$search' => query })
-        .page(page).per(per_page)
-    end
-  end
 
   private
 

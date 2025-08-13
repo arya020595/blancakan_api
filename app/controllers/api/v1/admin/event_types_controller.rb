@@ -11,7 +11,7 @@ module Api
         end
 
         def index
-          result = @event_type_service.index(query: params[:query], page: params[:page], per_page: params[:per_page])
+          result = @event_type_service.index(search_params)
           format_response(result: result, resource: 'event_types', action: :index)
         end
 
@@ -36,6 +36,12 @@ module Api
         end
 
         private
+
+        def search_params
+          params.permit(:query, :page, :per_page, :sort,
+                        filter: %i[name slug is_active sort_order created_at updated_at],
+                        sort: [])
+        end
 
         def event_type_params
           params.require(:event_type).permit(:name, :slug, :icon_url, :description, :is_active, :sort_order)
