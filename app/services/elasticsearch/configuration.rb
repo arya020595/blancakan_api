@@ -4,11 +4,11 @@ module Elasticsearch
   # Configuration class for Elasticsearch defaults
   # This centralizes all default configurations in a clean, organized way
   class Configuration
-    # Default field configurations
+    # Default field configurations - general fields that most models have
     DEFAULTS = {
-      sortable_fields: %w[created_at updated_at published_at title name _score _id],
-      searchable_fields: %w[title name description],
-      text_fields_with_keywords: %w[title name status],
+      sortable_fields: %w[created_at updated_at _score _id],
+      searchable_fields: %w[],
+      text_fields_with_keywords: %w[],
       boolean_fields: [],
       essential_fields: %w[_id],
       default_sort: [{ 'created_at' => { 'order' => 'desc' } }]
