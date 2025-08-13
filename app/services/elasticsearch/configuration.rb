@@ -10,6 +10,7 @@ module Elasticsearch
       searchable_fields: %w[title name description],
       text_fields_with_keywords: %w[title name status],
       boolean_fields: [],
+      essential_fields: %w[_id],
       default_sort: [{ 'created_at' => { 'order' => 'desc' } }]
     }.freeze
 
@@ -61,6 +62,15 @@ module Elasticsearch
           model_class.elasticsearch_default_sort
         else
           get(:default_sort)
+        end
+      end
+
+      # Get essential fields for a model
+      def essential_fields_for(model_class)
+        if model_class.respond_to?(:elasticsearch_essential_fields)
+          model_class.elasticsearch_essential_fields
+        else
+          get(:essential_fields)
         end
       end
     end

@@ -105,6 +105,11 @@ module Elasticsearch
       def elasticsearch_boolean_fields
         %w[is_paid]
       end
+
+      # Essential fields that should always be included in Elasticsearch source
+      def elasticsearch_essential_fields
+        %w[_id location cover_image cover_image_filename category_ids]
+      end
     end
   end
 end

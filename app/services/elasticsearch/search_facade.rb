@@ -110,9 +110,8 @@ module Elasticsearch
       # Add sortable fields (for sorting and filtering)
       fields.concat(Configuration.sortable_fields_for(@model_class))
 
-      # Add essential fields that should always be included
-      essential_fields = %w[_id location cover_image cover_image_filename category_ids]
-      fields.concat(essential_fields)
+      # Add essential fields that should always be included (model-specific)
+      fields.concat(Configuration.essential_fields_for(@model_class))
 
       # Remove duplicates and Elasticsearch-only fields like _score
       fields.uniq.reject { |field| field.start_with?('_') && field != '_id' }
