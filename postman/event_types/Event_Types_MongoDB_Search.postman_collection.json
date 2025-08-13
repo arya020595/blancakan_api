@@ -1,0 +1,736 @@
+{
+  "info": {
+    "_postman_id": "blancakan-event-types-api",
+    "name": "Blancakan API - Event Types (MongoDB Search)",
+    "description": "Complete EventType API collection with MongoDB search, filter, sort, and pagination capabilities. This collection demonstrates the SOLID MongoDB search implementation.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Event Types CRUD",
+      "item": [
+        {
+          "name": "Get All Event Types",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/event_types",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "event_types"]
+            },
+            "description": "Get all event types without any filters"
+          }
+        },
+        {
+          "name": "Get Single Event Type",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/event_types/{{event_type_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "event_types", "{{event_type_id}}"]
+            },
+            "description": "Get a single event type by ID"
+          }
+        },
+        {
+          "name": "Create Event Type",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"event_type\": {\n    \"name\": \"API Workshop\",\n    \"description\": \"Learn API development with hands-on exercises\",\n    \"is_active\": true,\n    \"sort_order\": 5,\n    \"icon_url\": \"https://example.com/workshop-icon.png\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/event_types",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "event_types"]
+            },
+            "description": "Create a new event type"
+          }
+        },
+        {
+          "name": "Update Event Type",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"event_type\": {\n    \"name\": \"Updated Workshop\",\n    \"description\": \"Updated description for the workshop\",\n    \"is_active\": false,\n    \"sort_order\": 10\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/event_types/{{event_type_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "event_types", "{{event_type_id}}"]
+            },
+            "description": "Update an existing event type"
+          }
+        },
+        {
+          "name": "Delete Event Type",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/event_types/{{event_type_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "event_types", "{{event_type_id}}"]
+            },
+            "description": "Delete an event type"
+          }
+        }
+      ],
+      "description": "Basic CRUD operations for Event Types"
+    },
+    {
+      "name": "MongoDB Search Features",
+      "item": [
+        {
+          "name": "Basic Text Search",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/event_types?query=workshop",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "event_types"],
+              "query": [
+                {
+                  "key": "query",
+                  "value": "workshop",
+                  "description": "Search for 'workshop' in searchable fields"
+                }
+              ]
+            },
+            "description": "Search for event types containing 'workshop' in name, description, or slug"
+          }
+        },
+        {
+          "name": "Search Conference Types",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/event_types?query=conference",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "event_types"],
+              "query": [
+                {
+                  "key": "query",
+                  "value": "conference",
+                  "description": "Search for conference-related event types"
+                }
+              ]
+            },
+            "description": "Search for event types related to conferences"
+          }
+        },
+        {
+          "name": "Partial Text Search",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/event_types?query=work",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "event_types"],
+              "query": [
+                {
+                  "key": "query",
+                  "value": "work",
+                  "description": "Partial search for 'work' (should match workshop, networking, etc.)"
+                }
+              ]
+            },
+            "description": "Partial text search using regex fallback"
+          }
+        }
+      ],
+      "description": "Text search functionality using MongoDB $text search or regex fallback"
+    },
+    {
+      "name": "Filtering",
+      "item": [
+        {
+          "name": "Filter Active Only",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/event_types?filter[is_active]=true",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "event_types"],
+              "query": [
+                {
+                  "key": "filter[is_active]",
+                  "value": "true",
+                  "description": "Show only active event types"
+                }
+              ]
+            },
+            "description": "Filter to show only active event types (boolean filter)"
+          }
+        },
+        {
+          "name": "Filter Inactive Only",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/event_types?filter[is_active]=false",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "event_types"],
+              "query": [
+                {
+                  "key": "filter[is_active]",
+                  "value": "false",
+                  "description": "Show only inactive event types"
+                }
+              ]
+            },
+            "description": "Filter to show only inactive event types"
+          }
+        },
+        {
+          "name": "Filter by Exact Name",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/event_types?filter[name]=Workshop",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "event_types"],
+              "query": [
+                {
+                  "key": "filter[name]",
+                  "value": "Workshop",
+                  "description": "Exact match for name field"
+                }
+              ]
+            },
+            "description": "Filter by exact name match"
+          }
+        },
+        {
+          "name": "Filter by Sort Order Range",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/event_types?filter[sort_order][gte]=2&filter[sort_order][lte]=4",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "event_types"],
+              "query": [
+                {
+                  "key": "filter[sort_order][gte]",
+                  "value": "2",
+                  "description": "Sort order greater than or equal to 2"
+                },
+                {
+                  "key": "filter[sort_order][lte]",
+                  "value": "4",
+                  "description": "Sort order less than or equal to 4"
+                }
+              ]
+            },
+            "description": "Filter event types with sort_order between 2 and 4 (range filter)"
+          }
+        },
+        {
+          "name": "Multiple Filters Combined",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/event_types?filter[is_active]=true&filter[sort_order]=2",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "event_types"],
+              "query": [
+                {
+                  "key": "filter[is_active]",
+                  "value": "true",
+                  "description": "Only active event types"
+                },
+                {
+                  "key": "filter[sort_order]",
+                  "value": "2",
+                  "description": "With sort order 2"
+                }
+              ]
+            },
+            "description": "Combine multiple filters: active status AND specific sort order"
+          }
+        }
+      ],
+      "description": "Various filtering options including boolean, exact match, and range filters"
+    },
+    {
+      "name": "Sorting",
+      "item": [
+        {
+          "name": "Sort by Name Ascending",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/event_types?sort=name:asc",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "event_types"],
+              "query": [
+                {
+                  "key": "sort",
+                  "value": "name:asc",
+                  "description": "Sort by name in ascending order (A-Z)"
+                }
+              ]
+            },
+            "description": "Sort event types by name in ascending order"
+          }
+        },
+        {
+          "name": "Sort by Sort Order Descending",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/event_types?sort=sort_order:desc",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "event_types"],
+              "query": [
+                {
+                  "key": "sort",
+                  "value": "sort_order:desc",
+                  "description": "Sort by sort_order in descending order (highest first)"
+                }
+              ]
+            },
+            "description": "Sort by sort_order in descending order"
+          }
+        },
+        {
+          "name": "Sort by Created Date",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/event_types?sort=created_at:desc",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "event_types"],
+              "query": [
+                {
+                  "key": "sort",
+                  "value": "created_at:desc",
+                  "description": "Sort by creation date, newest first"
+                }
+              ]
+            },
+            "description": "Sort by creation date (newest first)"
+          }
+        },
+        {
+          "name": "Multiple Sort Criteria",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/event_types?sort[]=sort_order:asc&sort[]=name:asc",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "event_types"],
+              "query": [
+                {
+                  "key": "sort[]",
+                  "value": "sort_order:asc",
+                  "description": "Primary sort: by sort_order ascending"
+                },
+                {
+                  "key": "sort[]",
+                  "value": "name:asc",
+                  "description": "Secondary sort: by name ascending"
+                }
+              ]
+            },
+            "description": "Sort by multiple criteria: sort_order first, then name"
+          }
+        },
+        {
+          "name": "Sort Active First, Then by Name",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/event_types?sort[]=is_active:desc&sort[]=name:asc",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "event_types"],
+              "query": [
+                {
+                  "key": "sort[]",
+                  "value": "is_active:desc",
+                  "description": "Show active items first"
+                },
+                {
+                  "key": "sort[]",
+                  "value": "name:asc",
+                  "description": "Then sort by name"
+                }
+              ]
+            },
+            "description": "Show active event types first, then sort by name"
+          }
+        }
+      ],
+      "description": "Various sorting options including single and multiple field sorting"
+    },
+    {
+      "name": "Pagination",
+      "item": [
+        {
+          "name": "First Page (5 items)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/event_types?page=1&per_page=5",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "event_types"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "First page"
+                },
+                {
+                  "key": "per_page",
+                  "value": "5",
+                  "description": "5 items per page"
+                }
+              ]
+            },
+            "description": "Get first page with 5 items per page"
+          }
+        },
+        {
+          "name": "Second Page (3 items)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/event_types?page=2&per_page=3",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "event_types"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "2",
+                  "description": "Second page"
+                },
+                {
+                  "key": "per_page",
+                  "value": "3",
+                  "description": "3 items per page"
+                }
+              ]
+            },
+            "description": "Get second page with 3 items per page"
+          }
+        },
+        {
+          "name": "Large Page Size",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/event_types?page=1&per_page=20",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "event_types"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "First page"
+                },
+                {
+                  "key": "per_page",
+                  "value": "20",
+                  "description": "20 items per page"
+                }
+              ]
+            },
+            "description": "Get first page with large page size (20 items)"
+          }
+        }
+      ],
+      "description": "Pagination examples with different page sizes"
+    },
+    {
+      "name": "Complex Combined Examples",
+      "item": [
+        {
+          "name": "Search + Filter + Sort + Pagination",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/event_types?query=workshop&filter[is_active]=true&sort=name:asc&page=1&per_page=2",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "event_types"],
+              "query": [
+                {
+                  "key": "query",
+                  "value": "workshop",
+                  "description": "Search for workshop"
+                },
+                {
+                  "key": "filter[is_active]",
+                  "value": "true",
+                  "description": "Only active items"
+                },
+                {
+                  "key": "sort",
+                  "value": "name:asc",
+                  "description": "Sort by name"
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "First page"
+                },
+                {
+                  "key": "per_page",
+                  "value": "2",
+                  "description": "2 items per page"
+                }
+              ]
+            },
+            "description": "Complete example: Search for workshop, active only, sorted by name, paginated"
+          }
+        },
+        {
+          "name": "Range Filter + Multiple Sort",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/event_types?filter[sort_order][gte]=2&sort[]=sort_order:asc&sort[]=name:asc&per_page=5",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "event_types"],
+              "query": [
+                {
+                  "key": "filter[sort_order][gte]",
+                  "value": "2",
+                  "description": "Sort order >= 2"
+                },
+                {
+                  "key": "sort[]",
+                  "value": "sort_order:asc",
+                  "description": "Sort by sort_order first"
+                },
+                {
+                  "key": "sort[]",
+                  "value": "name:asc",
+                  "description": "Then by name"
+                },
+                {
+                  "key": "per_page",
+                  "value": "5",
+                  "description": "5 items per page"
+                }
+              ]
+            },
+            "description": "Filter by range + multiple sort criteria"
+          }
+        },
+        {
+          "name": "All Features Combined",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/event_types?query=*&filter[is_active]=true&filter[sort_order][gte]=2&sort[]=is_active:desc&sort[]=sort_order:asc&sort[]=name:asc&page=1&per_page=3",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "event_types"],
+              "query": [
+                {
+                  "key": "query",
+                  "value": "*",
+                  "description": "Search all"
+                },
+                {
+                  "key": "filter[is_active]",
+                  "value": "true",
+                  "description": "Active only"
+                },
+                {
+                  "key": "filter[sort_order][gte]",
+                  "value": "2",
+                  "description": "Sort order >= 2"
+                },
+                {
+                  "key": "sort[]",
+                  "value": "is_active:desc",
+                  "description": "Active first"
+                },
+                {
+                  "key": "sort[]",
+                  "value": "sort_order:asc",
+                  "description": "Then by sort order"
+                },
+                {
+                  "key": "sort[]",
+                  "value": "name:asc",
+                  "description": "Finally by name"
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "First page"
+                },
+                {
+                  "key": "per_page",
+                  "value": "3",
+                  "description": "3 items per page"
+                }
+              ]
+            },
+            "description": "Ultimate example using all features: search, multiple filters, multiple sorts, pagination"
+          }
+        }
+      ],
+      "description": "Complex examples combining multiple MongoDB search features"
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000",
+      "description": "Base URL for the Rails API server"
+    },
+    {
+      "key": "event_type_id",
+      "value": "replace_with_actual_id",
+      "description": "Event Type ID for single item operations (update this with actual ID from your database)"
+    }
+  ]
+}

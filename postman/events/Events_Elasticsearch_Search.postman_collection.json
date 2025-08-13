@@ -1,0 +1,791 @@
+{
+  "info": {
+    "_postman_id": "blancakan-events-api",
+    "name": "Blancakan API - Events (Elasticsearch)",
+    "description": "Complete Events API collection with Elasticsearch search, filter, sort, and pagination capabilities. This collection demonstrates the SOLID Elasticsearch search implementation.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Events CRUD",
+      "item": [
+        {
+          "name": "Get All Events",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/events",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "events"]
+            },
+            "description": "Get all events without any filters"
+          }
+        },
+        {
+          "name": "Get Single Event",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/events/{{event_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "events", "{{event_id}}"]
+            },
+            "description": "Get a single event by ID"
+          }
+        },
+        {
+          "name": "Create Event",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"event\": {\n    \"title\": \"Advanced Ruby Workshop\",\n    \"description\": \"Learn advanced Ruby techniques with hands-on exercises\",\n    \"start_date\": \"2025-09-15\",\n    \"start_time\": \"2025-09-15T09:00:00.000Z\",\n    \"end_date\": \"2025-09-15\",\n    \"end_time\": \"2025-09-15T17:00:00.000Z\",\n    \"location_type\": \"offline\",\n    \"timezone\": \"America/New_York\",\n    \"is_paid\": true,\n    \"status\": \"draft\",\n    \"location\": {\n      \"city\": \"New York\",\n      \"state\": \"NY\",\n      \"address\": \"123 Tech Street\"\n    },\n    \"category_ids\": [\"{{category_id}}\"]\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/events",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "events"]
+            },
+            "description": "Create a new event"
+          }
+        },
+        {
+          "name": "Update Event",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"event\": {\n    \"title\": \"Updated Advanced Ruby Workshop\",\n    \"description\": \"Updated description for the workshop\",\n    \"status\": \"published\",\n    \"is_paid\": false\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/events/{{event_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "events", "{{event_id}}"]
+            },
+            "description": "Update an existing event"
+          }
+        },
+        {
+          "name": "Delete Event",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/events/{{event_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "events", "{{event_id}}"]
+            },
+            "description": "Delete an event"
+          }
+        }
+      ],
+      "description": "Basic CRUD operations for Events"
+    },
+    {
+      "name": "Elasticsearch Search Features",
+      "item": [
+        {
+          "name": "Basic Text Search",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/events?query=workshop",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "events"],
+              "query": [
+                {
+                  "key": "query",
+                  "value": "workshop",
+                  "description": "Search for 'workshop' in searchable fields (title, description, etc.)"
+                }
+              ]
+            },
+            "description": "Search for events containing 'workshop' using Elasticsearch multi_match query"
+          }
+        },
+        {
+          "name": "Search Ruby Events",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/events?query=ruby",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "events"],
+              "query": [
+                {
+                  "key": "query",
+                  "value": "ruby",
+                  "description": "Search for Ruby-related events"
+                }
+              ]
+            },
+            "description": "Search for events related to Ruby programming"
+          }
+        },
+        {
+          "name": "Fuzzy Search",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/events?query=workshp",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "events"],
+              "query": [
+                {
+                  "key": "query",
+                  "value": "workshp",
+                  "description": "Fuzzy search - should match 'workshop' with typo"
+                }
+              ]
+            },
+            "description": "Test Elasticsearch fuzzy matching (typo tolerance)"
+          }
+        }
+      ],
+      "description": "Text search functionality using Elasticsearch multi_match queries with fuzzy matching"
+    },
+    {
+      "name": "Filtering",
+      "item": [
+        {
+          "name": "Filter Paid Events Only",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/events?filter[is_paid]=true",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "events"],
+              "query": [
+                {
+                  "key": "filter[is_paid]",
+                  "value": "true",
+                  "description": "Show only paid events"
+                }
+              ]
+            },
+            "description": "Filter to show only paid events (boolean filter)"
+          }
+        },
+        {
+          "name": "Filter Free Events Only",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/events?filter[is_paid]=false",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "events"],
+              "query": [
+                {
+                  "key": "filter[is_paid]",
+                  "value": "false",
+                  "description": "Show only free events"
+                }
+              ]
+            },
+            "description": "Filter to show only free events"
+          }
+        },
+        {
+          "name": "Filter by Status",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/events?filter[status]=published",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "events"],
+              "query": [
+                {
+                  "key": "filter[status]",
+                  "value": "published",
+                  "description": "Show only published events"
+                }
+              ]
+            },
+            "description": "Filter events by status (exact match)"
+          }
+        },
+        {
+          "name": "Filter by Date Range",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/events?filter[start_date][gte]=2025-09-01&filter[start_date][lte]=2025-12-31",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "events"],
+              "query": [
+                {
+                  "key": "filter[start_date][gte]",
+                  "value": "2025-09-01",
+                  "description": "Events starting on or after Sept 1, 2025"
+                },
+                {
+                  "key": "filter[start_date][lte]",
+                  "value": "2025-12-31",
+                  "description": "Events starting on or before Dec 31, 2025"
+                }
+              ]
+            },
+            "description": "Filter events by start date range"
+          }
+        },
+        {
+          "name": "Filter by Categories",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/events?filter[category_ids][]=category_id_1&filter[category_ids][]=category_id_2",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "events"],
+              "query": [
+                {
+                  "key": "filter[category_ids][]",
+                  "value": "category_id_1",
+                  "description": "Include events with this category"
+                },
+                {
+                  "key": "filter[category_ids][]",
+                  "value": "category_id_2",
+                  "description": "Include events with this category"
+                }
+              ]
+            },
+            "description": "Filter events by multiple category IDs (array filter)"
+          }
+        },
+        {
+          "name": "Multiple Filters Combined",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/events?filter[is_paid]=true&filter[status]=published&filter[location_type]=offline",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "events"],
+              "query": [
+                {
+                  "key": "filter[is_paid]",
+                  "value": "true",
+                  "description": "Only paid events"
+                },
+                {
+                  "key": "filter[status]",
+                  "value": "published",
+                  "description": "Only published events"
+                },
+                {
+                  "key": "filter[location_type]",
+                  "value": "offline",
+                  "description": "Only offline events"
+                }
+              ]
+            },
+            "description": "Combine multiple filters: paid AND published AND offline events"
+          }
+        }
+      ],
+      "description": "Various filtering options including boolean, exact match, range, and array filters"
+    },
+    {
+      "name": "Sorting",
+      "item": [
+        {
+          "name": "Sort by Title Ascending",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/events?sort=title:asc",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "events"],
+              "query": [
+                {
+                  "key": "sort",
+                  "value": "title:asc",
+                  "description": "Sort by title in ascending order (A-Z)"
+                }
+              ]
+            },
+            "description": "Sort events by title in ascending order"
+          }
+        },
+        {
+          "name": "Sort by Start Date Descending",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/events?sort=start_date:desc",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "events"],
+              "query": [
+                {
+                  "key": "sort",
+                  "value": "start_date:desc",
+                  "description": "Sort by start date, newest first"
+                }
+              ]
+            },
+            "description": "Sort by start date in descending order (newest first)"
+          }
+        },
+        {
+          "name": "Sort by Relevance Score",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/events?query=workshop&sort=_score:desc",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "events"],
+              "query": [
+                {
+                  "key": "query",
+                  "value": "workshop",
+                  "description": "Search term for relevance scoring"
+                },
+                {
+                  "key": "sort",
+                  "value": "_score:desc",
+                  "description": "Sort by Elasticsearch relevance score"
+                }
+              ]
+            },
+            "description": "Sort by Elasticsearch relevance score (most relevant first)"
+          }
+        },
+        {
+          "name": "Multiple Sort Criteria",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/events?sort[]=is_paid:desc&sort[]=start_date:asc",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "events"],
+              "query": [
+                {
+                  "key": "sort[]",
+                  "value": "is_paid:desc",
+                  "description": "Primary sort: paid events first"
+                },
+                {
+                  "key": "sort[]",
+                  "value": "start_date:asc",
+                  "description": "Secondary sort: earliest date first"
+                }
+              ]
+            },
+            "description": "Sort by multiple criteria: paid events first, then by start date"
+          }
+        },
+        {
+          "name": "Sort Published First, Then by Date",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/events?sort[]=status:desc&sort[]=start_date:asc",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "events"],
+              "query": [
+                {
+                  "key": "sort[]",
+                  "value": "status:desc",
+                  "description": "Show published events first"
+                },
+                {
+                  "key": "sort[]",
+                  "value": "start_date:asc",
+                  "description": "Then sort by start date"
+                }
+              ]
+            },
+            "description": "Show published events first, then sort by start date"
+          }
+        }
+      ],
+      "description": "Various sorting options including single and multiple field sorting with Elasticsearch relevance"
+    },
+    {
+      "name": "Pagination",
+      "item": [
+        {
+          "name": "First Page (5 items)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/events?page=1&per_page=5",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "events"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "First page"
+                },
+                {
+                  "key": "per_page",
+                  "value": "5",
+                  "description": "5 items per page"
+                }
+              ]
+            },
+            "description": "Get first page with 5 events per page"
+          }
+        },
+        {
+          "name": "Second Page (3 items)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/events?page=2&per_page=3",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "events"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "2",
+                  "description": "Second page"
+                },
+                {
+                  "key": "per_page",
+                  "value": "3",
+                  "description": "3 items per page"
+                }
+              ]
+            },
+            "description": "Get second page with 3 events per page"
+          }
+        },
+        {
+          "name": "Large Page Size",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/events?page=1&per_page=20",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "events"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "First page"
+                },
+                {
+                  "key": "per_page",
+                  "value": "20",
+                  "description": "20 items per page"
+                }
+              ]
+            },
+            "description": "Get first page with large page size (20 events)"
+          }
+        }
+      ],
+      "description": "Pagination examples with different page sizes"
+    },
+    {
+      "name": "Complex Combined Examples",
+      "item": [
+        {
+          "name": "Search + Filter + Sort + Pagination",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/events?query=workshop&filter[is_paid]=true&sort=start_date:desc&page=1&per_page=2",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "events"],
+              "query": [
+                {
+                  "key": "query",
+                  "value": "workshop",
+                  "description": "Search for workshop events"
+                },
+                {
+                  "key": "filter[is_paid]",
+                  "value": "true",
+                  "description": "Only paid events"
+                },
+                {
+                  "key": "sort",
+                  "value": "start_date:desc",
+                  "description": "Sort by start date, newest first"
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "First page"
+                },
+                {
+                  "key": "per_page",
+                  "value": "2",
+                  "description": "2 items per page"
+                }
+              ]
+            },
+            "description": "Complete example: Search for workshops, paid only, sorted by date, paginated"
+          }
+        },
+        {
+          "name": "Date Range + Multiple Sort + Status Filter",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/events?filter[start_date][gte]=2025-09-01&filter[status]=published&sort[]=is_paid:desc&sort[]=start_date:asc&per_page=5",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "events"],
+              "query": [
+                {
+                  "key": "filter[start_date][gte]",
+                  "value": "2025-09-01",
+                  "description": "Events from Sept 2025 onwards"
+                },
+                {
+                  "key": "filter[status]",
+                  "value": "published",
+                  "description": "Only published events"
+                },
+                {
+                  "key": "sort[]",
+                  "value": "is_paid:desc",
+                  "description": "Paid events first"
+                },
+                {
+                  "key": "sort[]",
+                  "value": "start_date:asc",
+                  "description": "Then by start date"
+                },
+                {
+                  "key": "per_page",
+                  "value": "5",
+                  "description": "5 items per page"
+                }
+              ]
+            },
+            "description": "Filter by date range and status + multiple sort criteria"
+          }
+        },
+        {
+          "name": "All Features Combined",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/events?query=ruby&filter[is_paid]=true&filter[status]=published&filter[location_type]=offline&filter[start_date][gte]=2025-08-01&sort[]=_score:desc&sort[]=start_date:asc&page=1&per_page=3",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "events"],
+              "query": [
+                {
+                  "key": "query",
+                  "value": "ruby",
+                  "description": "Search for Ruby events"
+                },
+                {
+                  "key": "filter[is_paid]",
+                  "value": "true",
+                  "description": "Paid events only"
+                },
+                {
+                  "key": "filter[status]",
+                  "value": "published",
+                  "description": "Published events only"
+                },
+                {
+                  "key": "filter[location_type]",
+                  "value": "offline",
+                  "description": "Offline events only"
+                },
+                {
+                  "key": "filter[start_date][gte]",
+                  "value": "2025-08-01",
+                  "description": "Events from August 2025"
+                },
+                {
+                  "key": "sort[]",
+                  "value": "_score:desc",
+                  "description": "Most relevant first"
+                },
+                {
+                  "key": "sort[]",
+                  "value": "start_date:asc",
+                  "description": "Then by start date"
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "First page"
+                },
+                {
+                  "key": "per_page",
+                  "value": "3",
+                  "description": "3 items per page"
+                }
+              ]
+            },
+            "description": "Ultimate example using all features: search, multiple filters, multiple sorts, pagination"
+          }
+        }
+      ],
+      "description": "Complex examples combining multiple Elasticsearch search features"
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000",
+      "description": "Base URL for the Rails API server"
+    },
+    {
+      "key": "event_id",
+      "value": "replace_with_actual_event_id",
+      "description": "Event ID for single item operations (update this with actual ID from your database)"
+    },
+    {
+      "key": "category_id",
+      "value": "replace_with_actual_category_id",
+      "description": "Category ID for event creation/filtering (update with actual ID from your database)"
+    }
+  ]
+}
