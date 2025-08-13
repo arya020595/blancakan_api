@@ -5,9 +5,6 @@ module Elasticsearch
     include BaseSearchable
 
     included do
-      include Elasticsearch::Model
-      include Elasticsearch::Model::Callbacks
-
       # Elasticsearch index configuration
       settings do
         mappings dynamic: false do
