@@ -13,4 +13,5 @@ class Container
   register('v1.ticket_type_service') { V1::TicketTypeService.new }
   register('v1.payment_method_service') { V1::PaymentMethodService.new }
   register('v1.bank_service') { V1::BankService.new }
+  register('v1.payout_method_service') { V1::PayoutMethodService.new }
 end

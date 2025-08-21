@@ -33,6 +33,16 @@ Rails.application.routes.draw do
             get :available
           end
         end
+        resources :payout_methods do
+          member do
+            patch :activate
+            patch :deactivate
+            post :verify_pin
+          end
+          collection do
+            get :active
+          end
+        end
         get 'dashboard', to: 'dashboard#stats'
       end
 

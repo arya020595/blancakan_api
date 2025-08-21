@@ -221,6 +221,34 @@ en:
     available:
       success: "Available banks fetched successfully"
       error: "Failed to fetch available banks"
+  payout_methods:
+    index:
+      success: "Payout methods fetched successfully"
+      error: "Failed to fetch payout methods"
+    show:
+      success: "Payout method found"
+      error: "Payout method not found"
+    create:
+      success: "Payout method created successfully"
+      error: "Failed to create payout method"
+    update:
+      success: "Payout method updated successfully"
+      error: "Failed to update payout method"
+    destroy:
+      success: "Payout method deleted successfully"
+      error: "Failed to delete payout method"
+    activate:
+      success: "Payout method activated successfully"
+      error: "Failed to activate payout method"
+    deactivate:
+      success: "Payout method deactivated successfully"
+      error: "Failed to deactivate payout method"
+    verify_pin:
+      success: "PIN verified successfully"
+      error: "PIN verification failed"
+    active:
+      success: "Active payout method retrieved successfully"
+      error: "No active payout method found"
   mongoid:
     errors:
       models:
