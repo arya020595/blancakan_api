@@ -3,7 +3,7 @@
 class Permission
   include Mongoid::Document
   include Mongoid::Timestamps
-  include Searchable
+  include Elasticsearch::PermissionSearchable
 
   field :action, type: String # Example: "read", "create"
   field :subject_class, type: String # Example: "Event", "User"
@@ -21,9 +21,4 @@ class Permission
                           message: I18n.t('mongoid.errors.models.permission.attributes.action.duplicate_permission') }
 
   scope :ordered, -> { order_by(action: :asc, subject_class: :asc) }
-
-  # Define searchable fields for the Searchable concern
-  def self.searchable_fields
-    %w[action subject_class]
-  end
 end

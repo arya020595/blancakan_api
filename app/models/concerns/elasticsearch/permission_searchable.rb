@@ -1,35 +1,48 @@
 module Elasticsearch
   module PermissionSearchable
     extend ActiveSupport::Concern
+    include BaseSearchable
 
     included do
-      include Elasticsearch::Model
-      include Elasticsearch::Model::Callbacks
-
       settings do
         mappings dynamic: false do
-          indexes :action, type: :text, analyzer: 'standard'
-          indexes :subject_class, type: :text, analyzer: 'standard'
+          indexes :action, type: :text, analyzer: 'standard', fields: {
+            keyword: { type: :keyword, ignore_above: 256 }
+          }
+          indexes :subject_class, type: :text, analyzer: 'standard', fields: {
+            keyword: { type: :keyword, ignore_above: 256 }
+          }
           indexes :conditions, type: :object
+          indexes :role_id, type: :keyword
+          indexes :created_at, type: :date
+          indexes :updated_at, type: :date
         end
       end
 
       def as_indexed_json(_options = {})
-        as_json(only: %i[action subject_class conditions])
+        as_json(only: %i[action subject_class conditions role_id created_at updated_at])
       end
     end
 
     module ClassMethods
-      def search(query: '*', page: 1, per_page: 10)
-        search_definition = if query == '*' || query.nil?
-                              { query: { match_all: {} } }
-                            else
-                              { query: { multi_match: { query: query,
-                                                        fields: %w[action subject_class conditions] } } }
-                            end
+      def elasticsearch_searchable_fields
+        %w[action subject_class]
+      end
 
-        response = __elasticsearch__.search(search_definition)
-        response.records.page(page).per(per_page)
+      def elasticsearch_sortable_fields
+        %w[action subject_class role_id created_at updated_at _score _id]
+      end
+
+      def elasticsearch_text_fields_with_keywords
+        %w[action subject_class]
+      end
+
+      def elasticsearch_boolean_fields
+        []
+      end
+
+      def elasticsearch_essential_fields
+        %w[_id role_id]
       end
     end
   end

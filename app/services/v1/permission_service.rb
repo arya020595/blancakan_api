@@ -5,8 +5,9 @@ module V1
   class PermissionService
     include Dry::Monads[:result]
 
-    def index(query: '*', page: 1, per_page: 10)
-      permissions = ::Permission.search(query: query, page: page, per_page: per_page)
+    def index(params = {})
+      permissions = ::Permission.search_with_filters(params)
+
       Success(permissions)
     end
 
