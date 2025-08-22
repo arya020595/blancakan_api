@@ -5,8 +5,9 @@ module V1
   class OrganizerService
     include Dry::Monads[:result]
 
-    def index(query: '*', page: 1, per_page: 10)
-      organizers = ::Organizer.search(query: query, page: page, per_page: per_page)
+    def index(params = {})
+      organizers = ::Organizer.search_with_filters(params)
+
       Success(organizers)
     end
 
