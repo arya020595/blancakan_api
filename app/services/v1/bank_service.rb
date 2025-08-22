@@ -5,8 +5,9 @@ module V1
   class BankService
     include Dry::Monads[:result]
 
-    def index(query: '*', page: 1, per_page: 10)
-      banks = ::Bank.search(query: query, page: page, per_page: per_page)
+    def index(params = {})
+      banks = ::Bank.mongodb_search_with_filters(params)
+
       Success(banks)
     end
 
