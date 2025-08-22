@@ -18,7 +18,7 @@ module MongodbSearch
 
       # Fields with text indexes (MongoDB $text search)
       def mongodb_text_fields
-        %w[name]
+        %w[]
       end
 
       # Fields that are boolean type for filtering
