@@ -11,7 +11,7 @@ module Api
         end
 
         def index
-          result = @user_service.index(query: params[:query], page: params[:page], per_page: params[:per_page])
+          result = @user_service.index(params)
           format_response(result: result, resource: 'users', action: :index)
         end
 

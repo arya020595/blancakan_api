@@ -5,8 +5,9 @@ module V1
   class RoleService
     include Dry::Monads[:result]
 
-    def index(query: '*', page: 1, per_page: 10)
-      roles = ::Role.search(query: query, page: page, per_page: per_page)
+    def index(params = {})
+      roles = ::Role.search_with_filters(params)
+
       Success(roles)
     end
 

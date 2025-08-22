@@ -17,6 +17,7 @@ class User
   field :email,              type: String, default: ''
   field :password_digest,    type: String
   field :name, type: String
+  field :is_active, type: Boolean, default: true
 
   # Password authentication
   attr_reader :password
