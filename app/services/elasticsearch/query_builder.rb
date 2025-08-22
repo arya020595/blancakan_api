@@ -42,8 +42,8 @@ module Elasticsearch
           query: query,
           fields: searchable_fields,
           type: 'best_fields',
-          fuzziness: 'AUTO',
-          minimum_should_match: '75%'
+          fuzziness: Configuration.fuzziness_for(model_class),
+          minimum_should_match: Configuration.minimum_should_match_for(model_class)
         }
       }
     end

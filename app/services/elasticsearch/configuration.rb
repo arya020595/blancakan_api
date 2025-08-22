@@ -11,7 +11,10 @@ module Elasticsearch
       text_fields_with_keywords: %w[],
       boolean_fields: [],
       essential_fields: %w[_id],
-      default_sort: [{ 'created_at' => { 'order' => 'desc' } }]
+      default_sort: [{ 'created_at' => { 'order' => 'desc' } }],
+      # Query tuning defaults
+      fuzziness: 'AUTO',
+      minimum_should_match: '100%'
     }.freeze
 
     class << self
@@ -62,6 +65,24 @@ module Elasticsearch
           model_class.elasticsearch_default_sort
         else
           get(:default_sort)
+        end
+      end
+
+      # Get fuzziness setting for a model
+      def fuzziness_for(model_class)
+        if model_class.respond_to?(:elasticsearch_default_fuzziness)
+          model_class.elasticsearch_default_fuzziness
+        else
+          get(:fuzziness)
+        end
+      end
+
+      # Get minimum_should_match setting for a model
+      def minimum_should_match_for(model_class)
+        if model_class.respond_to?(:elasticsearch_minimum_should_match)
+          model_class.elasticsearch_minimum_should_match
+        else
+          get(:minimum_should_match)
         end
       end
 
