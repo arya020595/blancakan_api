@@ -10,7 +10,7 @@ module Api
         end
 
         def index
-          result = @category_service.index(query: params[:query], page: params[:page], per_page: params[:per_page])
+          result = @category_service.index(params)
           format_response(result: result, resource: 'events', action: :index)
         end
 

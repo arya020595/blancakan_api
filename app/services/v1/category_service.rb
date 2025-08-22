@@ -5,8 +5,9 @@ module V1
   class CategoryService
     include Dry::Monads[:result]
 
-    def index(query: '*', page: 1, per_page: 10)
-      categories = ::Category.search(query: query, page: page, per_page: per_page)
+    def index(params = {}, **kwargs)
+      categories = ::Category.search_with_filters(params)
+
       Success(categories)
     end
 
