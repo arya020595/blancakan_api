@@ -8,7 +8,7 @@ class ReindexElasticsearchJob < ApplicationJob
   def perform(model_name, record_id)
     # Log the start of the job
     HelperLogger.info(
-      "ReindexElasticsearchJob started",
+      'ReindexElasticsearchJob started',
       klass: self.class.name,
       extra: { model_name: model_name, record_id: record_id }
     )
@@ -24,14 +24,14 @@ class ReindexElasticsearchJob < ApplicationJob
       record.__elasticsearch__.index_document
       # Log the successful reindexing
       HelperLogger.info(
-        "Successfully reindexed",
+        'Successfully reindexed',
         klass: self.class.name,
         extra: { model_name: model_name, record_id: record_id }
       )
     else
       # Log a warning if the record is not found
       HelperLogger.warn(
-        "Record not found",
+        'Record not found',
         klass: self.class.name,
         extra: { model_name: model_name, record_id: record_id }
       )
