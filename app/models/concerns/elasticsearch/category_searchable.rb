@@ -38,7 +38,11 @@ module Elasticsearch
           response = __elasticsearch__.search(search_definition)
           response.records.page(page).per(per_page)
         rescue StandardError => e
-          Rails.logger.error "Elasticsearch search failed: #{e.message}"
+          HelperLogger.error(
+            "Elasticsearch search failed: #{e.message}",
+            klass: name,
+            extra: { error: e.class.name, backtrace: e.backtrace }
+          )
           # Fallback to database with same interface
           Category.page(page).per(per_page)
         end

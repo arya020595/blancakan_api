@@ -25,7 +25,11 @@ module Elasticsearch
     def index_exists?
       @model_class.__elasticsearch__.index_exists?
     rescue StandardError => e
-      Rails.logger.warn "Could not check if Elasticsearch index exists: #{e.message}"
+      HelperLogger.warn(
+        "Could not check if Elasticsearch index exists: #{e.message}",
+        klass: self.class.name,
+        extra: { model_class: @model_class.name, error: e.class.name, backtrace: e.backtrace }
+      )
       false
     end
 
@@ -36,7 +40,11 @@ module Elasticsearch
       )
       count_response['count'].positive?
     rescue StandardError => e
-      Rails.logger.warn "Could not check Elasticsearch index document count: #{e.message}"
+      HelperLogger.warn(
+        "Could not check Elasticsearch index document count: #{e.message}",
+        klass: self.class.name,
+        extra: { model_class: @model_class.name, error: e.class.name, backtrace: e.backtrace }
+      )
       false
     end
 
@@ -44,33 +52,64 @@ module Elasticsearch
     def create_index_if_missing
       return if index_exists?
 
-      Rails.logger.info "Creating Elasticsearch index for #{@model_class.name}..."
+      HelperLogger.info(
+        'Creating Elasticsearch index...',
+        klass: self.class.name,
+        extra: { model_class: @model_class.name }
+      )
       @model_class.__elasticsearch__.create_index!
-      Rails.logger.info '✅ Index created successfully'
+      HelperLogger.info(
+        '✅ Index created successfully',
+        klass: self.class.name,
+        extra: { model_class: @model_class.name }
+      )
     rescue StandardError => e
-      Rails.logger.warn "Could not create Elasticsearch index: #{e.message}"
+      HelperLogger.warn(
+        "Could not create Elasticsearch index: #{e.message}",
+        klass: self.class.name,
+        extra: { model_class: @model_class.name, error: e.class.name, backtrace: e.backtrace }
+      )
     end
 
     # Populate index if it's empty but database has records
     def populate_empty_index
       return unless database_has_records? && !index_has_documents?
 
-      Rails.logger.info "Populating empty Elasticsearch index with #{@model_class.count} #{@model_class.name.downcase} records..."
-      
+      HelperLogger.info(
+        'Populating empty Elasticsearch index...',
+        klass: self.class.name,
+        extra: { model_class: @model_class.name, record_count: @model_class.count }
+      )
       bulk_import_records
     rescue StandardError => e
-      Rails.logger.warn "Bulk import failed (#{e.message}), trying individual indexing..."
+      HelperLogger.warn(
+        "Bulk import failed (#{e.message}), trying individual indexing...",
+        klass: self.class.name,
+        extra: { model_class: @model_class.name, error: e.class.name, backtrace: e.backtrace }
+      )
       individual_import_records
     end
 
     # Force reindex all records (useful for maintenance)
     def reindex_all(force: false)
       if force || index_exists?
-        Rails.logger.info "Reindexing all #{@model_class.name} records..."
+        HelperLogger.info(
+          'Reindexing all records...',
+          klass: self.class.name,
+          extra: { model_class: @model_class.name }
+        )
         @model_class.import(force: true, refresh: true)
-        Rails.logger.info '✅ Reindexing completed'
+        HelperLogger.info(
+          '✅ Reindexing completed',
+          klass: self.class.name,
+          extra: { model_class: @model_class.name }
+        )
       else
-        Rails.logger.warn "Index does not exist for #{@model_class.name}. Create it first."
+        HelperLogger.warn(
+          'Index does not exist. Create it first.',
+          klass: self.class.name,
+          extra: { model_class: @model_class.name }
+        )
       end
     end
 
@@ -85,7 +124,11 @@ module Elasticsearch
         in_sync: document_count == @model_class.count
       }
     rescue StandardError => e
-      Rails.logger.warn "Could not get index stats: #{e.message}"
+      HelperLogger.warn(
+        "Could not get index stats: #{e.message}",
+        klass: self.class.name,
+        extra: { model_class: @model_class.name, error: e.class.name, backtrace: e.backtrace }
+      )
       { exists: false, error: e.message }
     end
 
@@ -96,7 +139,11 @@ module Elasticsearch
     def database_has_records?
       @model_class.count.positive?
     rescue StandardError => e
-      Rails.logger.warn "Could not check database record count: #{e.message}"
+      HelperLogger.warn(
+        "Could not check database record count: #{e.message}",
+        klass: self.class.name,
+        extra: { model_class: @model_class.name, error: e.class.name, backtrace: e.backtrace }
+      )
       false
     end
 
@@ -111,15 +158,27 @@ module Elasticsearch
 
     def bulk_import_records
       @model_class.import(force: true, refresh: true)
-      Rails.logger.info '✅ Index populated successfully'
+      HelperLogger.info(
+        '✅ Index populated successfully',
+        klass: self.class.name,
+        extra: { model_class: @model_class.name }
+      )
     end
 
     def individual_import_records
       @model_class.find_each(&:index_document)
       @model_class.__elasticsearch__.refresh_index!
-      Rails.logger.info '✅ Individual indexing completed'
-    rescue StandardError => fallback_error
-      Rails.logger.error "Could not index documents: #{fallback_error.message}"
+      HelperLogger.info(
+        '✅ Individual indexing completed',
+        klass: self.class.name,
+        extra: { model_class: @model_class.name }
+      )
+    rescue StandardError => e
+      HelperLogger.error(
+        "Could not index documents: #{e.message}",
+        klass: self.class.name,
+        extra: { model_class: @model_class.name, error: e.class.name, backtrace: e.backtrace }
+      )
     end
   end
 end

@@ -27,7 +27,11 @@ module V1
 
         Cloudinary::Uploader.destroy(image_url.file.public_id)
       rescue StandardError => e
-        Rails.logger.error "Failed to destroy image: #{e.message}"
+        HelperLogger.error(
+          "Failed to destroy image: #{e.message}",
+          klass: self.class.name,
+          extra: { event_id: @event.id, error: e.class.name, backtrace: e.backtrace }
+        )
       end
     end
   end

@@ -16,7 +16,11 @@ module V1
         # Remove the previous avatar file
         previous_avatar.remove!
       rescue StandardError => e
-        Rails.logger.error "Failed to remove previous organizer avatar: #{e.message}"
+        HelperLogger.error(
+          "Failed to remove previous organizer avatar: #{e.message}",
+          klass: self.class.name,
+          extra: { organizer_id: @organizer.id, error: e.class.name, backtrace: e.backtrace }
+        )
       end
 
       def destroy_current_image
@@ -24,7 +28,11 @@ module V1
 
         @organizer.avatar.remove!
       rescue StandardError => e
-        Rails.logger.error "Failed to remove current organizer avatar: #{e.message}"
+        HelperLogger.error(
+          "Failed to remove current organizer avatar: #{e.message}",
+          klass: self.class.name,
+          extra: { organizer_id: @organizer.id, error: e.class.name, backtrace: e.backtrace }
+        )
       end
 
       # Additional helper methods for avatar management
