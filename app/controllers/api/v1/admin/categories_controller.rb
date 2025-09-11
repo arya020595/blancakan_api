@@ -15,7 +15,7 @@ module Api
         end
 
         def show
-          result = @category_service.show(params[:id])
+          result = @category_service.show(@category)
           format_response(result: result, resource: 'categories', action: :show)
         end
 

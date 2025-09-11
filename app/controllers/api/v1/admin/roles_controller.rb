@@ -16,7 +16,7 @@ module Api
         end
 
         def show
-          result = @role_service.show(params[:id])
+          result = @role_service.show(@role)
           format_response(result: result, resource: 'roles', action: :show)
         end
 

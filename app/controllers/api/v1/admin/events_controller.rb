@@ -16,7 +16,7 @@ module Api
         end
 
         def show
-          result = @event_service.show(params[:id])
+          result = @event_service.show(@event)
           format_response(result: result, resource: 'events', action: :show)
         end
 

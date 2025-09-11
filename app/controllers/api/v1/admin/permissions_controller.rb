@@ -16,7 +16,7 @@ module Api
         end
 
         def show
-          result = @permission_service.show(params[:id])
+          result = @permission_service.show(@permission)
           format_response(result: result, resource: 'permissions', action: :show)
         end
 

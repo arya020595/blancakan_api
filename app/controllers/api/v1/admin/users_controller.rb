@@ -16,7 +16,7 @@ module Api
         end
 
         def show
-          result = @user_service.show(params[:id])
+          result = @user_service.show(@user)
           format_response(result: result, resource: 'users', action: :show)
         end
 
