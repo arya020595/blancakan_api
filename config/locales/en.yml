@@ -88,6 +88,12 @@ en:
     register:
       success: "Registration successful"
       error: "Registration failed"
+    profile:
+      success: "Profile retrieved successfully"
+      error: "Failed to retrieve profile"
+    sign_out:
+      success: "Successfully signed out"
+      error: "Failed to sign out"
     sign_out:
       success: "Successfully signed out"
       error: "Sign out failed"

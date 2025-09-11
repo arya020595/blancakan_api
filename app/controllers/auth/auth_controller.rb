@@ -3,7 +3,10 @@
 module Auth
   class AuthController < ApplicationController
     include ServiceResponseFormatter
+    include Authenticatable
     include Dry::Monads[:result]
+
+    before_action :authenticate_request, only: %i[profile sign_out]
 
     # POST /auth/sign_in
     def sign_in
@@ -31,6 +34,12 @@ module Auth
         result = Failure(user.errors.full_messages)
         format_response(result: result, resource: 'users', action: :register)
       end
+    end
+
+    # GET /auth/profile
+    def profile
+      result = Success(current_user)
+      format_response(result: result, resource: 'users', action: :profile)
     end
 
     # POST /auth/sign_out

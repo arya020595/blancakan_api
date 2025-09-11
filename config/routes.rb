@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   namespace :auth do
     post 'sign_in', to: 'auth#sign_in'
     post 'register', to: 'auth#register'
+    get 'profile', to: 'auth#profile'
     delete 'sign_out', to: 'auth#sign_out'
   end
 
