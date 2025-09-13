@@ -30,6 +30,8 @@ module V1
     end
 
     def update(category, params)
+      return Failure(nil) unless category
+
       form = ::V1::Category::CategoryForm.new(params)
       return Failure(form.errors.to_hash) unless form.valid?
 
