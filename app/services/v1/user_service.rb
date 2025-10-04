@@ -6,7 +6,7 @@ module V1
     include Dry::Monads[:result]
 
     def index(params = {})
-      users = ::User.search_with_filters(params)
+      users = ::User.mongodb_search_with_filters(params)
 
       Success(users)
     end

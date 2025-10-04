@@ -4,8 +4,9 @@ module V1
   class PayoutMethodService
     include Dry::Monads[:result]
 
-    def index(query: '*', page: 1, per_page: 10)
-      payout_methods = ::PayoutMethod.search(query: query, page: page, per_page: per_page)
+    def index(params = {})
+      payout_methods = ::PayoutMethod.mongodb_search_with_filters(params)
+
       Success(payout_methods)
     end
 

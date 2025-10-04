@@ -6,7 +6,7 @@ module V1
     include Dry::Monads[:result]
 
     def index(params = {})
-      organizers = ::Organizer.search_with_filters(params)
+      organizers = ::Organizer.mongodb_search_with_filters(params)
 
       Success(organizers)
     end

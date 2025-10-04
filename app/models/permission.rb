@@ -4,6 +4,7 @@ class Permission
   include Mongoid::Document
   include Mongoid::Timestamps
   include Elasticsearch::PermissionSearchable
+  include MongodbSearch::PermissionSearchable
 
   field :action, type: String # Example: "read", "create"
   field :subject_class, type: String # Example: "Event", "User"

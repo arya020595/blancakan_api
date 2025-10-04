@@ -5,8 +5,9 @@ module V1
   class PaymentMethodService
     include Dry::Monads[:result]
 
-    def index(query: '*', page: 1, per_page: 10)
-      payment_methods = ::PaymentMethod.search(query: query, page: page, per_page: per_page)
+    def index(params = {})
+      payment_methods = ::PaymentMethod.mongodb_search_with_filters(params)
+
       Success(payment_methods)
     end
 

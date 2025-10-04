@@ -4,6 +4,7 @@ class Category
   include Mongoid::Document
   include Mongoid::Timestamps
   include Elasticsearch::CategorySearchable
+  include MongodbSearch::CategorySearchable
 
   field :name, type: String
   field :description, type: String

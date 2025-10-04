@@ -6,6 +6,7 @@ class Event
   include AASM
   include CarrierWave::Mongoid
   include Elasticsearch::EventSearchable
+  include MongodbSearch::EventSearchable
 
   # Concerns for separation of concerns
   include Events::SlugGenerator

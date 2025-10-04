@@ -6,7 +6,7 @@ module V1
     include Dry::Monads[:result]
 
     def index(params = {})
-      categories = ::Category.search_with_filters(params)
+      categories = ::Category.mongodb_search_with_filters(params)
 
       Success(categories)
     end

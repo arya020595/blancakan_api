@@ -6,7 +6,7 @@ module V1
     include Dry::Monads[:result]
 
     def index(params = {})
-      events = ::Event.search_with_filters(params)
+      events = ::Event.mongodb_search_with_filters(params)
 
       Success(events)
     end

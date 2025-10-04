@@ -8,6 +8,7 @@ class PayoutMethod
   include PayoutMethods::AccountMasking
   include PayoutMethods::WithdrawalRules
   include PayoutMethods::SingleActivePerUser
+  include MongodbSearch::PayoutMethodSearchable
   include Searchable
 
   # Fields

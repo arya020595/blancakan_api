@@ -7,6 +7,7 @@ class User
   include Mongoid::Timestamps
   include Mongoid::Locker
   include Elasticsearch::UserSearchable
+  include MongodbSearch::UserSearchable
 
   field :locker_locked_at, type: Time
   field :locker_locked_until, type: Time

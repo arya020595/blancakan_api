@@ -6,7 +6,7 @@ module V1
     include Dry::Monads[:result]
 
     def index(params = {})
-      permissions = ::Permission.search_with_filters(params)
+      permissions = ::Permission.mongodb_search_with_filters(params)
 
       Success(permissions)
     end

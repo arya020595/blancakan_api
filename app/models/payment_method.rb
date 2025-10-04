@@ -3,7 +3,8 @@
 class PaymentMethod
   include Mongoid::Document
   include Mongoid::Timestamps
-  include Searchable
+  include Elasticsearch::PaymentMethodSearchable
+  include MongodbSearch::PaymentMethodSearchable
 
   field :code, type: String
   field :display_name, type: String

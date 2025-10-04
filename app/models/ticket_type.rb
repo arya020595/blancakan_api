@@ -5,6 +5,7 @@ class TicketType
   include Mongoid::Timestamps
   include StatusMethods
   include Elasticsearch::TicketTypeSearchable
+  include MongodbSearch::TicketTypeSearchable
 
   field :name, type: String
   field :description, type: String

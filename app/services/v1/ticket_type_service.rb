@@ -6,7 +6,7 @@ module V1
     include Dry::Monads[:result]
 
     def index(params = {})
-      ticket_types = ::TicketType.search_with_filters(params)
+      ticket_types = ::TicketType.mongodb_search_with_filters(params)
 
       Success(ticket_types)
     end

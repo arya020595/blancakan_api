@@ -4,6 +4,7 @@ class Organizer
   include Mongoid::Document
   include Mongoid::Timestamps
   include Elasticsearch::OrganizerSearchable
+  include MongodbSearch::OrganizerSearchable
 
   # Concerns for separation of concerns
   include Organizers::ProfileMethods
