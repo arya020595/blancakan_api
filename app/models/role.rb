@@ -4,6 +4,7 @@ class Role
   include Mongoid::Document
   include Mongoid::Timestamps
   include Elasticsearch::RoleSearchable
+  include MongodbSearch::RoleSearchable
 
   field :name, type: String
   field :description, type: String

@@ -6,7 +6,7 @@ module V1
     include Dry::Monads[:result]
 
     def index(params = {})
-      roles = ::Role.search_with_filters(params)
+      roles = ::Role.mongodb_search_with_filters(params)
 
       Success(roles)
     end
