@@ -9,7 +9,6 @@ class Event
   include MongodbSearch::EventSearchable
 
   # Concerns for separation of concerns
-  include Events::SlugGenerator
   include Events::DateTimeValidations
 
   # Fields - only data definition
@@ -55,6 +54,9 @@ class Event
   validates :short_id, presence: true, uniqueness: true
   validates :event_type, presence: true
   validates :organizer, presence: true
+
+  # Slug configuration using mongoid-slug
+  slug :title, history: true
 
   # CarrierWave
   mount_uploader :cover_image, ImageUploader

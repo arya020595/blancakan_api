@@ -28,6 +28,8 @@ class Organizer
 
   # MongoDB indexes for performance optimization
   index({ user_id: 1 }, { unique: true, background: true })
+  # Text search index for name and description
+  index({ name: 'text', description: 'text' }, { background: true })
   index({ handle: 1 }, { unique: true, sparse: true, background: true })
   index({ is_active: 1 }, { background: true })
   index({ name: 1 }, { background: true })

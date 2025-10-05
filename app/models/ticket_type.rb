@@ -20,6 +20,9 @@ class TicketType
 
   belongs_to :event
 
+  # Text search index for name and description
+  index({ name: 'text', description: 'text' }, { background: true })
+
   validates :name, :price, :quota, :event, :available_from, :available_until, :valid_on, presence: true
   validates :price, :quota, :sort_order, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
 

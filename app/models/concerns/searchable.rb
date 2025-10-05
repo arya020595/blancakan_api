@@ -18,7 +18,7 @@
 #      end
 #
 #   3. Use search methods:
-#      Model.search('term')                           # Simple search
+#      Model.search('term')                          # Simple search
 #      Model.search(query: 'term', page: 1)          # Service pattern
 #      Model.search_all_terms('multiple terms')      # AND logic
 #      Model.search_any_terms('multiple terms')      # OR logic

@@ -22,6 +22,9 @@ class PayoutMethod
   belongs_to :user
   belongs_to :bank
 
+  # Text search index for account_holder
+  index({ account_holder: 'text' }, { background: true })
+
   # Validations
   validates :bank_account_no, presence: true,
                               format: { with: /\A\d{8,20}\z/, message: 'must be 8-20 digits' }

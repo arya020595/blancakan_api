@@ -3,17 +3,20 @@
 class Bank
   include Mongoid::Document
   include Mongoid::Timestamps
+  include Mongoid::Slug
   include StatusMethods
   include MongodbSearch::BankSearchable
 
   field :code, type: String
   field :name, type: String
+  field :slug, type: String
   field :logo_url, type: String
   field :is_active, type: Boolean, default: true
 
   # MongoDB indexes for performance optimization
   index({ name: 1 }, { unique: true, sparse: true, background: true })
   index({ code: 1 }, { unique: true, sparse: true, background: true })
+  index({ slug: 1 }, { unique: true, sparse: true, background: true })
   index({ is_active: 1, sort_order: 1 }, { background: true })
   # Text search index for name
   index({ name: 'text' }, { background: true })
@@ -21,6 +24,10 @@ class Bank
   validates :code, presence: true, uniqueness: true,
                    format: { with: /\A[A-Z0-9_]+\z/, message: 'must contain only uppercase letters, numbers, and underscores' }
   validates :name, presence: true
+  validates :slug, presence: true, uniqueness: true
+
+  # Slug configuration using mongoid-slug
+  slug :name, history: true
 
   scope :ordered, -> { order_by(name: :asc) }
 

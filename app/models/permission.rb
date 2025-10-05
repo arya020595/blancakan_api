@@ -13,6 +13,8 @@ class Permission
   # MongoDB indexes for performance optimization
   index({ action: 1, subject_class: 1, role_id: 1 }, { unique: true, background: true })
   index({ role_id: 1 }, { background: true })
+  # Text search index for action and subject_class
+  index({ action: 'text', subject_class: 'text' }, { background: true })
 
   belongs_to :role
 

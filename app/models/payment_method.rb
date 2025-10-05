@@ -20,6 +20,9 @@ class PaymentMethod
   # Enum for type
   TYPES = %w[e_wallet bank_transfer credit_card convenience_store].freeze
 
+  # Text search index for display_name and description
+  index({ display_name: 'text', description: 'text' }, { background: true })
+
   validates :code, presence: true, uniqueness: true,
                    format: { with: /\A[a-z0-9_]+\z/, message: 'must contain only lowercase letters, numbers, and underscores' }
   validates :display_name, :type, :payment_gateway, presence: true

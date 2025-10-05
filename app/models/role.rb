@@ -13,6 +13,8 @@ class Role
   has_many :permissions, dependent: :destroy
 
   index({ name: 1 }, { unique: true })
+  # Text search index for name and description
+  index({ name: 'text', description: 'text' }, { background: true })
 
   validates :name, presence: true, uniqueness: true
   validates :description, presence: true

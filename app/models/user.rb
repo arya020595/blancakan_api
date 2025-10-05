@@ -27,6 +27,9 @@ class User
   validates :password, presence: true, confirmation: true, if: :password_required?
   validates :email, presence: true
 
+  # Text search index for name and email
+  index({ name: 'text', email: 'text' }, { background: true })
+
   before_save :encrypt_password, if: :password_required?
 
   def authenticate(unencrypted_password)
