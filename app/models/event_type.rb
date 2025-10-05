@@ -3,6 +3,7 @@
 class EventType
   include Mongoid::Document
   include Mongoid::Timestamps
+  include Mongoid::Slug
   include MongodbSearch::EventTypeSearchable
 
   # Fields matching the provided schema
@@ -28,18 +29,10 @@ class EventType
   validates :slug, presence: true, uniqueness: true
   validates :sort_order, presence: true, numericality: { greater_than_or_equal_to: 0 }
 
-  # Callbacks
-  before_validation :generate_slug, on: :create
+  # Slug configuration using mongoid-slug
+  slug :name, history: true
 
   # Scopes
   scope :active, -> { where(is_active: true) }
   scope :ordered, -> { order(:sort_order, :name) }
-
-  private
-
-  def generate_slug
-    return if name.blank?
-
-    self.slug = name.parameterize
-  end
 end

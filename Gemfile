@@ -27,6 +27,7 @@ gem 'tzinfo-data', platforms: %i[windows jruby]
 # Reduces boot times through caching; required in config/boot.rb
 gem 'aasm', '~> 5.5'
 gem 'active_model_serializers', '~> 0.10.2'
+gem 'babosa'
 gem 'bootsnap', require: false
 gem 'cancancan', '~> 3.5'
 gem 'carrierwave', '~> 3.1', '>= 3.1.1'
@@ -44,6 +45,7 @@ gem 'kaminari-mongoid'
 gem 'lograge', '~> 0.14.0'
 gem 'mongoid'
 gem 'mongoid-locker', '~> 2.1'
+gem 'mongoid-slug'
 gem 'omniauth'
 gem 'redis', '~> 5.3'
 gem 'sidekiq', '~> 7.3', '>= 7.3.8'
