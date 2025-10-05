@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
+# Provides Elasticsearch integration for models, including async indexing and search utilities.
 module Elasticsearch
+  # This module provides Elasticsearch integration for models, including async indexing and search utilities.
   module BaseSearchable
     extend ActiveSupport::Concern
 
@@ -8,13 +10,12 @@ module Elasticsearch
       include Elasticsearch::Model
       # Don't include Elasticsearch::Model::Callbacks - we use async callbacks instead
       # This prevents synchronous indexing that blocks requests
-
-      # Async callbacks - run after transaction commits
-      # Reference: "Elasticsearch: The Definitive Guide" recommends async indexing for resilience
       after_commit :async_index_document, on: %i[create update], if: :elasticsearch_enabled?
       after_commit :async_delete_document, on: :destroy, if: :elasticsearch_enabled?
     end
 
+    # Class methods for Elasticsearch::BaseSearchable.
+    # Provides search, index management, and availability checks for including models.
     module ClassMethods
       # Main search method - follows Single Responsibility Principle
       def search_with_filters(params = {})
@@ -46,38 +47,28 @@ module Elasticsearch
 
     private
 
-    # Async indexing - enqueues background job
-    # Pattern: "Background Job" pattern from "Enterprise Integration Patterns" (Hohpe & Woolf)
-    # Benefits: Non-blocking, retriable, fault-tolerant
     def async_index_document
       ReindexElasticsearchJob.perform_later(self.class.name, id.to_s)
     rescue StandardError => e
-      # Log but don't raise - main operation should succeed
-      # Pattern: "Let It Crash" (Erlang/Elixir philosophy adapted for Ruby)
-      HelperLogger.warn(
-        'Failed to enqueue Elasticsearch indexing job',
-        klass: self.class.name,
-        extra: {
-          record_id: id.to_s,
-          error: e.message,
-          backtrace: e.backtrace.first(3)
-        }
-      )
+      log_elasticsearch_job_failure('indexing', e)
     end
 
-    # Async delete - enqueues background job
-    # Pattern: Consistent with async_index_document for true non-blocking behavior
     def async_delete_document
       ReindexElasticsearchJob.perform_later(self.class.name, id.to_s, 'delete')
     rescue StandardError => e
-      # Log but don't raise - main operation should succeed
+      log_elasticsearch_job_failure('delete', e)
+    end
+
+    # Shared logging for Elasticsearch job failures
+    def log_elasticsearch_job_failure(operation, error)
       HelperLogger.warn(
-        'Failed to enqueue Elasticsearch delete job',
+        "Failed to enqueue Elasticsearch #{operation} job",
         klass: self.class.name,
         extra: {
           record_id: id.to_s,
-          error: e.message,
-          backtrace: e.backtrace.first(3)
+          operation: operation,
+          error: error.message,
+          backtrace: error.backtrace.first(3)
         }
       )
     end
