@@ -85,7 +85,7 @@ module Elasticsearch
     # Check if Elasticsearch indexing is enabled
     # Can be disabled via environment variable for testing or maintenance
     def elasticsearch_enabled?
-      Rails.application.credentials.dig(:elasticsearch, :enabled)
+      Rails.application.credentials.dig(:elasticsearch, :enabled) || false
     end
   end
 end

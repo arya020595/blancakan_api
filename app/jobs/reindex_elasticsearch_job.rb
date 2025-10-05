@@ -5,8 +5,8 @@ class ReindexElasticsearchJob < ApplicationJob
   # Retry strategy - based on Sidekiq best practices
   # Reference: "Sidekiq in Practice" recommends exponential backoff for external services
   # Retries: 0min, 3min, 15min, 2hr, 10hr (5 attempts total)
-  retry_on Elastic::Transport::Transport::Error, wait: :exponentially_longer, attempts: 5
-  retry_on Faraday::ConnectionFailed, wait: :exponentially_longer, attempts: 5
+  retry_on Elastic::Transport::Transport::Error, wait: :polynomially_longer, attempts: 5
+  retry_on Faraday::ConnectionFailed, wait: :polynomially_longer, attempts: 5
 
   # Don't retry if record is not found - it's been deleted
   discard_on Mongoid::Errors::DocumentNotFound do |job, error|
