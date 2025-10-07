@@ -3,6 +3,7 @@
 class Event
   include Mongoid::Document
   include Mongoid::Timestamps
+  include Mongoid::Slug
   include AASM
   include CarrierWave::Mongoid
   include Elasticsearch::EventSearchable
@@ -14,7 +15,6 @@ class Event
   # Fields - only data definition
   field :title, type: String
   field :slug, type: String
-  field :short_id, type: String
   field :description, type: String
   field :cover_image, type: String
   field :status, type: String, default: 'draft'
@@ -38,7 +38,6 @@ class Event
   # MongoDB indexes for performance optimization
   # Based on "MongoDB: The Definitive Guide" - index common query patterns
   index({ slug: 1 }, { unique: true, sparse: true, background: true })
-  index({ short_id: 1 }, { unique: true, sparse: true, background: true })
   index({ status: 1, start_date: 1 }, { background: true })
   index({ category_ids: 1, status: 1 }, { background: true })
   index({ organizer_id: 1, status: 1 }, { background: true })
@@ -51,7 +50,6 @@ class Event
 
   # Database integrity validations - fallback guardrails
   validates :slug, presence: true, uniqueness: true
-  validates :short_id, presence: true, uniqueness: true
   validates :event_type, presence: true
   validates :organizer, presence: true
 

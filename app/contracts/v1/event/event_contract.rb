@@ -95,7 +95,7 @@ module V1
       end
 
       rule(:organizer_id) do
-        key.failure('organizer does not exist') if key? && value.present? && !::User.where(id: value).exists?
+        key.failure('organizer does not exist') if key? && value.present? && !::Organizer.where(id: value).exists?
       end
 
       rule(:event_type_id) do
