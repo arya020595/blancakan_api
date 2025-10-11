@@ -19,6 +19,7 @@ class User
   field :password_digest,    type: String
   field :name, type: String
   field :is_active, type: Boolean, default: true
+  field :timezone, type: String
 
   # Password authentication
   attr_reader :password
