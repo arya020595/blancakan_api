@@ -45,10 +45,8 @@ module Api
           params.require(:event).permit(
             :title,
             :description,
-            :start_date,
-            :start_time,
-            :end_date,
-            :end_time,
+            :starts_at_local,
+            :ends_at_local,
             :location_type,
             :timezone,
             :event_type_id,

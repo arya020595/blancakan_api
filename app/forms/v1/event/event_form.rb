@@ -5,10 +5,8 @@ module V1
     class EventForm < ApplicationForm
       attribute :title, :string
       attribute :description, :string
-      attribute :start_date, :date
-      attribute :start_time, :time
-      attribute :end_date, :date
-      attribute :end_time, :time
+      attribute :starts_at_local, :datetime  # Combined datetime from frontend
+      attribute :ends_at_local, :datetime    # Combined datetime from frontend
       attribute :location_type, :string
       attribute :location
       attribute :timezone, :string
@@ -43,26 +41,23 @@ module V1
 
       # Sanitized and processed attributes
       def sanitized_attributes
-        {
+        attrs = {
           title: strip_string(title),
           description: strip_string(description),
-          start_date: parse_date(start_date),
-          start_time: parse_time(start_time),
-          end_date: parse_date(end_date),
-          end_time: parse_time(end_time),
+          starts_at_local: parse_datetime(starts_at_local),
+          ends_at_local: parse_datetime(ends_at_local),
           location_type: strip_string(location_type),
           location: location,
-          timezone: strip_string(timezone),
+          timezone: strip_string(timezone) || 'Asia/Jakarta', # Default to Jakarta
           organizer_id: organizer_id,
           event_type_id: event_type_id,
           category_ids: sanitize_array(category_ids),
           cover_image: cover_image, # File upload handled by CarrierWave
           is_paid: is_paid
-        }.compact
-      end
+        }
 
-      # Keep backward compatibility
-      alias attributes sanitized_attributes
+        attrs.compact
+      end
     end
   end
 end

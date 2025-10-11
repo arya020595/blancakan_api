@@ -2,83 +2,39 @@
 
 module V1
   module Events
+    # Service for datetime operations on events
+    # Works with the new combined datetime fields (starts_at_local, starts_at_utc, etc.)
     class DateTimeService
       def initialize(event)
         @event = event
       end
 
-      def start_datetime
-        return nil unless @event.start_date && @event.start_time
-
-        combine_date_time(@event.start_date, @event.start_time)
-      end
-
-      def end_datetime
-        return nil unless @event.end_date && @event.end_time
-
-        combine_date_time(@event.end_date, @event.end_time)
-      end
-
-      def start_datetime_in(timezone)
-        return nil unless start_datetime
-
-        start_datetime.in_time_zone(timezone)
-      end
-
-      def end_datetime_in(timezone)
-        return nil unless end_datetime
-
-        end_datetime.in_time_zone(timezone)
-      end
-
-      def start_datetime_utc
-        return nil unless start_datetime
-
-        start_datetime.utc
-      end
-
-      def end_datetime_utc
-        return nil unless end_datetime
-
-        end_datetime.utc
-      end
-
+      # Duration in hours between start and end
       def duration_in_hours
-        return nil unless start_datetime && end_datetime
+        return nil unless @event.starts_at_utc && @event.ends_at_utc
 
-        ((end_datetime - start_datetime) / 1.hour).round(2)
+        ((@event.ends_at_utc - @event.starts_at_utc) / 1.hour).round(2)
       end
 
+      # Check if event is currently happening (timezone-aware)
       def happening_now?
-        return false unless start_datetime && end_datetime
+        return false unless @event.starts_at_utc && @event.ends_at_utc
 
-        Time.current.between?(start_datetime, end_datetime)
+        Time.current.utc.between?(@event.starts_at_utc, @event.ends_at_utc)
       end
 
+      # Get start time in a specific timezone
       def local_start_time_for(timezone)
-        return nil unless start_datetime
+        return nil unless @event.starts_at_utc
 
-        start_datetime.in_time_zone(timezone)
+        @event.starts_at_utc.in_time_zone(timezone)
       end
 
+      # Get end time in a specific timezone
       def local_end_time_for(timezone)
-        return nil unless end_datetime
+        return nil unless @event.ends_at_utc
 
-        end_datetime.in_time_zone(timezone)
-      end
-
-      private
-
-      def combine_date_time(date, time)
-        DateTime.new(
-          date.year,
-          date.month,
-          date.day,
-          time.hour,
-          time.min,
-          time.sec,
-          time.zone
-        ).in_time_zone(@event.timezone)
+        @event.ends_at_utc.in_time_zone(timezone)
       end
     end
   end

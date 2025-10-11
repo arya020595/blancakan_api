@@ -6,13 +6,12 @@ module V1
   module Event
     class EventContract < Dry::Validation::Contract
       INDONESIA_TIMEZONES = ['Asia/Jakarta', 'Asia/Makassar', 'Asia/Jayapura'].freeze
+
       params do
         required(:title).filled(:string)
         required(:description).filled(:string)
-        required(:start_date).filled(:date)
-        required(:start_time).filled(:time)
-        required(:end_date).filled(:date)
-        required(:end_time).filled(:time)
+        required(:starts_at_local).filled(:date_time)  # Combined datetime field
+        required(:ends_at_local).filled(:date_time)    # Combined datetime field
         required(:location_type).filled(:string)
         required(:timezone).filled(:string)
         required(:event_type_id).filled
@@ -79,13 +78,15 @@ module V1
         end
       end
 
-      rule(:start_date, :end_date, :start_time, :end_time) do
-        if values[:start_date] && values[:end_date] && values[:start_time] && values[:end_time]
-          start_datetime = combine_date_time(values[:start_date], values[:start_time])
-          end_datetime = combine_date_time(values[:end_date], values[:end_time])
+      rule(:starts_at_local, :ends_at_local, :timezone) do
+        if values[:starts_at_local] && values[:ends_at_local] && values[:timezone]
+          # Convert to UTC for comparison (timezone-safe)
+          tz = ActiveSupport::TimeZone[values[:timezone]] || ActiveSupport::TimeZone['Asia/Jakarta']
+          starts_utc = values[:starts_at_local].in_time_zone(tz).utc
+          ends_utc = values[:ends_at_local].in_time_zone(tz).utc
 
-          key(:end_date).failure('must be after start date and time') if start_datetime >= end_datetime
-          key(:start_date).failure('cannot be in the past') if start_datetime < Time.current
+          key(:ends_at_local).failure('must be after start datetime') if starts_utc >= ends_utc
+          key(:starts_at_local).failure('cannot be in the past') if starts_utc < Time.current.utc
         end
       end
 
@@ -111,10 +112,6 @@ module V1
       end
 
       private
-
-      def combine_date_time(date, time)
-        DateTime.new(date.year, date.month, date.day, time.hour, time.min)
-      end
 
       def valid_timezone?(timezone)
         tz = timezone.to_s.strip

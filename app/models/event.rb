@@ -20,11 +20,16 @@ class Event
   field :status, type: String, default: 'draft'
   field :location_type, type: String
   field :location, type: Hash
-  field :start_date, type: Date
-  field :start_time, type: Time
-  field :end_date, type: Date
-  field :end_time, type: Time
-  field :timezone, type: String, default: 'UTC'
+
+  # Datetime fields (timezone-safe design)
+  # Frontend merges date + time → sends full local datetime + timezone
+  # Backend stores both local and UTC versions
+  field :starts_at_local, type: DateTime  # Event's local start time (organizer's timezone)
+  field :starts_at_utc, type: DateTime    # UTC version for filtering, sorting, scheduling
+  field :ends_at_local, type: DateTime    # Event's local end time (organizer's timezone)
+  field :ends_at_utc, type: DateTime      # UTC version for filtering, sorting, scheduling
+  field :timezone, type: String, default: 'Asia/Jakarta' # IANA timezone identifier
+
   field :is_paid, type: Boolean, default: false
   field :published_at, type: Time
   field :canceled_at, type: Time
@@ -38,13 +43,13 @@ class Event
   # MongoDB indexes for performance optimization
   # Based on "MongoDB: The Definitive Guide" - index common query patterns
   index({ slug: 1 }, { unique: true, sparse: true, background: true })
-  index({ status: 1, start_date: 1 }, { background: true })
+  index({ status: 1, starts_at_utc: 1 }, { background: true }) # Use UTC for global queries
   index({ category_ids: 1, status: 1 }, { background: true })
   index({ organizer_id: 1, status: 1 }, { background: true })
   index({ event_type_id: 1, status: 1 }, { background: true })
-  index({ start_date: 1, end_date: 1 }, { background: true })
+  index({ starts_at_utc: 1, ends_at_utc: 1 }, { background: true }) # Use UTC for date range queries
   index({ published_at: 1 }, { sparse: true, background: true })
-  index({ timezone: 1, start_date: 1 }, { background: true })
+  index({ timezone: 1, starts_at_utc: 1 }, { background: true }) # Timezone + UTC start for filtering
   # Text search index for title and description
   index({ title: 'text', description: 'text' }, { background: true })
 
@@ -60,6 +65,7 @@ class Event
   mount_uploader :cover_image, ImageUploader
 
   # Callbacks
+  before_validation :sync_utc_datetimes
   before_update :destroy_previous_image_if_changed
   before_destroy :destroy_current_image
   after_save :enqueue_reindex_job
@@ -87,12 +93,21 @@ class Event
   end
 
   # Delegate datetime operations to service object (Fowler's Delegation pattern)
-  delegate :start_datetime, :end_datetime, :start_datetime_in, :end_datetime_in,
-           :start_datetime_utc, :end_datetime_utc, :duration_in_hours,
-           :happening_now?, :local_start_time_for, :local_end_time_for,
+  delegate :duration_in_hours, :happening_now?,
+           :local_start_time_for, :local_end_time_for,
            to: :datetime_service
 
   private
+
+  # Automatically sync UTC datetimes when local datetimes change
+  # This ensures consistency and enables UTC-based queries
+  def sync_utc_datetimes
+    self.starts_at_utc = starts_at_local.in_time_zone(timezone).utc if starts_at_local.present? && timezone.present?
+
+    return unless ends_at_local.present? && timezone.present?
+
+    self.ends_at_utc = ends_at_local.in_time_zone(timezone).utc
+  end
 
   def datetime_service
     @datetime_service ||= V1::Events::DateTimeService.new(self)

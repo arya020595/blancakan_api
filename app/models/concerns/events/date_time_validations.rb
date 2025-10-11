@@ -5,38 +5,41 @@ module Events
     extend ActiveSupport::Concern
 
     included do
-      validate :start_datetime_cannot_be_in_the_past
-      validate :start_datetime_before_end_datetime
-      validate :start_and_end_on_same_day_if_single_day_event
+      validate :starts_at_cannot_be_in_the_past
+      validate :starts_at_before_ends_at
+      validate :event_duration_is_reasonable
     end
 
     private
 
     # Timezone-aware validations (based on Rails guides best practices)
-    def start_datetime_cannot_be_in_the_past
-      return unless datetime_service.start_datetime.present?
+    # Always compare in UTC to avoid timezone confusion
+    def starts_at_cannot_be_in_the_past
+      return unless starts_at_utc.present?
 
       # Compare in UTC to avoid timezone confusion
-      return unless datetime_service.start_datetime_utc < Time.current.utc
+      return unless starts_at_utc < Time.current.utc
 
-      errors.add(:start_date, I18n.t('event.errors.start_datetime_past'))
+      errors.add(:starts_at_local, I18n.t('event.errors.start_datetime_past'))
     end
 
-    def start_datetime_before_end_datetime
-      return unless datetime_service.start_datetime.present? && datetime_service.end_datetime.present?
+    def starts_at_before_ends_at
+      return unless starts_at_utc.present? && ends_at_utc.present?
 
-      return unless datetime_service.start_datetime_utc >= datetime_service.end_datetime_utc
+      return unless starts_at_utc >= ends_at_utc
 
-      errors.add(:start_date, I18n.t('event.errors.start_before_end'))
+      errors.add(:starts_at_local, I18n.t('event.errors.start_before_end'))
     end
 
     # Enhanced validation for international events
-    def start_and_end_on_same_day_if_single_day_event
-      return unless start_date.present? && end_date.present?
-      return if start_date == end_date # Valid single-day event
-      return if (end_date - start_date).to_i <= 30 # Valid multi-day event (up to 30 days)
+    # Ensure events don't exceed reasonable duration (30 days)
+    def event_duration_is_reasonable
+      return unless starts_at_utc.present? && ends_at_utc.present?
 
-      errors.add(:end_date, I18n.t('event.errors.invalid_date_range'))
+      duration_days = ((ends_at_utc - starts_at_utc) / 1.day).to_i
+      return if duration_days <= 30 # Valid event (up to 30 days)
+
+      errors.add(:ends_at_local, I18n.t('event.errors.invalid_date_range'))
     end
 
     def datetime_service

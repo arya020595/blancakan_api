@@ -13,10 +13,10 @@ module MongodbSearch
 
       # Fields that can be used for sorting
       def mongodb_sortable_fields
-        %w[name description location start_datetime end_datetime is_active created_at updated_at _id]
+        %w[name description location starts_at_utc ends_at_utc is_active created_at updated_at _id]
       end
 
-      # Fields with text indexes (MongoDB $text search)
+      # Fields that are text indexes (MongoDB $text search)
       def mongodb_text_fields
         %w[name description location]
       end
@@ -28,13 +28,13 @@ module MongodbSearch
 
       # Fields that can be filtered
       def mongodb_filterable_fields
-        %w[name description location is_active is_featured organizer_id event_type_id category_ids start_datetime
-           end_datetime created_at updated_at]
+        %w[name description location is_active is_featured organizer_id event_type_id category_ids starts_at_utc
+           ends_at_utc timezone created_at updated_at]
       end
 
       # Default sort order
       def mongodb_default_sort
-        { start_datetime: -1, name: 1 } # Sort by start date descending, then name
+        { starts_at_utc: -1, name: 1 } # Sort by start date (UTC) descending, then name
       end
     end
   end

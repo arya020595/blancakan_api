@@ -28,10 +28,10 @@ module Elasticsearch
           indexes :category_ids, type: :keyword
 
           # Date fields for date filtering and sorting
-          indexes :start_date, type: :date
-          indexes :end_date, type: :date
-          indexes :start_time, type: :date
-          indexes :end_time, type: :date
+          indexes :starts_at_local, type: :date
+          indexes :starts_at_utc, type: :date
+          indexes :ends_at_local, type: :date
+          indexes :ends_at_utc, type: :date
           indexes :published_at, type: :date
           indexes :canceled_at, type: :date
           indexes :created_at, type: :date
@@ -47,7 +47,7 @@ module Elasticsearch
       def as_indexed_json(_options = {})
         attributes = as_json(only: %i[
                                title slug short_id description status location_type location
-                               start_date start_time end_date end_time timezone is_paid published_at
+                               starts_at_local starts_at_utc ends_at_local ends_at_utc timezone is_paid published_at
                                canceled_at organizer_id event_type_id category_ids
                              ])
 
@@ -90,7 +90,7 @@ module Elasticsearch
       def elasticsearch_sortable_fields
         %w[
           title status slug short_id location_type timezone is_paid
-          start_date end_date start_time end_time organizer_id event_type_id
+          starts_at_local starts_at_utc ends_at_local ends_at_utc organizer_id event_type_id
           created_at updated_at published_at canceled_at
           _score _id
         ]
