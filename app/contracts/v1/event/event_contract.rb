@@ -5,6 +5,7 @@ require 'dry/validation'
 module V1
   module Event
     class EventContract < Dry::Validation::Contract
+      INDONESIA_TIMEZONES = ['Asia/Jakarta', 'Asia/Makassar', 'Asia/Jayapura'].freeze
       params do
         required(:title).filled(:string)
         required(:description).filled(:string)
@@ -119,8 +120,8 @@ module V1
         tz = timezone.to_s.strip
         return false if tz.empty?
 
-        # Case-insensitive match against Rails time zone names
-        ActiveSupport::TimeZone.all.any? { |zone| zone.name.casecmp?(tz) }
+        # Only allow a small set of Indonesian timezones for now
+        INDONESIA_TIMEZONES.any? { |allowed| allowed.casecmp?(tz) }
       rescue StandardError
         false
       end
