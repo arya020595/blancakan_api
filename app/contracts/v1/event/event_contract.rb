@@ -116,7 +116,11 @@ module V1
       end
 
       def valid_timezone?(timezone)
-        ActiveSupport::TimeZone.all.map(&:name).include?(timezone)
+        tz = timezone.to_s.strip
+        return false if tz.empty?
+
+        # Case-insensitive match against Rails time zone names
+        ActiveSupport::TimeZone.all.any? { |zone| zone.name.casecmp?(tz) }
       rescue StandardError
         false
       end
