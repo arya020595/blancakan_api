@@ -18,23 +18,39 @@ docs/
 │   ├── folder_structure.md     # Folder Structure Guide
 │   ├── design_patterns.md      # Design Patterns Used
 │   └── data_flow.md           # Data Flow & Request Lifecycle
+├── authorization/              # **NEW: Authorization System**
+│   ├── README.md              # Complete authorization guide
+│   ├── QUICK_REFERENCE.md     # Quick reference and cheat sheet
+│   └── COMPLETE_EXAMPLE.md    # Step-by-step implementation example
 ├── development/
 │   ├── setup.md               # Development Setup
 │   ├── testing.md             # Testing Guide
 │   ├── coding_standards.md    # Coding Standards & Best Practices
+│   ├── form_objects_pattern.md # Form Objects Pattern Guide
 │   └── contributing.md        # Contributing Guidelines
-└── deployment/
-    ├── production.md          # Production Deployment
-    ├── environment_variables.md # Environment Configuration
-    └── monitoring.md          # Monitoring & Logging
+├── deployment/
+│   ├── production.md          # Production Deployment
+│   ├── environment_variables.md # Environment Configuration
+│   └── monitoring.md          # Monitoring & Logging
+├── elasticsearch/              # Elasticsearch Integration
+│   ├── README.md              # Elasticsearch setup and usage
+│   ├── QUICK_REFERENCE.md     # Quick reference guide
+│   └── COMPLETE_EXAMPLE.md    # Complete examples
+├── mongodb_search/             # MongoDB Search System
+│   ├── README.md              # MongoDB search documentation
+│   ├── QUICK_REFERENCE.md     # Quick reference guide
+│   └── COMPLETE_EXAMPLE.md    # Complete examples
+└── helper/
+    └── helper_logger.md       # Logging helper documentation
 ```
 
 ## 🚀 Quick Start
 
 1. **API Documentation**: Start with [API Endpoints](api/endpoints.md)
 2. **Authentication**: Learn about [Authentication & Authorization](api/authentication.md)
-3. **Architecture**: Understand the [Architecture Overview](architecture/overview.md)
-4. **Development**: Set up your [Development Environment](development/setup.md)
+3. **Authorization**: Understand [Role-Based Access Control](authorization/README.md)
+4. **Architecture**: Understand the [Architecture Overview](architecture/overview.md)
+5. **Development**: Set up your [Development Environment](development/setup.md)
 
 ## 🏗️ Architecture Highlights
 
@@ -46,12 +62,14 @@ docs/
 ## 📖 Key Features
 
 - **JWT Authentication**: Secure token-based authentication
-- **Role-Based Authorization**: Granular permission system
+- **Role-Based Authorization**: CanCanCan-powered granular permission system ([docs](authorization/README.md))
 - **Event Management**: Comprehensive event management system
-- **Search Integration**: Elasticsearch-powered search
+- **Search Integration**: Elasticsearch-powered search ([docs](elasticsearch/README.md))
+- **MongoDB Search**: Native MongoDB text and regex search ([docs](mongodb_search/README.md))
 - **File Uploads**: Cloudinary integration for media management
 - **Background Jobs**: Sidekiq for asynchronous processing
 - **API Documentation**: Swagger/OpenAPI 3.0 specification
+- **Form Objects**: Clean validation layer ([docs](development/form_objects_pattern.md))
 
 ## 🛠️ Tech Stack
 
