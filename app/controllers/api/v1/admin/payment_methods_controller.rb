@@ -10,8 +10,9 @@ module Api
         end
 
         def index
-          result = @payment_method_service.index(query: params[:query], page: params[:page],
-                                                 per_page: params[:per_page])
+          # @payment_methods automatically set by set_collection_for_index before_action
+          result = @payment_method_service.index({ query: params[:query], page: params[:page],
+                                                   per_page: params[:per_page] }, @payment_methods)
           format_response(result: result, resource: 'payment_methods', action: :index)
         end
 

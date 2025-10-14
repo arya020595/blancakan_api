@@ -10,7 +10,8 @@ module Api
         end
 
         def index
-          result = @bank_service.index(params)
+          # @banks automatically set by set_collection_for_index before_action
+          result = @bank_service.index(params, @banks)
           format_response(result: result, resource: 'banks', action: :index)
         end
 

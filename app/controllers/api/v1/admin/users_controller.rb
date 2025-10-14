@@ -11,7 +11,8 @@ module Api
         end
 
         def index
-          result = @user_service.index(params)
+          # @users automatically set by set_collection_for_index before_action
+          result = @user_service.index(params, @users)
           format_response(result: result, resource: 'users', action: :index)
         end
 

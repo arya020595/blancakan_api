@@ -11,7 +11,8 @@ module Api
         end
 
         def index
-          result = @role_service.index(params)
+          # @roles automatically set by set_collection_for_index before_action
+          result = @role_service.index(params, @roles)
           format_response(result: result, resource: 'roles', action: :index)
         end
 
