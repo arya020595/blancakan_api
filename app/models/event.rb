@@ -102,11 +102,16 @@ class Event
   # Automatically sync UTC datetimes when local datetimes change
   # This ensures consistency and enables UTC-based queries
   def sync_utc_datetimes
-    self.starts_at_utc = starts_at_local.in_time_zone(timezone).utc if starts_at_local.present? && timezone.present?
+    if starts_at_local.present? && timezone.present?
+      # Parse the local datetime as being in the specified timezone, then convert to UTC
+      tz = ActiveSupport::TimeZone[timezone]
+      self.starts_at_utc = tz.parse(starts_at_local.strftime('%Y-%m-%d %H:%M:%S')).utc
+    end
 
-    return unless ends_at_local.present? && timezone.present?
-
-    self.ends_at_utc = ends_at_local.in_time_zone(timezone).utc
+    if ends_at_local.present? && timezone.present?
+      tz = ActiveSupport::TimeZone[timezone]
+      self.ends_at_utc = tz.parse(ends_at_local.strftime('%Y-%m-%d %H:%M:%S')).utc
+    end
   end
 
   def datetime_service
