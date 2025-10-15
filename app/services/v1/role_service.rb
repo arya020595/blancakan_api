@@ -5,9 +5,8 @@ module V1
   class RoleService
     include Dry::Monads[:result]
 
-    def index(params = {}, scope)
-      # Scope is required - always pass @roles from controller
-      roles = scope.mongodb_search_with_filters(params)
+    def index(params = {})
+      roles = ::Role.mongodb_search_with_filters(params)
 
       Success(roles)
     end

@@ -5,9 +5,8 @@ module V1
   class EventTypeService
     include Dry::Monads[:result]
 
-    def index(params = {}, scope)
-      # Scope is required - always pass @event_types from controller
-      event_types = scope.mongodb_search_with_filters(params)
+    def index(params = {})
+      event_types = ::EventType.mongodb_search_with_filters(params)
       Success(event_types)
     end
 

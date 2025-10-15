@@ -11,8 +11,7 @@ module Api
         end
 
         def index
-          # @permissions automatically set by set_collection_for_index before_action
-          result = @permission_service.index(params, @permissions)
+          result = @permission_service.index(params)
           format_response(result: result, resource: 'permissions', action: :index)
         end
 

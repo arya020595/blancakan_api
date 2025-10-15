@@ -10,9 +10,7 @@ module Api
         end
 
         def index
-          # @payout_methods automatically set by set_collection_for_index before_action
-          result = @payout_method_service.index({ query: params[:query], page: params[:page],
-                                                  per_page: params[:per_page] }, @payout_methods)
+          result = @payout_method_service.index(query: params[:query], page: params[:page], per_page: params[:per_page])
           format_response(result: result, resource: 'payout_methods', action: :index)
         end
 
