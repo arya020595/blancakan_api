@@ -5,8 +5,8 @@ module V1
   class PermissionService
     include Dry::Monads[:result]
 
-    def index(params = {})
-      permissions = ::Permission.mongodb_search_with_filters(params)
+    def index(scope, params = {})
+      permissions = scope.mongodb_search_with_filters(params)
 
       Success(permissions)
     end

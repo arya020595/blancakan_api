@@ -10,8 +10,8 @@ module Api
         end
 
         def index
-          result = @category_service.index(params)
-          format_response(result: result, resource: 'events', action: :index)
+          result = @category_service.index(@categories, params)
+          format_response(result: result, resource: 'categories', action: :index)
         end
 
         def show

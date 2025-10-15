@@ -11,7 +11,7 @@ module Api
         end
 
         def index
-          result = @permission_service.index(params)
+          result = @permission_service.index(@permissions, params)
           format_response(result: result, resource: 'permissions', action: :index)
         end
 

@@ -11,7 +11,7 @@ module Api
         end
 
         def index
-          result = @ticket_type_service.index(params)
+          result = @ticket_type_service.index(@ticket_types, params)
           format_response(result: result, resource: 'ticket_types', action: :index)
         end
 

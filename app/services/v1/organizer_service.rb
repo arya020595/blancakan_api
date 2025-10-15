@@ -5,8 +5,8 @@ module V1
   class OrganizerService
     include Dry::Monads[:result]
 
-    def index(params = {})
-      organizers = ::Organizer.mongodb_search_with_filters(params)
+    def index(scope, params = {})
+      organizers = scope.mongodb_search_with_filters(params)
 
       Success(organizers)
     end

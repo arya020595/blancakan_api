@@ -10,7 +10,7 @@ module Api
         end
 
         def index
-          result = @bank_service.index(params)
+          result = @bank_service.index(@banks, params)
           format_response(result: result, resource: 'banks', action: :index)
         end
 

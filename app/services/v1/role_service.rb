@@ -5,8 +5,8 @@ module V1
   class RoleService
     include Dry::Monads[:result]
 
-    def index(params = {})
-      roles = ::Role.mongodb_search_with_filters(params)
+    def index(scope, params = {})
+      roles = scope.mongodb_search_with_filters(params)
 
       Success(roles)
     end

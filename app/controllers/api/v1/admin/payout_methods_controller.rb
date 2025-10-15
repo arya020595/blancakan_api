@@ -10,7 +10,7 @@ module Api
         end
 
         def index
-          result = @payout_method_service.index(query: params[:query], page: params[:page], per_page: params[:per_page])
+          result = @payout_method_service.index(@payout_methods, params)
           format_response(result: result, resource: 'payout_methods', action: :index)
         end
 

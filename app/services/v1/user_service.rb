@@ -5,8 +5,8 @@ module V1
   class UserService
     include Dry::Monads[:result]
 
-    def index(params = {})
-      users = ::User.mongodb_search_with_filters(params)
+    def index(scope, params = {})
+      users = scope.mongodb_search_with_filters(params)
 
       Success(users)
     end

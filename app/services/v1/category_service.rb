@@ -5,8 +5,8 @@ module V1
   class CategoryService
     include Dry::Monads[:result]
 
-    def index(params = {})
-      categories = ::Category.mongodb_search_with_filters(params)
+    def index(scope, params = {})
+      categories = scope.mongodb_search_with_filters(params)
 
       Success(categories)
     end

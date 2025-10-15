@@ -11,7 +11,7 @@ module Api
         end
 
         def index
-          result = @organizer_service.index(params)
+          result = @organizer_service.index(@organizers, params)
           format_response(result: result, resource: 'organizers', action: :index)
         end
 
