@@ -5,8 +5,8 @@ module V1
   class EventService
     include Dry::Monads[:result]
 
-    def index(params = {})
-      events = ::Event.mongodb_search_with_filters(params)
+    def index(scope, params = {})
+      events = scope.mongodb_search_with_filters(params)
 
       Success(events)
     end

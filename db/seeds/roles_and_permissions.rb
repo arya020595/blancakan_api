@@ -4,6 +4,10 @@ Permission.destroy_all
 
 # Create Roles
 roles = {
+  'public' => {
+    description: 'No permissions. Default for public users.',
+    permissions: []
+  },
   'superadmin' => {
     description: 'Has full access to all resources and actions.',
     permissions: []
@@ -19,19 +23,19 @@ roles = {
   'organizer' => {
     description: 'Can manage their own events.',
     permissions: [
-      { action: 'read', subject_class: 'Event' },
+      { action: 'read', subject_class: 'Event', conditions: { organizer_id: 'user.organizer.id' } },
       { action: 'create', subject_class: 'Event' },
-      { action: 'update', subject_class: 'Event', conditions: { user_id: 'user.id' } },
-      { action: 'destroy', subject_class: 'Event', conditions: { user_id: 'user.id' } }
+      { action: 'update', subject_class: 'Event', conditions: { organizer_id: 'user.organizer.id' } },
+      { action: 'destroy', subject_class: 'Event', conditions: { organizer_id: 'user.organizer.id' } }
     ]
   },
   'premium_organizer' => {
     description: 'Can manage their own events and create tickets.',
     permissions: [
-      { action: 'read', subject_class: 'Event' },
+      { action: 'read', subject_class: 'Event', conditions: { organizer_id: 'user.organizer.id' } },
       { action: 'create', subject_class: 'Event' },
-      { action: 'update', subject_class: 'Event', conditions: { user_id: 'user.id' } },
-      { action: 'destroy', subject_class: 'Event', conditions: { user_id: 'user.id' } },
+      { action: 'update', subject_class: 'Event', conditions: { organizer_id: 'user.organizer.id' } },
+      { action: 'destroy', subject_class: 'Event', conditions: { organizer_id: 'user.organizer.id' } },
       { action: 'create', subject_class: 'Ticket' }
     ]
   }
