@@ -1,10 +1,62 @@
 Rails.application.routes.draw do
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+  mount Rswag::Ui::Engine => '/api-docs'
+  mount Rswag::Api::Engine => '/api-docs'
+
+  namespace :auth do
+    post 'sign_in', to: 'auth#sign_in'
+    post 'register', to: 'auth#register'
+    get 'profile', to: 'auth#profile'
+    delete 'sign_out', to: 'auth#sign_out'
+  end
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
-  # Can be used by load balancers and uptime monitors to verify that the app is live.
-  get "up" => "rails/health#show", as: :rails_health_check
+  get 'up' => 'rails/health#show', as: :rails_health_check
 
-  # Defines the root path route ("/")
-  # root "posts#index"
+  namespace :api do
+    namespace :v1 do
+      namespace :admin do
+        resources :home, only: [:index]
+        resources :events
+        resources :organizers
+        resources :users
+        resources :roles
+        resources :permissions
+        resources :categories
+        resources :event_types
+        resources :ticket_types
+        resources :payment_methods
+        resources :banks do
+          member do
+            patch :activate
+            patch :deactivate
+          end
+          collection do
+            get :available
+          end
+        end
+        resources :payout_methods do
+          member do
+            patch :activate
+            patch :deactivate
+            post :verify_pin
+          end
+          collection do
+            get :active
+          end
+        end
+        get 'dashboard', to: 'dashboard#stats'
+      end
+
+      namespace :organizer do
+        resources :events
+        get 'dashboard', to: 'dashboard#stats'
+      end
+
+      namespace :user do
+      end
+
+      namespace :public do
+      end
+    end
+  end
 end

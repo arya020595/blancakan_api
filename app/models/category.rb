@@ -1,0 +1,46 @@
+# frozen_string_literal: true
+
+class Category
+  include Mongoid::Document
+  include Mongoid::Timestamps
+  include Mongoid::Slug
+  include Elasticsearch::CategorySearchable
+  include MongodbSearch::CategorySearchable
+
+  field :name, type: String
+  field :slug, type: String
+  field :description, type: String
+  field :is_active, type: Boolean, default: false
+  field :parent_id, type: BSON::ObjectId
+
+  belongs_to :parent, class_name: 'Category', optional: true
+  has_many :subcategories, class_name: 'Category', foreign_key: :parent_id
+
+  # MongoDB indexes for performance optimization
+  index({ name: 1 }, { unique: true, sparse: true, background: true })
+  index({ slug: 1 }, { unique: true, sparse: true, background: true })
+  index({ is_active: 1 }, { background: true })
+  index({ parent_id: 1 }, { sparse: true, background: true })
+  # Text search index for name and description
+  index({ name: 'text', description: 'text' }, { background: true })
+
+  validates :name, presence: true, uniqueness: true
+  validates :slug, presence: true, uniqueness: true
+
+  # Slug configuration using mongoid-slug
+  slug :name, history: true
+
+  scope :main_categories, -> { where(parent_id: nil) }
+  scope :subcategories, -> { where(:parent_id.ne => nil) }
+  scope :active, -> { where(is_active: true) }
+  scope :inactive, -> { where(is_active: false) }
+
+  after_save :enqueue_reindex_job
+  after_destroy :enqueue_reindex_job
+
+  private
+
+  def enqueue_reindex_job
+    ReindexElasticsearchJob.perform_later(self.class.name, id.to_s)
+  end
+end

@@ -28,4 +28,237 @@
 #       enabled: "ON"
 
 en:
-  hello: "Hello world"
+  roles:
+    index:
+      success: "Roles fetched successfully"
+      error: "Failed to fetch roles"
+    show:
+      success: "Role found"
+      error: "Role not found"
+    create:
+      success: "Role created"
+      error: "Role creation failed"
+    update:
+      success: "Role updated"
+      error: "Role update failed"
+    destroy:
+      success: "Role deleted"
+      error: "Role deletion failed"
+  permissions:
+    index:
+      success: "Permission fetched successfully"
+      error: "Failed to fetch permissions"
+    show:
+      success: "Permission found"
+      error: "Permission not found"
+    create:
+      success: "Permission created"
+      error: "Permission creation failed"
+    update:
+      success: "Permission updated"
+      error: "Permission update failed"
+    destroy:
+      success: "Permission deleted"
+      error: "Permission deletion failed"
+  permission:
+    errors:
+      duplicate_permission: "and subject_class combination already exists for this role"
+  users:
+    index:
+      success: "Users fetched successfully"
+      error: "Failed to fetch users"
+    show:
+      success: "User found"
+      error: "User not found"
+    create:
+      success: "User created successfully"
+      error: "Failed to create user"
+    update:
+      success: "User updated successfully"
+      error: "Failed to update user"
+    destroy:
+      success: "User deleted successfully"
+      error: "Failed to delete user"
+    assign_role:
+      success: "Role assigned successfully"
+      error: "Failed to assign role"
+    sign_in:
+      success: "Sign in successful"
+      error: "Invalid email or password"
+    register:
+      success: "Registration successful"
+      error: "Registration failed"
+    profile:
+      success: "Profile retrieved successfully"
+      error: "Failed to retrieve profile"
+    sign_out:
+      success: "Successfully signed out"
+      error: "Failed to sign out"
+    sign_out:
+      success: "Successfully signed out"
+      error: "Sign out failed"
+  organizers:
+    index:
+      success: "Organizers fetched successfully"
+      error: "Failed to fetch organizers"
+    show:
+      success: "Organizer found"
+      error: "Organizer not found"
+    create:
+      success: "Organizer created successfully"
+      error: "Failed to create organizer"
+    update:
+      success: "Organizer updated successfully"
+      error: "Failed to update organizer"
+    destroy:
+      success: "Organizer deleted successfully"
+      error: "Failed to delete organizer"
+  events:
+    index:
+      success: "Events fetched successfully"
+      error: "Failed to fetch events"
+    show:
+      success: "Event found"
+      error: "Event not found"
+    create:
+      success: "Event created successfully"
+      error: "Failed to create event"
+    update:
+      success: "Event updated successfully"
+      error: "Failed to update event"
+    destroy:
+      success: "Event deleted successfully"
+      error: "Failed to delete event"
+  event:
+    errors:
+      starts_at_past: "can't be in the past"
+      starts_at_before_ends_at: "must be before the end date"
+      failed_to_update_published_at: "Failed to update published_at"
+      failed_to_update_canceled_at: "Failed to update canceled_at"
+    notifications:
+      published: "Event '%{title}' has been published!"
+      canceled: "Event '%{title}' has been canceled!"
+  categories:
+    index:
+      success: "Categories fetched successfully"
+      error: "Failed to fetch categories"
+    show:
+      success: "Category found"
+      error: "Category not found"
+    create:
+      success: "Category created successfully"
+      error: "Failed to create category"
+    update:
+      success: "Category updated successfully"
+      error: "Failed to update category"
+    destroy:
+      success: "Category deleted successfully"
+      error: "Failed to delete category"
+  event_types:
+    index:
+      success: "Event types fetched successfully"
+      error: "Failed to fetch event types"
+    show:
+      success: "Event type found"
+      error: "Event type not found"
+    create:
+      success: "Event type created successfully"
+      error: "Failed to create event type"
+    update:
+      success: "Event type updated successfully"
+      error: "Failed to update event type"
+    destroy:
+      success: "Event type deleted successfully"
+      error: "Failed to delete event type"
+  ticket_types:
+    index:
+      success: "Ticket types fetched successfully"
+      error: "Failed to fetch ticket types"
+    show:
+      success: "Ticket type found"
+      error: "Ticket type not found"
+    create:
+      success: "Ticket type created successfully"
+      error: "Failed to create ticket type"
+    update:
+      success: "Ticket type updated successfully"
+      error: "Failed to update ticket type"
+    destroy:
+      success: "Ticket type deleted successfully"
+      error: "Failed to delete ticket type"
+  payment_methods:
+    index:
+      success: "Payment methods fetched successfully"
+      error: "Failed to fetch payment methods"
+    show:
+      success: "Payment method found"
+      error: "Payment method not found"
+    create:
+      success: "Payment method created successfully"
+      error: "Failed to create payment method"
+    update:
+      success: "Payment method updated successfully"
+      error: "Failed to update payment method"
+    destroy:
+      success: "Payment method deleted successfully"
+      error: "Failed to delete payment method"
+  banks:
+    index:
+      success: "Banks fetched successfully"
+      error: "Failed to fetch banks"
+    show:
+      success: "Bank found"
+      error: "Bank not found"
+    create:
+      success: "Bank created successfully"
+      error: "Failed to create bank"
+    update:
+      success: "Bank updated successfully"
+      error: "Failed to update bank"
+    destroy:
+      success: "Bank deleted successfully"
+      error: "Failed to delete bank"
+    activate:
+      success: "Bank activated successfully"
+      error: "Failed to activate bank"
+    deactivate:
+      success: "Bank deactivated successfully"
+      error: "Failed to deactivate bank"
+    available:
+      success: "Available banks fetched successfully"
+      error: "Failed to fetch available banks"
+  payout_methods:
+    index:
+      success: "Payout methods fetched successfully"
+      error: "Failed to fetch payout methods"
+    show:
+      success: "Payout method found"
+      error: "Payout method not found"
+    create:
+      success: "Payout method created successfully"
+      error: "Failed to create payout method"
+    update:
+      success: "Payout method updated successfully"
+      error: "Failed to update payout method"
+    destroy:
+      success: "Payout method deleted successfully"
+      error: "Failed to delete payout method"
+    activate:
+      success: "Payout method activated successfully"
+      error: "Failed to activate payout method"
+    deactivate:
+      success: "Payout method deactivated successfully"
+      error: "Failed to deactivate payout method"
+    verify_pin:
+      success: "PIN verified successfully"
+      error: "PIN verification failed"
+    active:
+      success: "Active payout method retrieved successfully"
+      error: "No active payout method found"
+  mongoid:
+    errors:
+      models:
+        permission:
+          attributes:
+            action:
+              duplicate_permission: "and subject_class combination already exists for this role"
