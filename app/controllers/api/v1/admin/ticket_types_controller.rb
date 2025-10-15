@@ -11,8 +11,7 @@ module Api
         end
 
         def index
-          # @ticket_types automatically set by set_collection_for_index before_action
-          result = @ticket_type_service.index(params, @ticket_types)
+          result = @ticket_type_service.index(@ticket_types, params)
           format_response(result: result, resource: 'ticket_types', action: :index)
         end
 

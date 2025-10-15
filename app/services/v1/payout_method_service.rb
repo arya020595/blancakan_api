@@ -4,8 +4,7 @@ module V1
   class PayoutMethodService
     include Dry::Monads[:result]
 
-    def index(params = {}, scope)
-      # Scope is required - always pass @payout_methods from controller
+    def index(scope, params = {})
       payout_methods = scope.mongodb_search_with_filters(params)
 
       Success(payout_methods)

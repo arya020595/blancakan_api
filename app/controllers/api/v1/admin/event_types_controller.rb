@@ -11,8 +11,7 @@ module Api
         end
 
         def index
-          # @event_types automatically set by set_collection_for_index before_action
-          result = @event_type_service.index(search_params, @event_types)
+          result = @event_type_service.index(@event_types, search_params)
           format_response(result: result, resource: 'event_types', action: :index)
         end
 

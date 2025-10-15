@@ -5,8 +5,7 @@ module V1
   class OrganizerService
     include Dry::Monads[:result]
 
-    def index(params = {}, scope)
-      # Scope is required - always pass @organizers from controller
+    def index(scope, params = {})
       organizers = scope.mongodb_search_with_filters(params)
 
       Success(organizers)

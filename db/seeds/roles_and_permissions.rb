@@ -4,6 +4,10 @@ Permission.destroy_all
 
 # Create Roles
 roles = {
+  'public' => {
+    description: 'No permissions. Default for public users.',
+    permissions: []
+  },
   'superadmin' => {
     description: 'Has full access to all resources and actions.',
     permissions: []

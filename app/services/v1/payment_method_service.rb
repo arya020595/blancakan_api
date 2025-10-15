@@ -5,8 +5,7 @@ module V1
   class PaymentMethodService
     include Dry::Monads[:result]
 
-    def index(params = {}, scope)
-      # Scope is required - always pass @payment_methods from controller
+    def index(scope, params = {})
       payment_methods = scope.mongodb_search_with_filters(params)
 
       Success(payment_methods)

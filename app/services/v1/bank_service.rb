@@ -5,8 +5,7 @@ module V1
   class BankService
     include Dry::Monads[:result]
 
-    def index(params = {}, scope)
-      # Scope is required - always pass @banks from controller
+    def index(scope, params = {})
       banks = scope.mongodb_search_with_filters(params)
 
       Success(banks)

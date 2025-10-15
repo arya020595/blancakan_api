@@ -11,8 +11,7 @@ module Api
         end
 
         def index
-          # @organizers automatically set by set_collection_for_index before_action
-          result = @organizer_service.index(params, @organizers)
+          result = @organizer_service.index(@organizers, params)
           format_response(result: result, resource: 'organizers', action: :index)
         end
 

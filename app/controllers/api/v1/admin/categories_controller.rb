@@ -10,8 +10,7 @@ module Api
         end
 
         def index
-          # @categories automatically set by set_collection_for_index before_action
-          result = @category_service.index(params, @categories)
+          result = @category_service.index(@categories, params)
           format_response(result: result, resource: 'categories', action: :index)
         end
 

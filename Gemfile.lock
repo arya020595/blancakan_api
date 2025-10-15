@@ -109,6 +109,8 @@ GEM
     builder (3.3.0)
     byebug (11.1.3)
     cancancan (3.6.1)
+    cancancan-mongoid (2.0.0)
+      cancancan (>= 2.0, < 4)
     carrierwave (3.1.1)
       activemodel (>= 6.0.0)
       activesupport (>= 6.0.0)
@@ -485,6 +487,7 @@ DEPENDENCIES
   brakeman (~> 6.1, >= 6.1.2)
   byebug (~> 11.1, >= 11.1.3)
   cancancan (~> 3.5)
+  cancancan-mongoid (~> 2.0)
   carrierwave (~> 3.1, >= 3.1.1)
   carrierwave-mongoid
   cloudinary (~> 2.2)

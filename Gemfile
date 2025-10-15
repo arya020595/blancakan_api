@@ -30,6 +30,7 @@ gem 'active_model_serializers', '~> 0.10.2'
 gem 'babosa'
 gem 'bootsnap', require: false
 gem 'cancancan', '~> 3.5'
+gem 'cancancan-mongoid', '~> 2.0'
 gem 'carrierwave', '~> 3.1', '>= 3.1.1'
 gem 'carrierwave-mongoid', require: 'carrierwave/mongoid'
 gem 'cloudinary', '~> 2.2'
