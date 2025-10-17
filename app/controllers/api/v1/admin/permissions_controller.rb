@@ -8,6 +8,7 @@ module Api
         def initialize
           super
           @permission_service = Container.resolve('v1.permission_service')
+          @permission_options_service = Container.resolve('v1.permission_options_service')
         end
 
         def index
@@ -36,7 +37,7 @@ module Api
         end
 
         def options
-          result = @permission_service.get_options
+          result = @permission_options_service.get_options
           format_response(result: result, resource: 'permissions', action: :options)
         end
 
