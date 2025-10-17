@@ -5,7 +5,7 @@ module V1
     class PermissionForm
       include ActiveModel::Model
 
-      attr_accessor :name, :description, :action, :subject
+      attr_accessor :action, :subject_class, :conditions, :role_id
 
       def initialize(params = {})
         super(params)
@@ -29,11 +29,25 @@ module V1
 
       def attributes
         {
-          name: name,
-          description: description,
           action: action,
-          subject: subject
-        }
+          subject_class: subject_class,
+          conditions: parse_conditions(conditions),
+          role_id: role_id
+        }.compact
+      end
+
+      private
+
+      def parse_conditions(conditions_input)
+        return {} if conditions_input.blank?
+        return conditions_input if conditions_input.is_a?(Hash)
+        
+        # Try to parse as JSON string
+        begin
+          JSON.parse(conditions_input)
+        rescue JSON::ParserError
+          {}
+        end
       end
     end
   end

@@ -35,6 +35,11 @@ module Api
           format_response(result: result, resource: 'permissions', action: :destroy)
         end
 
+        def options
+          result = @permission_service.get_options
+          format_response(result: result, resource: 'permissions', action: :options)
+        end
+
         private
 
         def permission_params
