@@ -60,6 +60,9 @@ en:
     destroy:
       success: "Permission deleted"
       error: "Permission deletion failed"
+    options:
+      success: "Permission options retrieved successfully"
+      error: "Failed to retrieve permission options"
   permission:
     errors:
       duplicate_permission: "and subject_class combination already exists for this role"
