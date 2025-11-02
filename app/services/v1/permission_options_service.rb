@@ -31,7 +31,7 @@ module V1
           next if basename.downcase == 'ability'
           const_name = basename.camelize
           klass = const_name.safe_constantize
-          class_names << klass.name if klass
+          class_names << klass.name if klass.is_a?(Class) && klass.included_modules.include?(Mongoid::Document)
         rescue StandardError
           next
         end
