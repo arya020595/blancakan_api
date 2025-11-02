@@ -78,6 +78,10 @@ puts "Generating 35 diverse events..."
   # Duration between 1 hour and 3 days
   duration_hours = [1, 2, 3, 4, 6, 8, 12, 24, 36, 48, 72].sample
   
+  # Calculate start and end times properly
+  start_time = (Time.current + start_offset_days.days).change(hour: start_hour, min: [0, 15, 30, 45].sample)
+  end_time = start_time + duration_hours.hours
+  
   # Create event attributes
   event_attrs = {
     title: Faker::Company.catch_phrase + " #{event_type.name}",
@@ -86,8 +90,8 @@ puts "Generating 35 diverse events..."
                                     random_sentences_to_add: rand(2..5)),
     location_type: location_type,
     location: location,
-    starts_at_local: (Time.current + start_offset_days.days).change(hour: start_hour, min: [0, 15, 30, 45].sample),
-    ends_at_local: (Time.current + start_offset_days.days + duration_hours.hours).change(min: [0, 15, 30, 45].sample),
+    starts_at_local: start_time,
+    ends_at_local: end_time.change(min: [0, 15, 30, 45].sample),
     timezone: timezone,
     is_paid: rand < 0.6, # 60% chance of being paid
     organizer: organizers.sample,
