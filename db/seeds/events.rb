@@ -89,7 +89,7 @@ puts "Generating 35 diverse events..."
     starts_at_local: (Time.current + start_offset_days.days).change(hour: start_hour, min: [0, 15, 30, 45].sample),
     ends_at_local: (Time.current + start_offset_days.days + duration_hours.hours).change(min: [0, 15, 30, 45].sample),
     timezone: timezone,
-    is_paid: [true, false, true, false, true].sample, # 60% chance of being paid
+    is_paid: rand < 0.6, # 60% chance of being paid
     organizer: organizers.sample,
     event_type: event_type,
     categories: selected_categories,
