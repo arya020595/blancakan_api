@@ -8,11 +8,12 @@ module Api
         def initialize
           super
           @permission_service = Container.resolve('v1.permission_service')
+          @permission_options_service = Container.resolve('v1.permission_options_service')
         end
 
         def index
           result = @permission_service.index(@permissions, params)
-          format_response(result: result, resource: 'permissions', action: :index)
+          format_response(result: result, resource: 'permissions', action: :index, serializer: PermissionSerializer)
         end
 
         def show
@@ -33,6 +34,11 @@ module Api
         def destroy
           result = @permission_service.destroy(@permission)
           format_response(result: result, resource: 'permissions', action: :destroy)
+        end
+
+        def options
+          result = @permission_options_service.get_options
+          format_response(result: result, resource: 'permissions', action: :options)
         end
 
         private

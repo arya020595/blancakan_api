@@ -4,36 +4,68 @@ puts 'Creating EventTypes...'
 
 event_types = [
   {
+    name: 'Conference',
+    slug: 'conference',
+    icon_url: 'https://cdn.example.com/icons/conference.png',
+    description: 'Large-scale professional gatherings with multiple speakers and sessions',
+    is_active: true,
+    sort_order: 1
+  },
+  {
     name: 'Workshop',
     slug: 'workshop',
     icon_url: 'https://cdn.example.com/icons/workshop.png',
     description: 'Hands-on learning sessions with practical activities',
     is_active: true,
-    sort_order: 1
+    sort_order: 2
+  },
+  {
+    name: 'Festival',
+    slug: 'festival',
+    icon_url: 'https://cdn.example.com/icons/festival.png',
+    description: 'Celebrations featuring music, arts, culture, food or other themes',
+    is_active: true,
+    sort_order: 3
+  },
+  {
+    name: 'Competition',
+    slug: 'competition',
+    icon_url: 'https://cdn.example.com/icons/competition.png',
+    description: 'Contests where participants compete for prizes or recognition',
+    is_active: true,
+    sort_order: 4
   },
   {
     name: 'Seminar',
     slug: 'seminar',
     icon_url: 'https://cdn.example.com/icons/seminar.png',
-    description: 'Educational presentations and discussions',
+    description: 'Educational presentations and discussions on specific topics',
     is_active: true,
-    sort_order: 2
+    sort_order: 5
   },
   {
-    name: 'Conference',
-    slug: 'conference',
-    icon_url: 'https://cdn.example.com/icons/conference.png',
-    description: 'Large-scale professional gatherings',
+    name: 'Exhibition',
+    slug: 'exhibition',
+    icon_url: 'https://cdn.example.com/icons/exhibition.png',
+    description: 'Public displays of art, products, or information',
     is_active: true,
-    sort_order: 3
+    sort_order: 6
   },
   {
-    name: 'Networking',
-    slug: 'networking',
-    icon_url: 'https://cdn.example.com/icons/networking.png',
-    description: 'Professional networking and social events',
+    name: 'Retreat',
+    slug: 'retreat',
+    icon_url: 'https://cdn.example.com/icons/retreat.png',
+    description: 'Immersive getaways focused on specific activities or wellness',
     is_active: true,
-    sort_order: 4
+    sort_order: 7
+  },
+  {
+    name: 'Summit',
+    slug: 'summit',
+    icon_url: 'https://cdn.example.com/icons/summit.png',
+    description: 'High-level gatherings focused on thought leadership and industry trends',
+    is_active: true,
+    sort_order: 8
   },
   {
     name: 'Webinar',
@@ -41,7 +73,15 @@ event_types = [
     icon_url: 'https://cdn.example.com/icons/webinar.png',
     description: 'Online presentations and virtual events',
     is_active: true,
-    sort_order: 5
+    sort_order: 9
+  },
+  {
+    name: 'Networking',
+    slug: 'networking',
+    icon_url: 'https://cdn.example.com/icons/networking.png',
+    description: 'Professional networking and social events',
+    is_active: true,
+    sort_order: 10
   }
 ]
 

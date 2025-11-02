@@ -20,7 +20,11 @@ Rails.application.routes.draw do
         resources :organizers
         resources :users
         resources :roles
-        resources :permissions
+        resources :permissions do
+          collection do
+            get :options
+          end
+        end
         resources :categories
         resources :event_types
         resources :ticket_types
