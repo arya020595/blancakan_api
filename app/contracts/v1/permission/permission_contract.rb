@@ -13,7 +13,7 @@ module V1
       rule(:role_id) do
         # Validate that role exists
         begin
-          role = Role.find(value)
+          Role.find(value)
         rescue Mongoid::Errors::DocumentNotFound
           key.failure('role not found')
         end
