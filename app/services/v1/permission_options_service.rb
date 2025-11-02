@@ -27,8 +27,8 @@ module V1
       Dir.glob(models_path.join('*.rb')).each do |file|
         begin
           basename = File.basename(file, '.rb')
-          # exclude ability.rb (authorization definitions) and any concerns
-          next if basename.downcase == 'ability' || basename.downcase == 'concerns'
+          # exclude ability.rb (authorization definitions)
+          next if basename.downcase == 'ability'
           const_name = basename.camelize
           klass = const_name.safe_constantize
           class_names << klass.name if klass
