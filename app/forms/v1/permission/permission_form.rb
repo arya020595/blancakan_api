@@ -6,10 +6,12 @@ module V1
       include ActiveModel::Model
 
       attr_accessor :action, :subject_class, :conditions, :role_id
+      attr_reader :conditions_parse_error
 
       def initialize(params = {})
         super(params)
         @contract = ::V1::Permission::PermissionContract.new
+        @conditions_parse_error = false
       end
 
       def valid?
@@ -39,14 +41,15 @@ module V1
       private
 
       def parse_conditions(conditions_input)
-        return {} if conditions_input.blank?
+        return nil if conditions_input.blank?
         return conditions_input if conditions_input.is_a?(Hash)
         
         # Try to parse as JSON string
         begin
           JSON.parse(conditions_input)
         rescue JSON::ParserError
-          {}
+          @conditions_parse_error = true
+          conditions_input # Return original value to allow validation to catch it
         end
       end
     end
