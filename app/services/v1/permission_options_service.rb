@@ -24,7 +24,7 @@ module V1
       return [] unless models_path.exist?
 
       class_names = []
-      Dir.glob(models_path.join('*.rb')).each do |file|
+      Dir.glob(models_path.join('**', '*.rb')).each do |file|
         begin
           basename = File.basename(file, '.rb')
           # exclude ability.rb (authorization definitions)
