@@ -4,16 +4,8 @@ development:
     # Defines the default client. (required)
     default:
       # Mongoid can connect to a URI accepted by the driver:
-      # uri: mongodb://user:password@mongodb.domain.com:27017/blancakan_api_development
-
-      # Otherwise define the parameters separately.
-      # This defines the name of the default database that Mongoid can connect to.
-      # (required).
-      database: blancakan_api_development
-      # Provides the hosts the default client can connect to. Must be an array
-      # of host:port pairs. (required)
-      hosts:
-        - localhost:27017
+      # Use MONGODB_URI environment variable for Docker, fallback to localhost for local development
+      uri: <%= ENV['MONGODB_URI'] || 'mongodb://localhost:27017/blancakan_api_development' %>
       options:
         # Note that all options listed below are Ruby driver client options (the mongo gem).
         # Please refer to the driver documentation of the version of the mongo gem you are using
@@ -285,6 +277,19 @@ development:
     # When this flag is set to true, the update and replace methods will
     # validate the paramters and raise an error if they are invalid.
     # validate_update_replace: false
+
+production:
+  clients:
+    default:
+      # Use MONGODB_URI environment variable for production
+      uri: <%= ENV.fetch('MONGODB_URI') %>
+      options:
+        max_pool_size: 10
+        min_pool_size: 1
+        wait_queue_timeout: 5
+        connect_timeout: 10
+        socket_timeout: 60
+        server_selection_timeout: 30
 
 test:
   clients:
