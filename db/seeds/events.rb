@@ -98,7 +98,7 @@ puts 'Generating 100 diverse events with Faker...'
     starts_at_local: start_time,
     ends_at_local: end_time,
     timezone: timezone,
-    is_paid: [true, false, true, false, true].sample, # 60% chance of being paid
+    is_paid: rand < 0.6, # 60% chance of being paid
     organizer: organizers.sample,
     event_type: event_type,
     categories: selected_categories,
